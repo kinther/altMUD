@@ -24,13 +24,13 @@
 
 static bool legal_communication(char * arg);
 
-static bool legal_communication(char * arg) 
+static bool legal_communication(char * arg)
 {
   while (*arg) {
     if (*arg == '@') {
       arg++;
       if (*arg == '(' || *arg == ')' || *arg == '<' || *arg == '>')
-        return FALSE; 
+        return FALSE;
     }
     arg++;
   }
@@ -46,7 +46,7 @@ ACMD(do_say)
   else {
     char buf[MAX_INPUT_LENGTH + 14], *msg;
     struct char_data *vict;
- 
+
     if (CONFIG_SPECIAL_IN_COMM && legal_communication(argument))
       parse_at(argument);
 
@@ -74,7 +74,7 @@ ACMD(do_say)
 ACMD(do_gsay)
 {
   skip_spaces(&argument);
-  
+
   if (!GROUP(ch)) {
     send_to_char(ch, "But you are not a member of a group!\r\n");
     return;
@@ -82,12 +82,12 @@ ACMD(do_gsay)
   if (!*argument)
     send_to_char(ch, "Yes, but WHAT do you want to group-say?\r\n");
   else {
-		
+
     if (CONFIG_SPECIAL_IN_COMM && legal_communication(argument))
-      parse_at(argument);		
-		
+      parse_at(argument);
+
     send_to_group(ch, ch->group, "%s%s%s says, '%s'%s\r\n", CCGRN(ch, C_NRM), CCGRN(ch, C_NRM), GET_NAME(ch), argument, CCNRM(ch, C_NRM));
-	
+
     if (!IS_NPC(ch) && PRF_FLAGGED(ch, PRF_NOREPEAT))
       send_to_char(ch, "%s", CONFIG_OK);
     else
@@ -107,7 +107,7 @@ static void perform_tell(struct char_data *ch, struct char_data *vict, char *arg
     send_to_char(ch, "%s", CONFIG_OK);
   else {
     snprintf(buf, sizeof(buf), "%sYou tell $N, '%s'%s", CCRED(ch, C_NRM), arg, CCNRM(ch, C_NRM));
-    msg = act(buf, FALSE, ch, 0, vict, TO_CHAR | TO_SLEEP);     
+    msg = act(buf, FALSE, ch, 0, vict, TO_CHAR | TO_SLEEP);
     add_history(ch, msg, HIST_TELL);
   }
 
@@ -210,8 +210,8 @@ ACMD(do_reply)
     /* Make sure the person you're replying to is still playing by searching
      * for them.  Note, now last tell is stored as player IDnum instead of
      * a pointer, which is much better because it's safer, plus will still
-     * work if someone logs out and back in again. A descriptor list based 
-     * search would be faster although we could not find link dead people.  
+     * work if someone logs out and back in again. A descriptor list based
+     * search would be faster although we could not find link dead people.
      * Not that they can hear tells anyway. :) -gg 2/24/98 */
     while (tch && (IS_NPC(tch) || GET_IDNUM(tch) != GET_LAST_TELL(ch)))
       tch = tch->next;
@@ -269,7 +269,7 @@ ACMD(do_spec_comm)
     snprintf(buf1, sizeof(buf1), "$n %s you, '%s'", action_plur, buf2);
     act(buf1, FALSE, ch, 0, vict, TO_VICT);
 
-    if ((!IS_NPC(ch)) && (PRF_FLAGGED(ch, PRF_NOREPEAT))) 
+    if ((!IS_NPC(ch)) && (PRF_FLAGGED(ch, PRF_NOREPEAT)))
       send_to_char(ch, "%s", CONFIG_OK);
     else
       send_to_char(ch, "You %s %s, '%s'\r\n", action_sing, GET_NAME(vict), buf2);
@@ -508,10 +508,10 @@ ACMD(do_gen_comm)
   else {
 		if (CONFIG_SPECIAL_IN_COMM && legal_communication(argument))
       parse_at(argument);
-      
+
     snprintf(buf1, sizeof(buf1), "%sYou %s, '%s%s'%s", COLOR_LEV(ch) >= C_CMP ? color_on : "",
         com_msgs[subcmd][1], argument, COLOR_LEV(ch) >= C_CMP ? color_on : "", CCNRM(ch, C_CMP));
-    
+
     msg = act(buf1, FALSE, ch, 0, 0, TO_CHAR | TO_SLEEP);
     add_history(ch, msg, hist_type[subcmd]);
   }
@@ -532,7 +532,7 @@ ACMD(do_gen_comm)
          !AWAKE(i->character)))
       continue;
 
-    snprintf(buf2, sizeof(buf2), "%s%s%s", (COLOR_LEV(i->character) >= C_NRM) ? color_on : "", buf1, KNRM); 
+    snprintf(buf2, sizeof(buf2), "%s%s%s", (COLOR_LEV(i->character) >= C_NRM) ? color_on : "", buf1, KNRM);
     msg = act(buf2, FALSE, ch, 0, i->character, TO_VICT | TO_SLEEP);
     add_history(i->character, msg, hist_type[subcmd]);
   }
@@ -551,7 +551,7 @@ ACMD(do_qcomm)
   else {
     char buf[MAX_STRING_LENGTH];
     struct descriptor_data *i;
-    
+
     if (CONFIG_SPECIAL_IN_COMM && legal_communication(argument))
       parse_at(argument);
 
@@ -573,4 +573,197 @@ ACMD(do_qcomm)
       if (STATE(i) == CON_PLAYING && i != ch->desc && PRF_FLAGGED(i->character, PRF_QUEST))
         act(buf, 0, ch, 0, i->character, TO_VICT | TO_SLEEP);
   }
+}
+
+void personalize_emote (char_data *src, char *emote)
+{
+	char		desc [MAX_STRING_LENGTH] = { '\0' };
+	char		copy [MAX_STRING_LENGTH] = { '\0' };
+	char		*charshortbuf = NULL;
+	char_data	*tch = NULL;
+    struct room_data *room = &world[IN_ROOM(src)];
+
+	snprintf (copy, MAX_STRING_LENGTH, "%s", emote);
+
+	while ( *emote ) {
+		*desc = '\0';
+		if ( *emote == '#' ) {
+			emote++;
+			if ( *emote == '5' ) {
+				emote++;
+				while ( *emote != '#' ) {
+					snprintf (desc + strlen(desc), MAX_STRING_LENGTH, "%c", *emote);
+					emote++;
+				}
+
+                /** Find the first person who matches the description **/
+				for ( tch = room->people; tch; tch = tch->next_in_room ) {
+					charshortbuf = (GET_NAME(tch));
+					if ( !str_cmp (charshortbuf, desc) )
+						break;
+
+
+				}
+			} /* end emote == '5'*/
+		}/* end emote == '#'*/
+		emote++;
+	}
+
+	for ( tch = room->people; tch; tch = tch->next_in_room ) {
+		if ( tch == src )
+			continue;
+		act (copy, TRUE, tch, 0, 0, TO_CHAR);
+	}
+
+	return;
+}
+
+ACMD(do_emote)
+{
+	char 		buf [MAX_STRING_LENGTH] = { '\0' };
+	char 		copy[MAX_STRING_LENGTH] = { '\0' };
+	char 		key [MAX_STRING_LENGTH] = { '\0' };
+	bool 		tochar = FALSE;
+	bool 		is_imote = FALSE;
+	obj_data	*obj = NULL;
+	int 		key_e = 0;
+	char 		*p = NULL;
+	char		*char_desc = NULL;
+	char		*obj_desc = NULL;
+	char_data	*char_vis = NULL;
+    char_data   *victim;
+
+	while (isspace(*argument))
+	    argument++;
+
+	if (argument == NULL)
+		send_to_char(ch,"What would you like to emote?\n");
+	else {
+		p = copy;
+		while(*argument) {
+
+			if ( *argument == '@' ) {
+				is_imote = TRUE;
+				char_desc = GET_NAME(ch);
+				snprintf (p, MAX_STRING_LENGTH,  "\tc%s\tn", char_desc);
+				p += strlen(p);
+				argument++;
+			}
+
+		    if(*argument == '*') {
+
+				argument++;
+				while(*argument>='0' && *argument<='9'){
+					key[key_e++] = *(argument++);
+ 				}
+
+ 				if(*argument=='.'){
+					key[key_e++] = *(argument++);
+ 				}
+
+ 				while(isalpha(*argument) || *argument=='-') {
+					key[key_e++] = *(argument++);
+ 				}
+
+	        	key[key_e] = '\0';
+				key_e = 0;
+
+				if (!get_obj_in_list_vis(ch, key, NULL, ch->carrying) &&
+			    	!get_obj_in_equip_vis(ch, key, NULL, ch->equipment)) {
+              		snprintf (buf, MAX_STRING_LENGTH,  "I don't see %s here.\n",key);
+              		send_to_char(ch, buf);
+              		return;
+          		}
+
+				obj = get_obj_in_list_vis (ch, key, NULL, ch->carrying);
+
+          		if ( !obj )
+             		obj = get_obj_in_equip_vis (ch, key, NULL, ch->equipment);
+
+
+             	obj_desc = obj->short_description;
+          		snprintf (p, MAX_STRING_LENGTH,  "\tn%s\tn", obj_desc);
+          		p += strlen(p);
+
+          	} /*end if(*argument == '*')*/
+
+          	else if(*argument == '/') {
+
+				argument++;
+
+          		while(*argument>='0' && *argument<='9'){
+          			key[key_e++] = *(argument++);
+          		}
+
+          		if(*argument=='.'){
+            		key[key_e++] = *(argument++);
+          		}
+
+ 				while(isalpha(*argument) || *argument=='-') {
+					key[key_e++] = *(argument++);
+ 				}
+
+	        	key[key_e] = '\0';
+				key_e = 0;
+
+				if (!get_char_room_vis(ch,key,NULL)) {
+            		snprintf (buf, MAX_STRING_LENGTH,  "Who is %s?\n",key);
+			    	send_to_char(ch,buf);
+			    	return;
+				}
+
+				char_vis = get_char_room_vis (ch,key,NULL);
+				if (char_vis == ch) {
+					send_to_char (ch,"You shouldn't refer to yourself using the token system.\n");
+					free(char_vis);
+					return;
+				}
+
+                victim = get_char_room_vis( ch,key,NULL );
+				char_desc = GET_NAME(victim);
+				snprintf (p, MAX_STRING_LENGTH,  "%s", char_desc);
+		    	p += strlen(p);
+				tochar = TRUE;
+
+		    } /* end if(*argument == '~')*/
+		    else
+		        *(p++) = *(argument++);
+
+		}/* end while *argument*/
+
+		*p = '\0';
+
+		if ( copy [0] == '\'' ) {
+			if ( !is_imote ) {
+				char_desc = GET_NAME(ch);
+				snprintf (buf, MAX_STRING_LENGTH,  "%s%s", char_desc, copy);
+				buf[2] = toupper (buf[2]);
+			}
+			else {
+            	snprintf (buf, MAX_STRING_LENGTH,   "%s", copy);
+			}
+		}
+		else {
+			if ( !is_imote ) {
+				char_desc = GET_NAME(ch);
+				snprintf (buf, MAX_STRING_LENGTH, "%s %s", char_desc, copy);
+				buf[2] = toupper (buf[2]);
+			}
+			else {
+             snprintf (buf, MAX_STRING_LENGTH,   "%s", copy);
+          	}
+		}
+
+		if ( buf[strlen(buf)-1] != '.' && buf[strlen(buf)-1] != '!' && buf[strlen(buf)-1] != '?' )
+			strcat (buf, ".");
+
+		if ( !tochar )
+			act(buf,FALSE,ch,0,0,TO_ROOM);
+		else
+			personalize_emote (ch, buf);
+
+		act(buf,FALSE,ch,0,0,TO_CHAR);
+	}
+
+	return;
 }

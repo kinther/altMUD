@@ -78,7 +78,7 @@ cpp_extern const struct command_info cmd_info[] = {
   { "se"       , "se"      , POS_STANDING, do_move     , 0, SCMD_SE },
   { "southwest", "southw"  , POS_STANDING, do_move     , 0, SCMD_SW },
   { "sw"       , "sw"      , POS_STANDING, do_move     , 0, SCMD_SW },
-  
+
   /* now, the main list */
   { "at"       , "at"      , POS_DEAD    , do_at       , LVL_IMMORT, 0 },
   { "advance"  , "adv"     , POS_DEAD    , do_advance  , LVL_GRGOD, 0 },
@@ -138,8 +138,7 @@ cpp_extern const struct command_info cmd_info[] = {
 
   { "eat"      , "ea"      , POS_RESTING , do_eat      , 0, SCMD_EAT },
   { "echo"     , "ec"      , POS_SLEEPING, do_echo     , LVL_IMMORT, SCMD_ECHO },
-  { "emote"    , "em"      , POS_RESTING , do_echo     , 0, SCMD_EMOTE },
-  { ":"        , ":"       , POS_RESTING, do_echo      , 1, SCMD_EMOTE },
+  { "emote"    , "em"      , POS_RESTING , do_emote     , 0, 0},
   { "enter"    , "ent"     , POS_STANDING, do_enter    , 0, 0 },
   { "equipment", "eq"      , POS_SLEEPING, do_equipment, 0, 0 },
   { "exits"    , "ex"      , POS_RESTING , do_exits    , 0, 0 },
@@ -230,7 +229,7 @@ cpp_extern const struct command_info cmd_info[] = {
   { "olc"      , "olc"     , POS_DEAD    , do_show_save_list, LVL_BUILDER, 0 },
   { "olist"    , "olist"   , POS_DEAD    , do_oasis_list, LVL_BUILDER, SCMD_OASIS_OLIST },
   { "oedit"    , "oedit"   , POS_DEAD    , do_oasis_oedit, LVL_BUILDER, 0 },
-  { "oset"     , "oset"    , POS_DEAD    , do_oset,        LVL_BUILDER, 0 },  
+  { "oset"     , "oset"    , POS_DEAD    , do_oset,        LVL_BUILDER, 0 },
   { "ocopy"    , "ocopy"   , POS_DEAD    , do_oasis_copy, LVL_GOD, CON_OEDIT },
 
   { "put"      , "p"       , POS_RESTING , do_put      , 0, 0 },
@@ -1268,7 +1267,7 @@ int enter_player_game (struct descriptor_data *d)
   character_list = d->character;
   char_to_room(d->character, load_room);
   load_result = Crash_load(d->character);
-  
+
   /* Save the character and their object file */
   save_char(d->character);
   Crash_crashsave(d->character);
@@ -1288,10 +1287,10 @@ EVENTFUNC(get_protocols)
 
   if (event_obj == NULL)
     return 0;
-  
+
   pMudEvent = (struct mud_event_data *) event_obj;
-  d = (struct descriptor_data *) pMudEvent->pStruct;  
-  
+  d = (struct descriptor_data *) pMudEvent->pStruct;
+
   /* Clear extra white space from the "protocol scroll" */
   write_to_output(d, "[H[J");
 
@@ -1303,14 +1302,14 @@ EVENTFUNC(get_protocols)
     len += snprintf(buf + len, MAX_STRING_LENGTH - len, "\tO[\toColors\tO] \twAnsi\tn | ");
   else
     len += snprintf(buf + len, MAX_STRING_LENGTH - len, "[Colors] No Color | ");
- 
+
   len += snprintf(buf + len, MAX_STRING_LENGTH - len,   "\tO[\toMXP\tO] \tw%s\tn | ", d->pProtocol->bMXP ? "Yes" : "No");
   len += snprintf(buf + len, MAX_STRING_LENGTH - len,   "\tO[\toMSDP\tO] \tw%s\tn | ", d->pProtocol->bMSDP ? "Yes" : "No");
   snprintf(buf + len, MAX_STRING_LENGTH - len,   "\tO[\toATCP\tO] \tw%s\tn\r\n\r\n", d->pProtocol->bATCP ? "Yes" : "No");
-   
+
   write_to_output(d, buf, 0);
-    
-  write_to_output(d, GREETINGS, 0); 
+
+  write_to_output(d, GREETINGS, 0);
   STATE(d) = CON_GET_NAME;
   return 0;
 }
@@ -1354,16 +1353,16 @@ void nanny(struct descriptor_data *d, char *arg)
   /* Not in OLC. */
   switch (STATE(d)) {
   case CON_GET_PROTOCOL:
-    write_to_output(d, "Collecting Protocol Information... Please Wait.\r\n"); 
+    write_to_output(d, "Collecting Protocol Information... Please Wait.\r\n");
     return;
   case CON_GET_NAME:		/* wait for input of name */
     if (d->character == NULL) {
       CREATE(d->character, struct char_data, 1);
       clear_char(d->character);
       CREATE(d->character->player_specials, struct player_special_data, 1);
-      
+
       new_mobile_data(d->character);
-      
+
       GET_HOST(d->character) = strdup(d->host);
       d->character->desc = d;
     }

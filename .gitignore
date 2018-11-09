@@ -13,3 +13,4 @@ src/util/depend
 lib/*
 doc/*
 log/*
+syslog*
