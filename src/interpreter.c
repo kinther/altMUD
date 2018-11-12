@@ -138,7 +138,7 @@ cpp_extern const struct command_info cmd_info[] = {
 
   { "eat"      , "ea"      , POS_RESTING , do_eat      , 0, SCMD_EAT },
   { "echo"     , "ec"      , POS_SLEEPING, do_echo     , LVL_IMMORT, SCMD_ECHO },
-  { "emote"    , "em"      , POS_RESTING , do_emote     , 0, 0},
+  { "emote"    , "em"      , POS_SLEEPING, do_emote     , 0, 0},
   { "enter"    , "ent"     , POS_STANDING, do_enter    , 0, 0 },
   { "equipment", "eq"      , POS_SLEEPING, do_equipment, 0, 0 },
   { "exits"    , "ex"      , POS_RESTING , do_exits    , 0, 0 },
@@ -234,6 +234,7 @@ cpp_extern const struct command_info cmd_info[] = {
 
   { "put"      , "p"       , POS_RESTING , do_put      , 0, 0 },
   { "peace"    , "pe"      , POS_DEAD    , do_peace    , LVL_BUILDER, 0 },
+  { "pemote"   , "pem"     , POS_SLEEPING, do_pemote   , 0, 0},
   { "pick"     , "pi"      , POS_STANDING, do_gen_door , 1, SCMD_PICK },
   { "practice" , "pr"      , POS_RESTING , do_practice , 1, 0 },
   { "page"     , "pag"     , POS_DEAD    , do_page     , 1, 0 },

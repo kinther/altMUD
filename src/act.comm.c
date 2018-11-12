@@ -621,7 +621,7 @@ void personalize_emote (char_data *src, char *emote)
 }
 
 
-/* Command called by player when issuing emote */
+/* Command called by player when issuing normal emote */
 ACMD(do_emote)
 {
 	char 		buf [MAX_STRING_LENGTH] = { '\0' };
@@ -759,6 +759,165 @@ ACMD(do_emote)
 			}
 			else {
              snprintf (buf, MAX_STRING_LENGTH,   "%s", copy);
+          	}
+		}
+
+		if ( buf[strlen(buf)-1] != '.' && buf[strlen(buf)-1] != '!' && buf[strlen(buf)-1] != '?' )
+			strcat (buf, ".");
+
+		if ( !tochar )
+			act(buf,FALSE,ch,0,0,TO_ROOM);
+		else
+			personalize_emote (ch, buf);
+
+		act(buf,FALSE,ch,0,0,TO_CHAR);
+	}
+
+	return;
+}
+
+/* Command called by player when issuing possessive emote */
+ACMD(do_pemote)
+{
+	char 		buf [MAX_STRING_LENGTH] = { '\0' };
+	char 		copy[MAX_STRING_LENGTH] = { '\0' };
+	char 		key [MAX_STRING_LENGTH] = { '\0' };
+	bool 		tochar = FALSE;
+	bool 		is_imote = FALSE;
+	obj_data	*obj = NULL;
+	int 		key_e = 0;
+	char 		*p = NULL;
+	char		*char_desc = NULL;
+	char		*obj_desc = NULL;
+	char_data	*char_vis = NULL;
+    char_data   *victim;
+
+	while (isspace(*argument))
+	    argument++;
+
+	if (argument == NULL)
+		send_to_char(ch,"What would you like to emote?\n");
+	else {
+		p = copy;
+		while(*argument) {
+
+			if ( *argument == '@' ) {
+				is_imote = TRUE;
+				char_desc = GET_NAME(ch);
+				snprintf (p, MAX_STRING_LENGTH,  "\tc%s\tn's", char_desc);
+				p += strlen(p);
+				argument++;
+			}
+
+		    if(*argument == '*') {
+
+				argument++;
+				while(*argument>='0' && *argument<='9'){
+					key[key_e++] = *(argument++);
+ 				}
+
+ 				if(*argument=='.'){
+					key[key_e++] = *(argument++);
+ 				}
+
+ 				while(isalpha(*argument) || *argument=='-') {
+					key[key_e++] = *(argument++);
+ 				}
+
+	      key[key_e] = '\0';
+				key_e = 0;
+
+				if (!get_obj_in_list_vis(ch, key, NULL, ch->carrying) &&
+			    	!get_obj_in_equip_vis(ch, key, NULL, ch->equipment)) {
+              		snprintf (buf, MAX_STRING_LENGTH,  "I don't see %s here.\n",key);
+              		send_to_char(ch, buf, NULL);
+              		return;
+          		}
+
+				obj = get_obj_in_list_vis (ch, key, NULL, ch->carrying);
+
+          		if ( !obj )
+             		obj = get_obj_in_equip_vis (ch, key, NULL, ch->equipment);
+
+
+             	obj_desc = obj->short_description;
+          		snprintf (p, MAX_STRING_LENGTH,  "\tn%s\tn", obj_desc);
+          		p += strlen(p);
+
+          	} /*end if(*argument == '*')*/
+
+          	else if(*argument == '/') {
+
+				argument++;
+
+          		while(*argument>='0' && *argument<='9'){
+          			key[key_e++] = *(argument++);
+          		}
+
+          		if(*argument=='.'){
+            		key[key_e++] = *(argument++);
+          		}
+
+ 				while(isalpha(*argument) || *argument=='-') {
+					key[key_e++] = *(argument++);
+ 				}
+
+	      key[key_e] = '\0';
+				key_e = 0;
+
+				if (!get_char_room_vis(ch,key,NULL)) {
+            		snprintf (buf, MAX_STRING_LENGTH,  "Who is %s?\n",key);
+			    	send_to_char(ch,buf, NULL);
+			    	return;
+				}
+
+				char_vis = get_char_room_vis (ch,key,NULL);
+				if (char_vis == ch) {
+					send_to_char (ch,"You shouldn't refer to yourself using the token system.\n");
+					free(char_vis);
+					return;
+				}
+
+        victim = get_char_room_vis(ch,key,NULL);
+				char_desc = GET_NAME(victim);
+				snprintf (p, MAX_STRING_LENGTH,  "%s", char_desc);
+		    	p += strlen(p);
+				tochar = TRUE;
+
+		    } /* end if(*argument == '~')*/
+		    else
+		        *(p++) = *(argument++);
+
+		}/* end while *argument*/
+
+		*p = '\0';
+
+		if ( copy [0] == '\'' ) {
+			if ( !is_imote ) {
+				char_desc = GET_NAME(ch);
+				snprintf (buf, MAX_STRING_LENGTH,  "%s's %s", char_desc, copy);
+
+        /* Commented out below line because it would upper the third */
+        /* letter of player's name when they perform normal emote */
+
+        /* buf[2] = toupper (buf[2]); */
+			}
+			else {
+            	snprintf (buf, MAX_STRING_LENGTH, "%s", copy);
+			}
+		}
+		else {
+			if ( !is_imote ) {
+				char_desc = GET_NAME(ch);
+				snprintf (buf, MAX_STRING_LENGTH, "%s's %s", char_desc, copy);
+
+        /* Commented out below line because it would upper the third */
+        /* letter of player's name when they perform normal emote */
+
+				/* buf[2] = toupper (buf[2]); */
+			}
+			else {
+             snprintf (buf, MAX_STRING_LENGTH, "%s", copy);
           	}
 		}
 

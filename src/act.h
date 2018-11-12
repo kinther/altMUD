@@ -48,6 +48,7 @@ ACMD(do_reply);
 ACMD(do_tell);
 ACMD(do_write);
 ACMD(do_emote);
+ACMD(do_pemote);
 /*****************************************************************************
  * Begin Functions and defines for act.informative.c
  ****************************************************************************/
