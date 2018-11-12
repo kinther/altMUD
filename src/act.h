@@ -171,6 +171,8 @@ extern const char *cmd_door[];
 /*****************************************************************************
  * Begin Functions and defines for act.offensive.c
  ****************************************************************************/
+ /* Utility Functions */
+ void improve_skill(struct char_data *ch, int skill);
 /* Functions with subcommands */
 /* do_hit */
 ACMD(do_hit);

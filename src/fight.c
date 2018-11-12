@@ -117,7 +117,7 @@ void check_killer(struct char_data *ch, struct char_data *vict)
 
   SET_BIT_AR(PLR_FLAGS(ch), PLR_KILLER);
   send_to_char(ch, "If you want to be a PLAYER KILLER, so be it...\r\n");
-  mudlog(BRF, MAX(LVL_IMMORT, MAX(GET_INVIS_LEV(ch), GET_INVIS_LEV(vict))), 
+  mudlog(BRF, MAX(LVL_IMMORT, MAX(GET_INVIS_LEV(ch), GET_INVIS_LEV(vict))),
     TRUE, "PC Killer bit set on %s for initiating attack on %s at %s.",
     GET_NAME(ch), GET_NAME(vict), world[IN_ROOM(vict)].name);
 }
@@ -273,7 +273,7 @@ struct char_data *i;
     if (killer->group) {
       while ((i = (struct char_data *) simple_list(killer->group->members)) != NULL)
         if(IN_ROOM(i) == IN_ROOM(ch)  || (world[IN_ROOM(i)].zone == world[IN_ROOM(ch)].zone))
-          autoquest_trigger_check(i, ch, NULL, AQ_MOB_KILL);      
+          autoquest_trigger_check(i, ch, NULL, AQ_MOB_KILL);
     } else
         autoquest_trigger_check(killer, ch, NULL, AQ_MOB_KILL);
   }
@@ -329,7 +329,7 @@ static void group_gain(struct char_data *ch, struct char_data *victim)
 {
   int tot_members = 0, base, tot_gain;
   struct char_data *k;
-  
+
   while ((k = (struct char_data *) simple_list(GROUP(ch)->members)) != NULL)
     if (IN_ROOM(ch) == IN_ROOM(k))
       tot_members++;
@@ -744,7 +744,7 @@ int damage(struct char_data *ch, struct char_data *victim, int dam, int attackty
     }
 
     if (!IS_NPC(victim)) {
-      mudlog(BRF, MAX(LVL_IMMORT, MAX(GET_INVIS_LEV(ch), GET_INVIS_LEV(victim))), 
+      mudlog(BRF, MAX(LVL_IMMORT, MAX(GET_INVIS_LEV(ch), GET_INVIS_LEV(victim))),
         TRUE, "%s killed by %s at %s", GET_NAME(victim), GET_NAME(ch), world[IN_ROOM(victim)].name);
       if (MOB_FLAGGED(ch, MOB_MEMORY))
 	forget(ch, victim);
@@ -841,7 +841,7 @@ void hit(struct char_data *ch, struct char_data *victim, int type)
 
   /* report for debugging if necessary */
   if (CONFIG_DEBUG_MODE >= NRM)
-    send_to_char(ch, "\t1Debug:\r\n   \t2Thaco: \t3%d\r\n   \t2AC: \t3%d\r\n   \t2Diceroll: \t3%d\tn\r\n", 
+    send_to_char(ch, "\t1Debug:\r\n   \t2Thaco: \t3%d\r\n   \t2AC: \t3%d\r\n   \t2Diceroll: \t3%d\tn\r\n",
       calc_thaco, victim_ac, diceroll);
 
   /* Decide whether this is a hit or a miss.
@@ -949,8 +949,8 @@ void perform_violence(void)
           continue;
         if (!CAN_SEE(tch, ch))
           continue;
-      
-        do_assist(tch, GET_NAME(ch), 0, 0);				  
+
+        do_assist(tch, GET_NAME(ch), 0, 0);
       }
     }
 
@@ -959,5 +959,28 @@ void perform_violence(void)
       char actbuf[MAX_INPUT_LENGTH] = "";
       (GET_MOB_SPEC(ch)) (ch, ch, 0, actbuf);
     }
+  }
+}
+
+/* Used to improve a skill upon failure */
+/* Credit to Nashak <bmw@efn.org> */
+/* Added by Kinther */
+void improve_skill(struct char_data *ch, int skill)
+{
+  extern char *spells[];
+  int percent = GET_SKILL(ch, skill);
+  int newpercent;
+  char skillbuf[MAX_STRING_LENGTH];
+
+  if (number(1, 200) > GET_WIS(ch) + GET_INT(ch))
+     return;
+  if (percent >= 97 || percent <= 0)
+     return;
+  newpercent = number(1, 3);
+  percent += newpercent;
+  SET_SKILL(ch, skill, percent);
+  if (newpercent >= 4) {
+     sprintf(skillbuf, "You feel your skill in %s improving.", spells[skill]);
+     send_to_char(skillbuf, ch);
   }
 }

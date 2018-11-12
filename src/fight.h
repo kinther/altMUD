@@ -1,12 +1,12 @@
 /**
 * @file fight.h
 * Fighting and violence functions and variables.
-* 
+*
 * Part of the core tbaMUD source code distribution, which is a derivative
 * of, and continuation of, CircleMUD.
-*                                                                        
-* All rights reserved.  See license for complete information.                                                                
-* Copyright (C) 1993, 94 by the Trustees of the Johns Hopkins University 
+*
+* All rights reserved.  See license for complete information.
+* Copyright (C) 1993, 94 by the Trustees of the Johns Hopkins University
 * CircleMUD is based on DikuMUD, Copyright (C) 1990, 1991.
 *
 */
@@ -34,6 +34,7 @@ void  set_fighting(struct char_data *ch, struct char_data *victim);
 int skill_message(int dam, struct char_data *ch, struct char_data *vict,
           int attacktype);
 void  stop_fighting(struct char_data *ch);
+void improve_skill(struct char_data *ch, int skill);
 
 
 /* Global variables */

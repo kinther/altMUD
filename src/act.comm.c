@@ -575,6 +575,8 @@ ACMD(do_qcomm)
   }
 }
 
+
+/* Used to pass argument from player and identify key values */
 void personalize_emote (char_data *src, char *emote)
 {
 	char		desc [MAX_STRING_LENGTH] = { '\0' };
@@ -618,6 +620,8 @@ void personalize_emote (char_data *src, char *emote)
 	return;
 }
 
+
+/* Command called by player when issuing emote */
 ACMD(do_emote)
 {
 	char 		buf [MAX_STRING_LENGTH] = { '\0' };
