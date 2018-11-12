@@ -482,6 +482,12 @@ void do_start(struct char_data *ch)
 
   case CLASS_WARRIOR:
     SET_SKILL(ch, SKILL_FORAGE, 10);
+    SET_SKILL(ch, SKILL_KICK, 10);
+    SET_SKILL(ch, SKILL_BASH, 10);
+    SET_SKILL(ch, SKILL_FORAGE, 10);
+    SET_SKILL(ch, SKILL_BANDAGE, 10);
+    SET_SKILL(ch, SKILL_RESCUE, 10);
+    SET_SKILL(ch, SKILL_TRACK, 10);
     break;
   }
 
