@@ -281,6 +281,11 @@ ACMD(do_practice)
     list_skills(ch);
 }
 
+ACMD(do_skills)
+{
+    list_skills(ch);
+}
+
 ACMD(do_visible)
 {
   if (GET_LEVEL(ch) >= LVL_IMMORT) {
@@ -973,31 +978,40 @@ ACMD(do_happyhour)
 
 /* Allows player to forage for items in certain areas */
 /* Credit to Chuck Carson (chuck@digmo.org) */
+/* To-Do: Split up forage results based on terrain */
+/* To-Do: Add in argument options for material types */
+/* Material Types: rocks, wood, food, herbs, artifacts */
 ACMD(do_forage)
 {
   struct obj_data *item_found;
 
   int item_no = 3001; /* Initialize with first item poss. */
 
+  /* Players should not be able to forage if they are too low on movement */
   if(GET_MOVE(ch) < 5)
     {
     send_to_char(ch, "You do not have enough energy right now.\r\n");
     return; }
 
+  /* If you aren't in the right terrain, you can't forage */
+  /* Is this necessary? Can we split this up somehow? */
   if(SECT(ch->in_room) != SECT_FIELD && SECT(ch->in_room) != SECT_FOREST &&
   SECT(ch->in_room) != SECT_HILLS && SECT(ch->in_room) != SECT_MOUNTAIN)
    {
     send_to_char(ch, "You cannot forage on this type of terrain!\r\n");
     return; }
 
+   /* If you don't have the skill, you can't forage */
+   /* Is there a better way to do this? */
    if(GET_SKILL(ch, SKILL_FORAGE) <= 0)
      {
      send_to_char(ch, "You have no idea how to forage!\r\n");
      return; }
 
-     send_to_char(ch, "You start searching the area...\r\n");
-     act("$n starts searching the area.\r\n", FALSE, ch, 0, 0, TO_ROOM)
-;
+   send_to_char(ch, "You start searching the area...\r\n");
+   act("$n starts searching the area.\r\n", FALSE, ch, 0, 0, TO_ROOM);
+
+   /* Alright let's start foraging now */
    if(rand_number(1,101) > GET_SKILL(ch, SKILL_FORAGE))
     {
      WAIT_STATE(ch, PULSE_VIOLENCE * 2);
@@ -1024,10 +1038,17 @@ ACMD(do_forage)
      case 7:
       item_no = 3006; break;
      }
-   WAIT_STATE(ch, PULSE_VIOLENCE * 2);  /* Not really necessary */
+   /* Players should not be able to spam this command, there should be a wait */
+   WAIT_STATE(ch, PULSE_VIOLENCE * 2);
+
+   /* Cost to issue command is five movement points */
    GET_MOVE(ch) -= (5);
+
+   /* Which item did we find? Let's give the item to the player now */
    item_found = read_object(item_no, VIRTUAL);
    obj_to_char(item_found, ch);
+
+   /* Echo success to the player and room */
    act("You find $p and pick it up off the ground.\r\n", FALSE, ch, item_found, 0, TO_CHAR);
    act("$n picks up $p off the ground.\r\n", FALSE, ch, item_found, 0, TO_ROOM);
      return;
