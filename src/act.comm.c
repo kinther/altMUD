@@ -675,7 +675,7 @@ ACMD(do_emote)
 				if (!get_obj_in_list_vis(ch, key, NULL, ch->carrying) &&
 			    	!get_obj_in_equip_vis(ch, key, NULL, ch->equipment)) {
               		snprintf (buf, MAX_STRING_LENGTH,  "I don't see %s here.\n",key);
-              		send_to_char(ch, buf);
+              		send_to_char(ch, buf, NULL);
               		return;
           		}
 
@@ -712,7 +712,7 @@ ACMD(do_emote)
 
 				if (!get_char_room_vis(ch,key,NULL)) {
             		snprintf (buf, MAX_STRING_LENGTH,  "Who is %s?\n",key);
-			    	send_to_char(ch,buf);
+			    	send_to_char(ch,buf, NULL);
 			    	return;
 				}
 
@@ -723,7 +723,7 @@ ACMD(do_emote)
 					return;
 				}
 
-                victim = get_char_room_vis( ch,key,NULL );
+        victim = get_char_room_vis( ch,key,NULL );
 				char_desc = GET_NAME(victim);
 				snprintf (p, MAX_STRING_LENGTH,  "%s", char_desc);
 		    	p += strlen(p);
@@ -741,7 +741,9 @@ ACMD(do_emote)
 			if ( !is_imote ) {
 				char_desc = GET_NAME(ch);
 				snprintf (buf, MAX_STRING_LENGTH,  "%s%s", char_desc, copy);
-				buf[2] = toupper (buf[2]);
+        /* Commented out below line because it would upper the third */
+        /* letter of player's name when they perform normal emote */
+        /* buf[2] = toupper (buf[2]); */
 			}
 			else {
             	snprintf (buf, MAX_STRING_LENGTH,   "%s", copy);
@@ -751,7 +753,9 @@ ACMD(do_emote)
 			if ( !is_imote ) {
 				char_desc = GET_NAME(ch);
 				snprintf (buf, MAX_STRING_LENGTH, "%s %s", char_desc, copy);
-				buf[2] = toupper (buf[2]);
+        /* Commented out below line because it would upper the third */
+        /* letter of player's name when they perform normal emote */
+				/* buf[2] = toupper (buf[2]); */
 			}
 			else {
              snprintf (buf, MAX_STRING_LENGTH,   "%s", copy);

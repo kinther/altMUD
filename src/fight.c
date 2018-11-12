@@ -970,17 +970,12 @@ void improve_skill(struct char_data *ch, int skill)
   extern char *spells[];
   int percent = GET_SKILL(ch, skill);
   int newpercent;
-  char skillbuf[MAX_STRING_LENGTH];
 
-  if (number(1, 200) > GET_WIS(ch) + GET_INT(ch))
+  if (rand_number(1, 200) > GET_WIS(ch) + GET_INT(ch))
      return;
   if (percent >= 97 || percent <= 0)
      return;
-  newpercent = number(1, 3);
+  newpercent = rand_number(1, 1);
   percent += newpercent;
   SET_SKILL(ch, skill, percent);
-  if (newpercent >= 4) {
-     sprintf(skillbuf, "You feel your skill in %s improving.", spells[skill]);
-     send_to_char(skillbuf, ch);
-  }
 }
