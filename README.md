@@ -10,4 +10,7 @@ which allow for "Roleplay Intensive" gameplay.  These include:
 
 * Expanded emoting system using tokens for targeting other players, items, etc.
 * Levels and experience points have been removed
-* Death is permanent
+* Permanent death of characters if they die
+* Account system for reviewing player characters before approval
+* Skills are increased slowly through use
+* Socials are pruned down to those that do not break RP
