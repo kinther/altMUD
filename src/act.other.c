@@ -111,8 +111,11 @@ ACMD(do_sneak)
 
   percent = rand_number(1, 101);	/* 101% is a complete failure */
 
-  if (percent > GET_SKILL(ch, SKILL_SNEAK) + dex_app_skill[GET_DEX(ch)].sneak)
+  /* Failed sneak */
+  if (percent > GET_SKILL(ch, SKILL_SNEAK) + dex_app_skill[GET_DEX(ch)].sneak){
+    improve_skill(ch, SKILL_SNEAK);
     return;
+  }
 
   new_affect(&af);
   af.spell = SKILL_SNEAK;
@@ -137,8 +140,11 @@ ACMD(do_hide)
 
   percent = rand_number(1, 101);	/* 101% is a complete failure */
 
-  if (percent > GET_SKILL(ch, SKILL_HIDE) + dex_app_skill[GET_DEX(ch)].hide)
+  /* Failed hide */
+  if (percent > GET_SKILL(ch, SKILL_HIDE) + dex_app_skill[GET_DEX(ch)].hide){
+    improve_skill(ch, SKILL_HIDE);
     return;
+  }
 
   SET_BIT_AR(AFF_FLAGS(ch), AFF_HIDE);
 }
@@ -223,6 +229,7 @@ ACMD(do_steal)
 	send_to_char(ch, "Oops..\r\n");
 	act("$n tried to steal something from you!", FALSE, ch, 0, vict, TO_VICT);
 	act("$n tries to steal something from $N.", TRUE, ch, 0, vict, TO_NOTVICT);
+  improve_skill(ch, SKILL_STEAL);
       } else {			/* Steal the item */
 	if (IS_CARRYING_N(ch) + 1 < CAN_CARRY_N(ch)) {
           if (!give_otrigger(obj, vict, ch) ||
@@ -245,6 +252,7 @@ ACMD(do_steal)
       send_to_char(ch, "Oops..\r\n");
       act("You discover that $n has $s hands in your wallet.", FALSE, ch, 0, vict, TO_VICT);
       act("$n tries to steal gold from $N.", TRUE, ch, 0, vict, TO_NOTVICT);
+      improve_skill(ch, SKILL_STEAL);
     } else {
       /* Steal some gold coins */
       gold = (GET_GOLD(vict) * rand_number(1, 10)) / 100;
@@ -1017,6 +1025,7 @@ ACMD(do_forage)
      WAIT_STATE(ch, PULSE_VIOLENCE * 2);
      GET_MOVE(ch) -= (5);
      send_to_char(ch, "\r\nYou search around the area, but don't find anything.\r\n");
+     improve_skill(ch, SKILL_FORAGE);
      return;
     }
    else

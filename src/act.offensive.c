@@ -167,10 +167,15 @@ ACMD(do_backstab)
   percent = rand_number(1, 101);	/* 101% is a complete failure */
   prob = GET_SKILL(ch, SKILL_BACKSTAB);
 
-  if (AWAKE(vict) && (percent > prob))
+  if (AWAKE(vict) && (percent > prob)){
     damage(ch, vict, 0, SKILL_BACKSTAB);
-  else
+    send_to_char(ch, "Successful backstab?");
+  }
+  else{
     hit(ch, vict, SKILL_BACKSTAB);
+    send_to_char(ch, "Failure backstab?");
+    improve_skill(ch, SKILL_BACKSTAB);
+  }
 
   WAIT_STATE(ch, 2 * PULSE_VIOLENCE);
 }
@@ -311,6 +316,7 @@ ACMD(do_bash)
   if (percent > prob) {
     damage(ch, vict, 0, SKILL_BASH);
     GET_POS(ch) = POS_SITTING;
+    improve_skill(ch, SKILL_BASH);
   } else {
     /*
      * If we bash a player and they wimp out, they will move to the previous
@@ -372,6 +378,7 @@ ACMD(do_rescue)
 
   if (percent > prob) {
     send_to_char(ch, "You fail the rescue!\r\n");
+    improve_skill(ch, SKILL_RESCUE);
     return;
   }
   send_to_char(ch, "Banzai!  To the rescue...\r\n");
@@ -565,6 +572,7 @@ ACMD(do_bandage)
     act("$n tries to bandage $N, but fails miserably.", TRUE, ch,
       0, vict, TO_NOTVICT);
     damage(vict, vict, 2, TYPE_SUFFERING);
+    improve_skill(ch, SKILL_BANDAGE);
     return;
   }
 

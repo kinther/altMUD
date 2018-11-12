@@ -89,8 +89,8 @@ static void bfs_clear_queue(void)
     bfs_dequeue();
 }
 
-/* find_first_step: given a source room and a target room, find the first step 
- * on the shortest path from the source to the target. Intended usage: in 
+/* find_first_step: given a source room and a target room, find the first step
+ * on the shortest path from the source to the target. Intended usage: in
  * mobile_activity, give a mob a dir to go if they're tracking another mob or a
  * PC.  Or, a 'track' skill for PCs. */
 static int find_first_step(room_rnum src, room_rnum target)
@@ -173,6 +173,7 @@ ACMD(do_track)
       dir = rand_number(0, DIR_COUNT - 1);
     } while (!CAN_GO(ch, dir) && --tries);
     send_to_char(ch, "You sense a trail %s from here!\r\n", dirs[dir]);
+    improve_skill(ch, SKILL_TRACK);
     return;
   }
 

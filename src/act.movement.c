@@ -123,8 +123,8 @@ static int has_scuba(struct char_data *ch)
  * @param ch The character structure to attempt to move.
  * @param dir The defined direction (NORTH, SOUTH, etc...) to attempt to
  * move into.
- * @param need_specials_check If TRUE will cause 
- * @retval int 1 for a successful move (ch is now in a new location)		
+ * @param need_specials_check If TRUE will cause
+ * @retval int 1 for a successful move (ch is now in a new location)
  * or 0 for a failed move (ch is still in the original location). */
 int do_simple_move(struct char_data *ch, int dir, int need_specials_check)
 {
@@ -598,8 +598,10 @@ static int ok_pick(struct char_data *ch, obj_vnum keynum, int pickproof, int scm
     send_to_char(ch, "Odd - you can't seem to find a keyhole.\r\n");
   else if (pickproof)
     send_to_char(ch, "It resists your attempts to pick it.\r\n");
-  else if (percent > skill_lvl)
+  else if (percent > skill_lvl){
     send_to_char(ch, "You failed to pick the lock.\r\n");
+    improve_skill(ch, SKILL_PICK_LOCK);
+  }
   else
     return (1);
 
@@ -940,7 +942,7 @@ ACMD(do_follow)
     }
   } else {
     if (ch->master != (char_data*)  NULL) {
-      send_to_char(ch, "You are following %s.\r\n", 
+      send_to_char(ch, "You are following %s.\r\n",
          GET_NAME(ch->master));
     } else {
       send_to_char(ch, "Whom do you wish to follow?\r\n");
@@ -977,7 +979,7 @@ ACMD(do_follow)
 ACMD(do_unfollow)
 {
   if (ch->master) {
-    if (AFF_FLAGGED(ch, AFF_CHARM)) { 
+    if (AFF_FLAGGED(ch, AFF_CHARM)) {
        send_to_char(ch, "You feel compelled to follow %s.\r\n",
          GET_NAME(ch->master));
     } else {
