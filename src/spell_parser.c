@@ -958,4 +958,6 @@ void mag_assign_spells(void)
   skillo(SKILL_WHIRLWIND, "whirlwind");
   skillo(SKILL_BANDAGE, "bandage");
   skillo(SKILL_FORAGE, "forage");
+  /* Weapon skills */
+  skillo(SKILL_UNARMED, "unarmed");
 }

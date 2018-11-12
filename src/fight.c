@@ -856,9 +856,11 @@ void hit(struct char_data *ch, struct char_data *victim, int type)
   else
     dam = (calc_thaco - diceroll <= victim_ac);
 
-  if (!dam)
+  if (!dam){
     /* the attacker missed the victim */
     damage(ch, victim, 0, type == SKILL_BACKSTAB ? SKILL_BACKSTAB : w_type);
+    improve_skill(ch, SKILL_UNARMED);
+  }
   else {
     /* okay, we know the guy has been hit.  now calculate damage.
      * Start with the damage bonuses: the damroll and strength apply */
@@ -871,10 +873,26 @@ void hit(struct char_data *ch, struct char_data *victim, int type)
       dam += dice(GET_OBJ_VAL(wielded, 1), GET_OBJ_VAL(wielded, 2));
     } else {
       /* If no weapon, add bare hand damage instead */
-        if (IS_NPC(ch))
-          dam += dice(ch->mob_specials.damnodice, ch->mob_specials.damsizedice);
-        else
-          dam += rand_number(0, 2);	/* Max 2 bare hand damage for players */
+      if (IS_NPC(ch)) {
+        dam += dice(ch->mob_specials.damnodice, ch->mob_specials.damsizedice);
+      }
+      //BoxBoy: My Unarmed Combat Code
+      else if (GET_SKILL(ch, SKILL_UNARMED)>20 && !GET_EQ(ch, WEAR_HOLD)) {
+        dam += rand_number(GET_HITROLL(ch)/10, GET_HITROLL(ch)/10);
+      }
+      else if (GET_SKILL(ch, SKILL_UNARMED)>40 && !GET_EQ(ch, WEAR_HOLD)) {
+        dam += rand_number(GET_HITROLL(ch)/8, GET_HITROLL(ch)/8);
+      }
+      else if (GET_SKILL(ch, SKILL_UNARMED)>60 && !GET_EQ(ch, WEAR_HOLD)) {
+        dam += rand_number(GET_HITROLL(ch)/4, GET_HITROLL(ch)/4);
+      }
+      else if (GET_SKILL(ch, SKILL_UNARMED)>80 && !GET_EQ(ch, WEAR_HOLD)) {
+        dam += rand_number(GET_HITROLL(ch)/2, GET_HITROLL(ch)/2);
+      }
+      //BoxBoy: End Unarmed Combat Code
+      else {
+        dam += rand_number(0, 2);      /* Max 2 bare hand damage for players */
+      }
     }
 
     /* Include a damage multiplier if victim isn't ready to fight:
@@ -964,7 +982,6 @@ void perform_violence(void)
 
 /* Used to improve a skill upon failure */
 /* Credit to Nashak <bmw@efn.org> */
-/* Added by Kinther */
 void improve_skill(struct char_data *ch, int skill)
 {
   extern char *spells[];
