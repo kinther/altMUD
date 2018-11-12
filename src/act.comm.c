@@ -646,6 +646,7 @@ ACMD(do_emote)
 		p = copy;
 		while(*argument) {
 
+      /* Changes location of player name in emote string to placement of @ */
 			if ( *argument == '@' ) {
 				is_imote = TRUE;
 				char_desc = GET_NAME(ch);
@@ -801,6 +802,7 @@ ACMD(do_pemote)
 		p = copy;
 		while(*argument) {
 
+      /* Changes location of player name in emote string to placement of @ */
 			if ( *argument == '@' ) {
 				is_imote = TRUE;
 				char_desc = GET_NAME(ch);
