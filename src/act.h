@@ -183,6 +183,7 @@ ACMD(do_hit);
 ACMD(do_assist);
 ACMD(do_bash);
 ACMD(do_backstab);
+ACMD(do_disarm);
 ACMD(do_flee);
 ACMD(do_kick);
 ACMD(do_kill);

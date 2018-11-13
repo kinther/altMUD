@@ -988,6 +988,7 @@ struct mob_special_data
   byte default_pos;   /**< Default position (standing, sleeping, etc.) */
   byte damnodice;     /**< The number of dice to roll for damage */
   byte damsizedice;   /**< The size of each die rolled for damage. */
+  struct obj_data *lost_weapon; /* Weapon that was just disarmed */
 };
 
 /** An affect structure. */

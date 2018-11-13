@@ -182,7 +182,7 @@ char *fread_action(FILE *fl, int nr)
       buf[i] = '\0';
       break;
     }
-  
+
   return (strdup(buf));
 }
 
@@ -676,7 +676,7 @@ void boot_db(void)
 
   log("Resetting the game time:");
   reset_time();
-  
+
   log("Initialize Global Lists");
   global_lists = create_list();
   group_list   = create_list();
@@ -1526,6 +1526,7 @@ static void parse_simple_mob(FILE *mob_f, int i, int nr)
   mob_proto[i].real_abils.dex = 11;
   mob_proto[i].real_abils.con = 11;
   mob_proto[i].real_abils.cha = 11;
+  mob_proto[i].mob_specials.lost_weapon = NULL;
 
   if (!get_line(mob_f, line)) {
     log("SYSERR: Format error in mob #%d, file ended after S flag!", nr);
@@ -2388,9 +2389,9 @@ struct char_data *create_char(void)
 
   CREATE(ch, struct char_data, 1);
   clear_char(ch);
-  
+
   new_mobile_data(ch);
-  
+
   ch->next = character_list;
   character_list = ch;
 
@@ -2422,13 +2423,13 @@ struct char_data *read_mobile(mob_vnum nr, int type) /* and mob_rnum */
 
   CREATE(mob, struct char_data, 1);
   clear_char(mob);
- 
+
   *mob = mob_proto[i];
   mob->next = character_list;
   character_list = mob;
-  
-  new_mobile_data(mob);  
-  
+
+  new_mobile_data(mob);
+
   if (!mob->points.max_hit) {
     mob->points.max_hit = dice(mob->points.hit, mob->points.mana) +
       mob->points.move;
@@ -2462,7 +2463,7 @@ struct obj_data *create_obj(void)
   clear_object(obj);
   obj->next = object_list;
   object_list = obj;
-  
+
   obj->events = NULL;
 
   obj->script_id = 0;	// this is set later by obj_script_id
@@ -2486,7 +2487,7 @@ struct obj_data *read_object(obj_vnum nr, int type) /* and obj_rnum */
   *obj = obj_proto[i];
   obj->next = object_list;
   object_list = obj;
-  
+
   obj->events = NULL;
 
   obj_index[i].number++;
@@ -2552,8 +2553,8 @@ void zone_update(void)
       struct descriptor_data *pt;
       for (pt = descriptor_list; pt; pt = pt->next)
         if (IS_PLAYING(pt) && pt->character && PRF_FLAGGED(pt->character, PRF_ZONERESETS))
-          send_to_char(pt->character, "%s[Auto zone reset: %s (Zone %d)]%s", 
-            CCGRN(pt->character, C_NRM), zone_table[update_u->zone_to_reset].name, 
+          send_to_char(pt->character, "%s[Auto zone reset: %s (Zone %d)]%s",
+            CCGRN(pt->character, C_NRM), zone_table[update_u->zone_to_reset].name,
             zone_table[update_u->zone_to_reset].number, CCNRM(pt->character, C_NRM));
       /* dequeue */
       if (update_u == reset_q.head)
@@ -2878,7 +2879,7 @@ char *fread_string(FILE *fl, const char *error)
       length += templength;
     }
   } while (!done);
-  
+
   parse_at(buf);
   /* allocate space for the new string and copy it */
   return (strlen(buf) ? strdup(buf) : NULL);
@@ -2934,7 +2935,7 @@ char *fread_clean_string(FILE *fl, const char *error)
       length += templength;
     }
   } while (!done);
-  
+
   parse_at(buf);
   /* allocate space for the new string and copy it */
   return (strlen(buf) ? strdup(buf) : NULL);
@@ -3359,9 +3360,9 @@ static int file_to_string_alloc(const char *name, char **buf)
 
   if (*buf)
     free(*buf);
-  
-  parse_at(temp);   
-    
+
+  parse_at(temp);
+
   *buf = strdup(temp);
   return (0);
 }
@@ -3458,7 +3459,7 @@ void clear_char(struct char_data *ch)
   GET_POS(ch) = POS_STANDING;
   ch->mob_specials.default_pos = POS_STANDING;
   ch->events = NULL;
-  
+
   GET_AC(ch) = 100;		/* Basic Armor */
   if (ch->points.max_mana < 100)
     ch->points.max_mana = 100;
@@ -3555,16 +3556,16 @@ void init_char(struct char_data *ch)
 
   GET_LOADROOM(ch) = NOWHERE;
   GET_SCREEN_WIDTH(ch) = PAGE_WIDTH;
-  
+
   /* Set Beginning Toggles Here */
   SET_BIT_AR(PRF_FLAGS(ch), PRF_AUTOEXIT);
   if (ch->desc)
-    if (ch->desc->pProtocol->pVariables[eMSDP_ANSI_COLORS] || 
+    if (ch->desc->pProtocol->pVariables[eMSDP_ANSI_COLORS] ||
       ch->desc->pProtocol->pVariables[eMSDP_XTERM_256_COLORS]) {
       SET_BIT_AR(PRF_FLAGS(ch), PRF_COLOR_1);
       SET_BIT_AR(PRF_FLAGS(ch), PRF_COLOR_2);
-    } 
-  SET_BIT_AR(PRF_FLAGS(ch), PRF_DISPHP);  
+    }
+  SET_BIT_AR(PRF_FLAGS(ch), PRF_DISPHP);
   SET_BIT_AR(PRF_FLAGS(ch), PRF_DISPMANA);
   SET_BIT_AR(PRF_FLAGS(ch), PRF_DISPMOVE);
 }

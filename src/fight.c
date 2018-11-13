@@ -64,7 +64,6 @@ static void solo_gain(struct char_data *ch, struct char_data *victim);
 static char *replace_string(const char *str, const char *weapon_singular, const char *weapon_plural);
 static int compute_thaco(struct char_data *ch, struct char_data *vict);
 
-
 #define IS_WEAPON(type) (((type) >= TYPE_HIT) && ((type) < TYPE_SUFFERING))
 /* The Fight related routines */
 void appear(struct char_data *ch)
@@ -933,6 +932,18 @@ void perform_violence(void)
       continue;
     }
 
+    /* Skill disarm code for an NPC to pick up missing weapon */
+    /* Commenting out due to issue with perform_get_from_room */
+/*
+      if (LOST_WEAPON(ch)) {
+        if (IN_ROOM(LOST_WEAPON(ch)) == IN_ROOM(ch)) {
+          obj_to_char(LOST_WEAPON(ch), ch);
+          act("$n grabs $p off the ground.", FALSE, ch, LOST_WEAPON(ch), 0, TO_ROOM);
+          do_wield(ch, OBJN(LOST_WEAPON(ch), ch), 0, 0);
+      }
+      LOST_WEAPON(ch) = NULL;
+    }
+*/
     if (IS_NPC(ch)) {
       if (GET_MOB_WAIT(ch) > 0) {
         GET_MOB_WAIT(ch) -= PULSE_VIOLENCE;

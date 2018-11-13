@@ -635,6 +635,7 @@ do                                                              \
 #define GET_DEFAULT_POS(ch)	((ch)->mob_specials.default_pos)
 /** Return the memory of ch. */
 #define MEMORY(ch)		((ch)->mob_specials.memory)
+#define LOST_WEAPON(ch) ((ch)->mob_specials.lost_weapon)
 
 /** Return the equivalent strength of ch if ch has level 18 strength. */
 #define STRENGTH_APPLY_INDEX(ch) \
@@ -842,7 +843,7 @@ do                                                              \
 
 /** True total number of directions available to move in. */
 #define DIR_COUNT ((CONFIG_DIAGONAL_DIRS) ? 10 : 6)
- 
+
 /* Returns TRUE if the direction is a diagonal one */
 #define IS_DIAGONAL(dir) (((dir) == NORTHWEST) || ((dir) == NORTHEAST) || \
 		((dir) == SOUTHEAST) || ((dir) == SOUTHWEST) )

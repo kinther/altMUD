@@ -946,18 +946,26 @@ void mag_assign_spells(void)
   /* Declaration of skills - this actually doesn't do anything except set it up
    * so that immortals can use these skills by default.  The min level to use
    * the skill for other classes is set up in class.c. */
-  skillo(SKILL_BACKSTAB, "backstab");
-  skillo(SKILL_BASH, "bash");
-  skillo(SKILL_HIDE, "hide");
-  skillo(SKILL_KICK, "kick");
-  skillo(SKILL_PICK_LOCK, "pick lock");
-  skillo(SKILL_RESCUE, "rescue");
-  skillo(SKILL_SNEAK, "sneak");
+
+  /* Stealth skills */
   skillo(SKILL_STEAL, "steal");
-  skillo(SKILL_TRACK, "track");
-  skillo(SKILL_WHIRLWIND, "whirlwind");
+  skillo(SKILL_SNEAK, "sneak");
+  skillo(SKILL_HIDE, "hide");
+  skillo(SKILL_PICK_LOCK, "pick lock");
+  skillo(SKILL_BACKSTAB, "backstab");
+
+  /* Survival skills */
   skillo(SKILL_BANDAGE, "bandage");
   skillo(SKILL_FORAGE, "forage");
+  skillo(SKILL_TRACK, "track");
+
+  /* Combat skills */
+  skillo(SKILL_WHIRLWIND, "whirlwind");
+  skillo(SKILL_BASH, "bash");
+  skillo(SKILL_KICK, "kick");
+  skillo(SKILL_RESCUE, "rescue");
+  skillo(SKILL_DISARM, "disarm");
+
   /* Weapon skills */
   skillo(SKILL_UNARMED, "unarmed");
 }

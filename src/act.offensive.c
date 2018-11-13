@@ -533,6 +533,8 @@ ACMD(do_kick)
   WAIT_STATE(ch, PULSE_VIOLENCE * 3);
 }
 
+/* Player skill to bandage a someone */
+/* Stock tbaMUD */
 ACMD(do_bandage)
 {
   char arg[MAX_INPUT_LENGTH];
@@ -582,4 +584,100 @@ ACMD(do_bandage)
   act("Someone bandages you, and you feel a bit better now.",
          FALSE, ch, 0, vict, TO_VICT);
   GET_HIT(vict) = 0;
+}
+
+/* Credit to BoxBoy baez@as-if.com & Ed Glamkowski eglamkowski@angelfire.com*/
+/* Player skill to disarm an opponent */
+ACMD(do_disarm)
+{
+  int goal, roll;
+  char arg[MAX_INPUT_LENGTH];
+  struct obj_data *weap;
+  struct char_data *vict;
+  int success = FALSE;
+
+  if (IS_NPC(ch) || !GET_SKILL(ch, SKILL_DISARM)) {
+    send_to_char(ch, "You have no idea how.\r\n");
+    return;
+  }
+  if (ROOM_FLAGGED(IN_ROOM(ch), ROOM_PEACEFUL)) {
+    send_to_char(ch, "This room just has such a peaceful, easy feeling...\r\n");
+    return;
+  }
+
+  one_argument(argument, arg);
+
+  if (!(vict = get_char_vis(ch, arg, NULL, FIND_CHAR_ROOM))) {
+    if (FIGHTING(ch) && IN_ROOM(ch) == IN_ROOM(FIGHTING(ch)))
+      vict = FIGHTING(ch);
+    else {
+      send_to_char(ch, "Disarm who?\r\n");
+      return;
+    }
+  }
+  if (vict == ch) {
+    send_to_char(ch, "Try REMOVE and DROP instead...\r\n");
+    return;
+  }
+
+  weap = GET_EQ(vict, WEAR_WIELD);
+  if (!weap) {
+    send_to_char(ch, "But your opponent is not wielding a weapon!\r\n");
+    return;
+  }
+
+  goal = GET_SKILL(ch, SKILL_DISARM) / 3;
+
+  /* Lots o' modifiers: */
+  roll = rand_number(0, 101);
+  roll -= GET_DEX(ch);   /* Improve odds */
+  roll += GET_DEX(vict); /* Degrade odds */
+
+  roll -= GET_LEVEL(ch);
+  roll += GET_LEVEL(vict);
+
+  roll += GET_OBJ_WEIGHT(weap);
+
+  if (GET_LEVEL(vict) <= LVL_IMMORT) /* No disarming an immort. */
+    roll = 1000;
+  if (GET_LEVEL(ch) <= LVL_IMMORT)   /* But immorts never fail! */
+    roll = -1000;
+
+  if (roll <= goal) {
+    success = TRUE;
+    if ((weap = GET_EQ(vict, WEAR_WIELD))) {
+      if (IS_NPC(vict))
+        LOST_WEAPON(vict) = weap;
+
+      act("You disarm $p from $N's off-hand!", FALSE, ch, weap, vict, TO_CHAR);
+      act("$n disarms $p from your off-hand!", FALSE, ch, weap, vict, TO_VICT);
+      act("$n disarms $p from $N's off-hand!", FALSE, ch, weap, vict, TO_NOTVICT);
+      obj_to_room(unequip_char(vict, WEAR_WIELD), IN_ROOM(vict));
+    }
+    /* If we wanted to add an off-hand weapon type or two handed we could */
+    /* else if ((weap = GET_EQ(vict, WEAR_WIELD))) {
+      if (IS_NPC(vict))
+        LOST_WEAPON(vict) = weap;
+
+      act("You disarm $p from $N's hand!", FALSE, ch, weap, vict, TO_CHAR);
+      act("$n disarms $p from your hand!", FALSE, ch, weap, vict, TO_VICT);
+      act("$n disarms $p from $N's hand!", FALSE, ch, weap, vict, TO_NOTVICT);
+      obj_to_room(unequip_char(vict, WEAR_WIELD), IN_ROOM(vict));
+    } */
+    else {
+      log("SYSERR: do_disarm(), should have a weapon to be disarmed, but lost it!");
+    }
+  } else {
+      act("You fail to disarm $N.", FALSE, ch, weap, vict, TO_CHAR);
+      act("$n fails to disarm you.", FALSE, ch, weap, vict, TO_VICT);
+      act("$n fails to disarm $N.", FALSE, ch, weap, vict, TO_NOTVICT);
+      improve_skill(ch, SKILL_DISARM);
+      set_fighting(ch, vict);
+  }
+
+  if (GET_LEVEL(ch) < LVL_IMMORT)
+    WAIT_STATE(ch, PULSE_VIOLENCE);
+
+  if (success && IS_NPC(vict))
+    set_fighting(ch, vict);
 }
