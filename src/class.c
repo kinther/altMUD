@@ -492,6 +492,7 @@ void do_start(struct char_data *ch)
     SET_SKILL(ch, SKILL_RESCUE, 10);
     SET_SKILL(ch, SKILL_TRACK, 10);
     SET_SKILL(ch, SKILL_UNARMED, 10);
+    SET_SKILL(ch, SKILL_DISARM, 10);
     break;
   }
 
@@ -683,6 +684,7 @@ void init_spell_levels(void)
   spell_level(SKILL_WHIRLWIND, CLASS_WARRIOR, 1);
   spell_level(SKILL_FORAGE, CLASS_WARRIOR, 1);
   spell_level(SKILL_UNARMED, CLASS_WARRIOR, 1);
+  spell_level(SKILL_DISARM, CLASS_WARRIOR, 1);
 }
 
 /* This is the exp given to implementors -- it must always be greater than the
