@@ -31,7 +31,6 @@ static void get_check_money(struct char_data *ch, struct obj_data *obj);
 static void get_from_container(struct char_data *ch, struct obj_data *cont, char *arg, int mode, int amount);
 static void get_from_room(struct char_data *ch, char *arg, int amount);
 static void perform_get_from_container(struct char_data *ch, struct obj_data *obj, struct obj_data *cont, int mode);
-static int perform_get_from_room(struct char_data *ch, struct obj_data *obj);
 /* do_give utility functions */
 static struct char_data *give_find_vict(struct char_data *ch, char *arg);
 static void perform_give(struct char_data *ch, struct char_data *vict, struct obj_data *obj);
@@ -175,12 +174,12 @@ if (!IS_NPC(ch) && !PRF_FLAGGED(ch, PRF_NOHASSLE)) {
     return (0);
   }
 }
-  
+
   if (OBJ_SAT_IN_BY(obj)){
     act("It appears someone is sitting on $p..", FALSE, ch, obj, 0, TO_CHAR);
     return (0);
   }
-  
+
   return (1);
 }
 
@@ -267,7 +266,7 @@ void get_from_container(struct char_data *ch, struct obj_data *cont,
   }
 }
 
-static int perform_get_from_room(struct char_data *ch, struct obj_data *obj)
+int perform_get_from_room(struct char_data *ch, struct obj_data *obj)
 {
   if (can_take_obj(ch, obj) && get_otrigger(obj, ch)) {
     obj_from_room(obj);
@@ -676,7 +675,7 @@ static void perform_give_gold(struct char_data *ch, struct char_data *vict,
 
   if (IS_NPC(ch) || (GET_LEVEL(ch) < LVL_GOD))
     decrease_gold(ch, amount);
-    
+
   increase_gold(vict, amount);
   bribe_mtrigger(vict, ch, amount);
 }
@@ -1529,7 +1528,7 @@ ACMD(do_sac)
     send_to_char(ch, "Sacrifice what?\n\r");
     return;
   }
-    
+
   if (!(j = get_obj_in_list_vis(ch, arg, NULL, world[IN_ROOM(ch)].contents)) && (!(j = get_obj_in_list_vis(ch, arg, NULL, ch->carrying)))) {
     send_to_char(ch, "It doesn't seem to be here.\n\r");
     return;

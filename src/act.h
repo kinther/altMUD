@@ -113,6 +113,7 @@ ACMD(do_whois);
 /* Utility Functions */
 /** @todo Compare with needs of find_eq_pos_script. */
 int find_eq_pos(struct char_data *ch, struct obj_data *obj, char *arg);
+int perform_get_from_room(struct char_data *ch, struct obj_data *obj);
 void name_from_drinkcon(struct obj_data *obj);
 void name_to_drinkcon(struct obj_data *obj, int type);
 void weight_change_object(struct obj_data *obj, int weight);
