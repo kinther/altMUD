@@ -635,7 +635,7 @@ ACMD(do_emote)
 	char		*char_desc = NULL;
 	char		*obj_desc = NULL;
 	char_data	*char_vis = NULL;
-    char_data   *victim;
+  char_data *victim;
 
 	while (isspace(*argument))
 	    argument++;
@@ -646,7 +646,7 @@ ACMD(do_emote)
 		p = copy;
 		while(*argument) {
 
-      /* Changes location of player name in emote string to placement of @ */
+      /* Token for changing player name location in emote echo */
 			if ( *argument == '@' ) {
 				is_imote = TRUE;
 				char_desc = GET_NAME(ch);
@@ -655,7 +655,9 @@ ACMD(do_emote)
 				argument++;
 			}
 
-		    if(*argument == '*') {
+      /* Token for placing other player or objects in emote echo */
+
+		  if(*argument == '~') {
 
 				argument++;
 				while(*argument>='0' && *argument<='9'){
@@ -670,69 +672,80 @@ ACMD(do_emote)
 					key[key_e++] = *(argument++);
  				}
 
-	        	key[key_e] = '\0';
+	      key[key_e] = '\0';
 				key_e = 0;
 
-				if (!get_obj_in_list_vis(ch, key, NULL, ch->carrying) &&
-			    	!get_obj_in_equip_vis(ch, key, NULL, ch->equipment)) {
+				if (!get_obj_in_list_vis(ch, key, NULL, ch->carrying)
+          && !get_obj_in_equip_vis(ch, key, NULL, ch->equipment)
+          && !get_obj_in_list_vis(ch, key, NULL, world[IN_ROOM(ch)].contents)) {
               		snprintf (buf, MAX_STRING_LENGTH,  "I don't see %s here.\n",key);
               		send_to_char(ch, buf, NULL);
               		return;
-          		}
+        }
 
-				obj = get_obj_in_list_vis (ch, key, NULL, ch->carrying);
+        if (get_obj_in_list_vis(ch, key, NULL, world[IN_ROOM(ch)].contents)){
+          obj = get_obj_in_list_vis(ch, key, NULL, world[IN_ROOM(ch)].contents);
+        }
 
-          		if ( !obj )
-             		obj = get_obj_in_equip_vis (ch, key, NULL, ch->equipment);
+        else if (get_obj_in_list_vis (ch, key, NULL, ch->carrying)){
+          obj = get_obj_in_list_vis (ch, key, NULL, ch->carrying);
+        }
+        else{
+          obj = get_obj_in_equip_vis (ch, key, NULL, ch->equipment);
+        }
 
+        obj_desc = obj->short_description;
+        snprintf (p, MAX_STRING_LENGTH,  "\tn%s\tn", obj_desc);
+        p += strlen(p);
 
-             	obj_desc = obj->short_description;
-          		snprintf (p, MAX_STRING_LENGTH,  "\tn%s\tn", obj_desc);
-          		p += strlen(p);
+      }
+      /*end if(*argument == '~')*/
 
-          	} /*end if(*argument == '*')*/
-
-          	else if(*argument == '/') {
+      /* Token for placing other players in emote echo */
+      else if(*argument == '/') {
 
 				argument++;
 
-          		while(*argument>='0' && *argument<='9'){
-          			key[key_e++] = *(argument++);
-          		}
+        while(*argument>='0' && *argument<='9'){
+          key[key_e++] = *(argument++);
+        }
 
-          		if(*argument=='.'){
-            		key[key_e++] = *(argument++);
-          		}
+        if(*argument=='.'){
+          key[key_e++] = *(argument++);
+        }
 
  				while(isalpha(*argument) || *argument=='-') {
 					key[key_e++] = *(argument++);
  				}
 
-	        	key[key_e] = '\0';
+	      key[key_e] = '\0';
 				key_e = 0;
 
 				if (!get_char_room_vis(ch,key,NULL)) {
-            		snprintf (buf, MAX_STRING_LENGTH,  "Who is %s?\n",key);
-			    	send_to_char(ch,buf, NULL);
-			    	return;
+          snprintf (buf, MAX_STRING_LENGTH,  "Who is %s?\n",key);
+			    send_to_char(ch,buf, NULL);
+			    return;
 				}
 
 				char_vis = get_char_room_vis (ch,key,NULL);
+        victim = get_char_room_vis( ch,key,NULL );
+        char_desc = GET_NAME(victim);
+
 				if (char_vis == ch) {
 					send_to_char (ch,"You shouldn't refer to yourself using the token system.\n");
 					free(char_vis);
 					return;
 				}
 
-        victim = get_char_room_vis( ch,key,NULL );
-				char_desc = GET_NAME(victim);
-				snprintf (p, MAX_STRING_LENGTH,  "%s", char_desc);
-		    	p += strlen(p);
-				tochar = TRUE;
+        snprintf (p, MAX_STRING_LENGTH,  "%s", char_desc);
+        p += strlen(p);
+        tochar = TRUE;
 
-		    } /* end if(*argument == '~')*/
-		    else
-		        *(p++) = *(argument++);
+		  }
+      /* end if(*argument == '/')*/
+
+      else
+		    *(p++) = *(argument++);
 
 		}/* end while *argument*/
 
@@ -742,9 +755,6 @@ ACMD(do_emote)
 			if ( !is_imote ) {
 				char_desc = GET_NAME(ch);
 				snprintf (buf, MAX_STRING_LENGTH,  "%s%s", char_desc, copy);
-        /* Commented out below line because it would upper the third */
-        /* letter of player's name when they perform normal emote */
-        /* buf[2] = toupper (buf[2]); */
 			}
 			else {
             	snprintf (buf, MAX_STRING_LENGTH,   "%s", copy);
@@ -754,9 +764,6 @@ ACMD(do_emote)
 			if ( !is_imote ) {
 				char_desc = GET_NAME(ch);
 				snprintf (buf, MAX_STRING_LENGTH, "%s %s", char_desc, copy);
-        /* Commented out below line because it would upper the third */
-        /* letter of player's name when they perform normal emote */
-				/* buf[2] = toupper (buf[2]); */
 			}
 			else {
              snprintf (buf, MAX_STRING_LENGTH,   "%s", copy);
@@ -811,7 +818,7 @@ ACMD(do_pemote)
 				argument++;
 			}
 
-		    if(*argument == '*') {
+		    if(*argument == '~') {
 
 				argument++;
 				while(*argument>='0' && *argument<='9'){
