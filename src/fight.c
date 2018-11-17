@@ -854,11 +854,22 @@ void hit(struct char_data *ch, struct char_data *victim, int type)
     dam = FALSE;
   else
     dam = (calc_thaco - diceroll <= victim_ac);
+  /* End hit calculation based on 1d20 roll */
 
   if (!dam){
     /* the attacker missed the victim */
+    /* this is where we add skill improvements */
     damage(ch, victim, 0, type == SKILL_BACKSTAB ? SKILL_BACKSTAB : w_type);
-    improve_skill(ch, SKILL_UNARMED);
+    if (w_type == TYPE_HIT)
+      improve_skill(ch, SKILL_UNARMED);
+    else if (w_type == TYPE_SLASH)
+      improve_skill(ch, SKILL_SLASHING_WEAPONS);
+    else if (w_type == TYPE_PIERCE)
+      improve_skill(ch, SKILL_PIERCING_WEAPONS);
+    else if (w_type == TYPE_BLUDGEON)
+      improve_skill(ch, SKILL_BLUDGEONING_WEAPONS);
+    else if (w_type == TYPE_STAB)
+      improve_skill(ch, SKILL_STABBING_WEAPONS);
   }
   else {
     /* okay, we know the guy has been hit.  now calculate damage.
@@ -870,7 +881,9 @@ void hit(struct char_data *ch, struct char_data *victim, int type)
     if (wielded && GET_OBJ_TYPE(wielded) == ITEM_WEAPON) {
       /* Add weapon-based damage if a weapon is being wielded */
       dam += dice(GET_OBJ_VAL(wielded, 1), GET_OBJ_VAL(wielded, 2));
-    } else {
+    }
+
+    else {
       /* If no weapon, add bare hand damage instead */
       if (IS_NPC(ch)) {
         dam += dice(ch->mob_specials.damnodice, ch->mob_specials.damsizedice);

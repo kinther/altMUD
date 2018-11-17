@@ -470,6 +470,7 @@ void do_start(struct char_data *ch)
   case CLASS_CLERIC:
     SET_SKILL(ch, SKILL_FORAGE, 10);
     SET_SKILL(ch, SKILL_UNARMED, 10);
+    SET_SKILL(ch, SKILL_PIERCING_WEAPONS, 10);
     break;
 
   case CLASS_THIEF:
@@ -481,6 +482,8 @@ void do_start(struct char_data *ch)
     SET_SKILL(ch, SKILL_TRACK, 10);
     SET_SKILL(ch, SKILL_FORAGE, 10);
     SET_SKILL(ch, SKILL_UNARMED, 10);
+    SET_SKILL(ch, SKILL_PIERCING_WEAPONS, 10);
+    SET_SKILL(ch, SKILL_STABBING_WEAPONS, 10);
     break;
 
   case CLASS_WARRIOR:
@@ -493,6 +496,9 @@ void do_start(struct char_data *ch)
     SET_SKILL(ch, SKILL_TRACK, 10);
     SET_SKILL(ch, SKILL_UNARMED, 10);
     SET_SKILL(ch, SKILL_DISARM, 10);
+    SET_SKILL(ch, SKILL_PIERCING_WEAPONS, 10);
+    SET_SKILL(ch, SKILL_SLASHING_WEAPONS, 10);
+    SET_SKILL(ch, SKILL_BLUDGEONING_WEAPONS, 10);
     break;
   }
 
@@ -665,6 +671,7 @@ void init_spell_levels(void)
   spell_level(SPELL_GROUP_HEAL, CLASS_CLERIC, 1);
   spell_level(SPELL_REMOVE_CURSE, CLASS_CLERIC, 1);
   spell_level(SKILL_UNARMED, CLASS_CLERIC, 1);
+  spell_level(SKILL_PIERCING_WEAPONS, CLASS_CLERIC, 1);
 
   /* THIEVES */
   spell_level(SKILL_SNEAK, CLASS_THIEF, 1);
@@ -674,6 +681,8 @@ void init_spell_levels(void)
   spell_level(SKILL_HIDE, CLASS_THIEF, 1);
   spell_level(SKILL_TRACK, CLASS_THIEF, 1);
   spell_level(SKILL_UNARMED, CLASS_THIEF, 1);
+  spell_level(SKILL_PIERCING_WEAPONS, CLASS_THIEF, 1);
+  spell_level(SKILL_STABBING_WEAPONS, CLASS_THIEF, 1);
 
   /* WARRIORS */
   spell_level(SKILL_KICK, CLASS_WARRIOR, 1);
@@ -685,6 +694,9 @@ void init_spell_levels(void)
   spell_level(SKILL_FORAGE, CLASS_WARRIOR, 1);
   spell_level(SKILL_UNARMED, CLASS_WARRIOR, 1);
   spell_level(SKILL_DISARM, CLASS_WARRIOR, 1);
+  spell_level(SKILL_PIERCING_WEAPONS, CLASS_WARRIOR, 1);
+  spell_level(SKILL_SLASHING_WEAPONS, CLASS_WARRIOR, 1);
+  spell_level(SKILL_BLUDGEONING_WEAPONS, CLASS_WARRIOR, 1);
 }
 
 /* This is the exp given to implementors -- it must always be greater than the

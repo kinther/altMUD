@@ -968,4 +968,8 @@ void mag_assign_spells(void)
 
   /* Weapon skills */
   skillo(SKILL_UNARMED, "unarmed");
+  skillo(SKILL_PIERCING_WEAPONS, "piercing weapons");
+  skillo(SKILL_SLASHING_WEAPONS, "slashing weapons");
+  skillo(SKILL_BLUDGEONING_WEAPONS, "bludgeoning weapons");
+  skillo(SKILL_STABBING_WEAPONS, "stabbing weapons");
 }

@@ -114,6 +114,10 @@
 #define SKILL_FORAGE                142 /* Reserved Skill[] DO NOT CHANGE */
 #define SKILL_UNARMED               143 /* Reserved Skill[] DO NOT CHANGE */
 #define SKILL_DISARM                144 /* Reserved Skill[] DO NOT CHANGE */
+#define SKILL_PIERCING_WEAPONS      145 /* Reserved Skill[] DO NOT CHANGE */
+#define SKILL_SLASHING_WEAPONS      146 /* Reserved Skill[] DO NOT CHANGE */
+#define SKILL_BLUDGEONING_WEAPONS   147 /* Reserved Skill[] DO NOT CHANGE */
+#define SKILL_STABBING_WEAPONS      148 /* Reserved Skill[] DO NOT CHANGE */
 
 /* New skills may be added here up to MAX_SKILLS (200) */
 
