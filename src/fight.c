@@ -103,6 +103,8 @@ void update_pos(struct char_data *victim)
     GET_POS(victim) = POS_MORTALLYW;
   else if (GET_HIT(victim) <= -3)
     GET_POS(victim) = POS_INCAP;
+  else if (GET_STUN(victim) <= 0)
+    GET_POS(victim) = POS_SLEEPING;
   else
     GET_POS(victim) = POS_STUNNED;
 }
@@ -694,6 +696,10 @@ int damage(struct char_data *ch, struct char_data *victim, int dam, int attackty
   case POS_STUNNED:
     act("$n is stunned, but will probably regain consciousness again.", TRUE, victim, 0, 0, TO_ROOM);
     send_to_char(victim, "You're stunned, but will probably regain consciousness again.\r\n");
+    break;
+  case POS_SLEEPING:
+    act("$n eyes roll back in their head.", TRUE, victim, 0, 0, TO_ROOM);
+    send_to_char(victim, "Your eyes roll back in your head.\r\n");
     break;
   case POS_DEAD:
     act("$n is dead!  R.I.P.", FALSE, victim, 0, 0, TO_ROOM);

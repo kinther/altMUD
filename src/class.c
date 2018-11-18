@@ -533,7 +533,7 @@ void advance_level(struct char_data *ch)
     add_mana = rand_number(GET_LEVEL(ch), (int)(1.5 * GET_LEVEL(ch)));
     add_mana = MIN(add_mana, 10);
     add_move = rand_number(0, 2);
-    add_stun = rand_number(0, 2);
+    add_stun = rand_number(1, 2);
     break;
 
   case CLASS_CLERIC:
@@ -541,7 +541,7 @@ void advance_level(struct char_data *ch)
     add_mana = rand_number(GET_LEVEL(ch), (int)(1.5 * GET_LEVEL(ch)));
     add_mana = MIN(add_mana, 10);
     add_move = rand_number(0, 2);
-    add_stun = rand_number(0, 2);
+    add_stun = rand_number(1, 2);
     break;
 
   case CLASS_THIEF:
@@ -565,6 +565,7 @@ void advance_level(struct char_data *ch)
 
   if (GET_LEVEL(ch) > 1)
     ch->points.max_mana += add_mana;
+    ch->points.max_stun += add_stun;
 
   if (IS_MAGIC_USER(ch) || IS_CLERIC(ch))
     GET_PRACTICES(ch) += MAX(2, wis_app[GET_WIS(ch)].bonus);
