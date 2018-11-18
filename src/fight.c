@@ -838,6 +838,51 @@ void hit(struct char_data *ch, struct char_data *victim, int type)
   /* roll the die and take your chances... */
   diceroll = rand_number(1, 20);
 
+  /* Begin weapon skill to hit bonuses */
+
+  if (w_type == TYPE_HIT && GET_SKILL(ch, SKILL_UNARMED) > 80)
+    diceroll += 4;
+  else if (w_type == TYPE_HIT && GET_SKILL(ch, SKILL_UNARMED) > 60)
+    diceroll += 3;
+  else if (w_type == TYPE_HIT && GET_SKILL(ch, SKILL_UNARMED) > 40)
+    diceroll += 2;
+  else if (w_type == TYPE_HIT && GET_SKILL(ch, SKILL_UNARMED) > 20)
+    diceroll += 1;
+  else if (w_type == TYPE_SLASH && GET_SKILL(ch, SKILL_SLASHING_WEAPONS) > 80)
+    diceroll += 4;
+  else if (w_type == TYPE_SLASH && GET_SKILL(ch, SKILL_SLASHING_WEAPONS) > 60)
+    diceroll += 3;
+  else if (w_type == TYPE_SLASH && GET_SKILL(ch, SKILL_SLASHING_WEAPONS) > 40)
+    diceroll += 2;
+  else if (w_type == TYPE_SLASH && GET_SKILL(ch, SKILL_SLASHING_WEAPONS) > 20)
+    diceroll += 1;
+  else if (w_type == TYPE_BLUDGEON && GET_SKILL(ch, SKILL_BLUDGEONING_WEAPONS) > 80)
+    diceroll += 4;
+  else if (w_type == TYPE_BLUDGEON && GET_SKILL(ch, SKILL_BLUDGEONING_WEAPONS) > 60)
+    diceroll += 3;
+  else if (w_type == TYPE_BLUDGEON && GET_SKILL(ch, SKILL_BLUDGEONING_WEAPONS) > 40)
+    diceroll += 2;
+  else if (w_type == TYPE_BLUDGEON && GET_SKILL(ch, SKILL_BLUDGEONING_WEAPONS) > 20)
+    diceroll += 1;
+  else if (w_type == TYPE_PIERCE && GET_SKILL(ch, SKILL_PIERCING_WEAPONS) > 80)
+    diceroll += 4;
+  else if (w_type == TYPE_PIERCE && GET_SKILL(ch, SKILL_PIERCING_WEAPONS) > 60)
+    diceroll += 3;
+  else if (w_type == TYPE_PIERCE && GET_SKILL(ch, SKILL_PIERCING_WEAPONS) > 40)
+    diceroll += 2;
+  else if (w_type == TYPE_PIERCE && GET_SKILL(ch, SKILL_PIERCING_WEAPONS) > 20)
+    diceroll += 1;
+  else if (w_type == TYPE_STAB && GET_SKILL(ch, SKILL_STABBING_WEAPONS) > 80)
+    diceroll += 4;
+  else if (w_type == TYPE_STAB && GET_SKILL(ch, SKILL_STABBING_WEAPONS) > 60)
+    diceroll += 3;
+  else if (w_type == TYPE_STAB && GET_SKILL(ch, SKILL_STABBING_WEAPONS) > 40)
+    diceroll += 2;
+  else if (w_type == TYPE_STAB && GET_SKILL(ch, SKILL_STABBING_WEAPONS) > 20)
+    diceroll += 1;
+
+  /* End weapon skill to hit bonuses */
+
   /* report for debugging if necessary */
   if (CONFIG_DEBUG_MODE >= NRM)
     send_to_char(ch, "\t1Debug:\r\n   \t2Thaco: \t3%d\r\n   \t2AC: \t3%d\r\n   \t2Diceroll: \t3%d\tn\r\n",
@@ -847,8 +892,8 @@ void hit(struct char_data *ch, struct char_data *victim, int type)
    *  Victim asleep = hit, otherwise:
    *     1   = Automatic miss.
    *   2..19 = Checked vs. AC.
-   *    20   = Automatic hit. */
-  if (diceroll == 20 || !AWAKE(victim))
+   *    20+   = Automatic hit. */
+  if (diceroll >= 20 || !AWAKE(victim))
     dam = TRUE;
   else if (diceroll == 1)
     dam = FALSE;
@@ -881,6 +926,41 @@ void hit(struct char_data *ch, struct char_data *victim, int type)
     if (wielded && GET_OBJ_TYPE(wielded) == ITEM_WEAPON) {
       /* Add weapon-based damage if a weapon is being wielded */
       dam += dice(GET_OBJ_VAL(wielded, 1), GET_OBJ_VAL(wielded, 2));
+
+      /* Begin weapon skill damage bonuses */
+      if (w_type == TYPE_SLASH && GET_SKILL(ch, SKILL_SLASHING_WEAPONS) > 80)
+        dam += rand_number(3,6);
+      else if (w_type == TYPE_SLASH && GET_SKILL(ch, SKILL_SLASHING_WEAPONS) > 60)
+        dam += rand_number(2,5);
+      else if (w_type == TYPE_SLASH && GET_SKILL(ch, SKILL_SLASHING_WEAPONS) > 40)
+        dam += rand_number(1,4);
+      else if (w_type == TYPE_SLASH && GET_SKILL(ch, SKILL_SLASHING_WEAPONS) > 20)
+        dam += rand_number(1,2);
+      else if (w_type == TYPE_BLUDGEON && GET_SKILL(ch, SKILL_BLUDGEONING_WEAPONS) > 80)
+        dam += rand_number(3,6);
+      else if (w_type == TYPE_BLUDGEON && GET_SKILL(ch, SKILL_BLUDGEONING_WEAPONS) > 60)
+        dam += rand_number(2,5);
+      else if (w_type == TYPE_BLUDGEON && GET_SKILL(ch, SKILL_BLUDGEONING_WEAPONS) > 40)
+        dam += rand_number(1,4);
+      else if (w_type == TYPE_BLUDGEON && GET_SKILL(ch, SKILL_BLUDGEONING_WEAPONS) > 20)
+        dam += rand_number(1,2);
+      else if (w_type == TYPE_PIERCE && GET_SKILL(ch, SKILL_PIERCING_WEAPONS) > 80)
+        dam += rand_number(3,6);
+      else if (w_type == TYPE_PIERCE && GET_SKILL(ch, SKILL_PIERCING_WEAPONS) > 60)
+        dam += rand_number(2,5);
+      else if (w_type == TYPE_PIERCE && GET_SKILL(ch, SKILL_PIERCING_WEAPONS) > 40)
+        dam += rand_number(1,4);
+      else if (w_type == TYPE_PIERCE && GET_SKILL(ch, SKILL_PIERCING_WEAPONS) > 20)
+        dam += rand_number(1,2);
+      else if (w_type == TYPE_STAB && GET_SKILL(ch, SKILL_STABBING_WEAPONS) > 80)
+        dam += rand_number(3,6);
+      else if (w_type == TYPE_STAB && GET_SKILL(ch, SKILL_STABBING_WEAPONS) > 60)
+        dam += rand_number(2,5);
+      else if (w_type == TYPE_STAB && GET_SKILL(ch, SKILL_STABBING_WEAPONS) > 40)
+        dam += rand_number(1,4);
+      else if (w_type == TYPE_STAB && GET_SKILL(ch, SKILL_STABBING_WEAPONS) > 20)
+        dam += rand_number(1,2);
+      /* End weapon skill damage bonuses */
     }
 
     else {
@@ -888,7 +968,7 @@ void hit(struct char_data *ch, struct char_data *victim, int type)
       if (IS_NPC(ch)) {
         dam += dice(ch->mob_specials.damnodice, ch->mob_specials.damsizedice);
       }
-      //BoxBoy: My Unarmed Combat Code
+      /* BoxBoy: My Unarmed Combat Code */
       else if (GET_SKILL(ch, SKILL_UNARMED)>20 && !GET_EQ(ch, WEAR_HOLD)) {
         dam += rand_number(GET_HITROLL(ch)/10, GET_HITROLL(ch)/10);
       }
@@ -901,9 +981,10 @@ void hit(struct char_data *ch, struct char_data *victim, int type)
       else if (GET_SKILL(ch, SKILL_UNARMED)>80 && !GET_EQ(ch, WEAR_HOLD)) {
         dam += rand_number(GET_HITROLL(ch)/2, GET_HITROLL(ch)/2);
       }
-      //BoxBoy: End Unarmed Combat Code
+      /* BoxBoy: End Unarmed Combat Code */
       else {
-        dam += rand_number(0, 2);      /* Max 2 bare hand damage for players */
+        /* Max 2 bare hand damage for players */
+        dam += rand_number(0, 2);
       }
     }
 
