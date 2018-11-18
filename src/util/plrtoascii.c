@@ -297,6 +297,8 @@ void convert(char *filename)
       fprintf(outfile, "Mana: %d/%d\n", cpd->mana, cpd->max_mana);
     if (cpd->move != PFDEF_MOVE || cpd->max_move != PFDEF_MAXMOVE)
       fprintf(outfile, "Move: %d/%d\n", cpd->move, cpd->max_move);
+    if (cpd->move != PFDEF_STUN || cpd->max_stun != PFDEF_MAXSTUN)
+      fprintf(outfile, "Stun: %d/%d\n", cpd->stun, cpd->max_stun);
     if (cpd->armor != PFDEF_AC)
       fprintf(outfile, "Ac  : %d\n", cpd->armor);
     if (cpd->gold != PFDEF_GOLD)

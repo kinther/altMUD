@@ -102,8 +102,9 @@ static const char s_Button5[] = "\005\002Inventory\002inventory\006";
 static const char s_Gauge1[]  = "\005\002Health\002red\002HEALTH\002HEALTH_MAX\006";
 static const char s_Gauge2[]  = "\005\002Mana\002blue\002MANA\002MANA_MAX\006";
 static const char s_Gauge3[]  = "\005\002Movement\002green\002MOVEMENT\002MOVEMENT_MAX\006";
-static const char s_Gauge4[]  = "\005\002Exp TNL\002yellow\002EXPERIENCE\002EXPERIENCE_MAX\006";
-static const char s_Gauge5[]  = "\005\002Opponent\002darkred\002OPPONENT_HEALTH\002OPPONENT_HEALTH_MAX\006";
+static const char s_Gauge4[]  = "\005\002Stun\002orange\002STUN\002STUN_MAX\006";
+static const char s_Gauge5[]  = "\005\002Exp TNL\002yellow\002EXPERIENCE\002EXPERIENCE_MAX\006";
+static const char s_Gauge6[]  = "\005\002Opponent\002darkred\002OPPONENT_HEALTH\002OPPONENT_HEALTH_MAX\006";
 
 /******************************************************************************
  MSDP variable table.
@@ -145,7 +146,7 @@ static variable_name_t VariableNameTable[eMSDP_MAX+1] =
    { eMSDP_MOVEMENT,         "MOVEMENT",         NUMBER_READ_ONLY },
    { eMSDP_MOVEMENT_MAX,     "MOVEMENT_MAX",     NUMBER_READ_ONLY },
    { eMSDP_STUN,             "STUN",             NUMBER_READ_ONLY },
-   { eMSDP_STUN_MAX,         "MOVEMENT_STUN",    NUMBER_READ_ONLY }, 
+   { eMSDP_STUN_MAX,         "MOVEMENT_STUN",    NUMBER_READ_ONLY },
    { eMSDP_HITROLL,          "HITROLL",          NUMBER_READ_ONLY },
    { eMSDP_DAMROLL,          "DAMROLL",          NUMBER_READ_ONLY },
    { eMSDP_AC,               "AC",               NUMBER_READ_ONLY },
@@ -194,6 +195,7 @@ static variable_name_t VariableNameTable[eMSDP_MAX+1] =
    { eMSDP_GAUGE_3,          "GAUGE_3",          STRING_GUI(s_Gauge3) },
    { eMSDP_GAUGE_4,          "GAUGE_4",          STRING_GUI(s_Gauge4) },
    { eMSDP_GAUGE_5,          "GAUGE_5",          STRING_GUI(s_Gauge5) },
+   { eMSDP_GAUGE_6,          "GAUGE_6",          STRING_GUI(s_Gauge6) },
 
    { eMSDP_MAX,              "", false, false, false, false, 0, 0, 0, NULL } /* This must always be last. */
 };

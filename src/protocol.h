@@ -114,7 +114,7 @@ typedef enum
    eMSDP_MOVEMENT,
    eMSDP_MOVEMENT_MAX,
    eMSDP_STUN,
-   eMSDP_STUN_MAX, 
+   eMSDP_STUN_MAX,
    eMSDP_HITROLL,
    eMSDP_DAMROLL,
    eMSDP_AC,
@@ -163,6 +163,7 @@ typedef enum
    eMSDP_GAUGE_3,
    eMSDP_GAUGE_4,
    eMSDP_GAUGE_5,
+   eMSDP_GAUGE_6,
 
    eMSDP_MAX                   /* This must always be last */
 } variable_t;

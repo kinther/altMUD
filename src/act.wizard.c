@@ -2866,34 +2866,36 @@ static struct set_struct {
    { "maxhit",	        LVL_BUILDER, 	BOTH, 	NUMBER },
    { "maxmana",       	LVL_BUILDER, 	BOTH, 	NUMBER },
    { "maxmove",		LVL_BUILDER, 	BOTH, 	NUMBER },  /* 30 */
+   { "maxstun",   LVL_BUILDER,  BOTH,   NUMBER },
    { "move",		LVL_BUILDER, 	BOTH, 	NUMBER },
    { "name",	LVL_IMMORT, 	PC, 	MISC },
    { "nodelete",	LVL_GOD, 	PC, 	BINARY },
-   { "nohassle",	LVL_GOD, 	PC, 	BINARY },
-   { "nosummon",	LVL_BUILDER,	PC,	BINARY },  /* 35 */
+   { "nohassle",	LVL_GOD, 	PC, 	BINARY }, /* 35 */
+   { "nosummon",	LVL_BUILDER,	PC,	BINARY },
    { "nowizlist", 	LVL_GRGOD, 	PC, 	BINARY },
    { "olc",		LVL_GRGOD,	PC,	MISC },
    { "password",	LVL_GRGOD,	PC,	MISC },
-   { "poofin",		LVL_IMMORT,	PC,	MISC },
-   { "poofout",         LVL_IMMORT,	PC,	MISC },   /* 40 */
+   { "poofin",		LVL_IMMORT,	PC,	MISC }, /* 40 */
+   { "poofout",         LVL_IMMORT,	PC,	MISC },
    { "practices", 	LVL_GOD, 	PC, 	NUMBER },
    { "quest",		LVL_GOD, 	PC, 	BINARY },
    { "room",		LVL_BUILDER, 	BOTH, 	NUMBER },
-   { "screenwidth", LVL_GOD,  PC,   NUMBER },
-   { "sex", 		LVL_GOD, 	BOTH, 	MISC },  /* 45 */
+   { "screenwidth", LVL_GOD,  PC,   NUMBER }, /* 45 */
+   { "sex", 		LVL_GOD, 	BOTH, 	MISC },
    { "showvnums",  LVL_BUILDER,  PC, BINARY },
    { "siteok",   LVL_GOD,  PC,   BINARY },
    { "str",		LVL_BUILDER, 	BOTH, 	NUMBER },
-   { "stradd",		LVL_BUILDER, 	BOTH, 	NUMBER },
-   { "thief",		LVL_GOD, 	PC, 	BINARY }, /* 50 */
+   { "stradd",		LVL_BUILDER, 	BOTH, 	NUMBER }, /* 50 */
+   { "stun",      LVL_BUILDER,  BOTH,   NUMBER },
+   { "thief",		LVL_GOD, 	PC, 	BINARY },
    { "thirst",		LVL_BUILDER, 	BOTH, 	MISC },
    { "title",		LVL_GOD, 	PC, 	MISC   },
-   { "variable",        LVL_GRGOD,	PC,	MISC },
+   { "variable",        LVL_GRGOD,	PC,	MISC }, /* 55 */
    { "weight",		LVL_BUILDER,	BOTH,	NUMBER },
-   { "wis", 		LVL_BUILDER, 	BOTH, 	NUMBER }, /* 55 */
+   { "wis", 		LVL_BUILDER, 	BOTH, 	NUMBER },
    { "questpoints",     LVL_GOD,        PC,     NUMBER },
    { "questhistory",    LVL_GOD,        PC,   NUMBER },
-   { "\n", 0, BOTH, MISC }
+   { "\n", 0, BOTH, MISC } /* 60 */
   };
 
 static int perform_set(struct char_data *ch, struct char_data *vict, int mode, char *val_arg)
@@ -3126,7 +3128,15 @@ static int perform_set(struct char_data *ch, struct char_data *vict, int mode, c
       vict->points.move = RANGE(0, vict->points.max_move);
       affect_total(vict);
       break;
-    case 32: /* name */
+    case 32: /* maxstun */
+      vict->points.max_stun = RANGE(1, 5000);
+      affect_total(vict);
+      break;
+    case 33: /* stun */
+      vict->points.stun = RANGE(0, vict->points.max_stun);
+      affect_total(vict);
+      break;
+    case 34: /* name */
       if (ch != vict && GET_LEVEL(ch) < LVL_IMPL) {
         send_to_char(ch, "Only Imps can change the name of other players.\r\n");
         return (0);
@@ -3136,24 +3146,24 @@ static int perform_set(struct char_data *ch, struct char_data *vict, int mode, c
         return (0);
       }
       break;
-    case 33: /* nodelete */
+    case 35: /* nodelete */
       SET_OR_REMOVE(PLR_FLAGS(vict), PLR_NODELETE);
       break;
-    case 34: /* nohassle */
+    case 36: /* nohassle */
       if (GET_LEVEL(ch) < LVL_GOD && ch != vict) {
         send_to_char(ch, "You aren't godly enough for that!\r\n");
         return (0);
       }
       SET_OR_REMOVE(PRF_FLAGS(vict), PRF_NOHASSLE);
       break;
-    case 35: /* nosummon */
+    case 37: /* nosummon */
       SET_OR_REMOVE(PRF_FLAGS(vict), PRF_SUMMONABLE);
       send_to_char(ch, "Nosummon %s for %s.\r\n", ONOFF(!on), GET_NAME(vict));
       break;
-    case 36: /* nowiz */
+    case 38: /* nowiz */
       SET_OR_REMOVE(PLR_FLAGS(vict), PLR_NOWIZLIST);
       break;
-    case 37: /* olc */
+    case 39: /* olc */
       if (is_abbrev(val_arg, "socials") || is_abbrev(val_arg, "actions") || is_abbrev(val_arg, "aedit"))
         GET_OLC_ZONE(vict) = AEDIT_PERMISSION;
       else if (is_abbrev(val_arg, "hedit") || is_abbrev(val_arg, "help"))
@@ -3168,7 +3178,7 @@ static int perform_set(struct char_data *ch, struct char_data *vict, int mode, c
       } else
         GET_OLC_ZONE(vict) = atoi(val_arg);
       break;
-    case 38: /* password */
+    case 40: /* password */
       if (GET_LEVEL(vict) >= LVL_GRGOD) {
         send_to_char(ch, "You cannot change that.\r\n");
         return (0);
@@ -3177,7 +3187,7 @@ static int perform_set(struct char_data *ch, struct char_data *vict, int mode, c
       *(GET_PASSWD(vict) + MAX_PWD_LENGTH) = '\0';
       send_to_char(ch, "Password changed to '%s'.\r\n", val_arg);
       break;
-    case 39: /* poofin */
+    case 41: /* poofin */
       if ((vict == ch) || (GET_LEVEL(ch) == LVL_IMPL)) {
         skip_spaces(&val_arg);
         parse_at(val_arg);
@@ -3191,7 +3201,7 @@ static int perform_set(struct char_data *ch, struct char_data *vict, int mode, c
           POOFIN(vict) = strdup(val_arg);
         }
       break;
-    case 40: /* poofout */
+    case 42: /* poofout */
       if ((vict == ch) || (GET_LEVEL(ch) == LVL_IMPL)) {
         skip_spaces(&val_arg);
         parse_at(val_arg);
@@ -3205,13 +3215,13 @@ static int perform_set(struct char_data *ch, struct char_data *vict, int mode, c
           POOFOUT(vict) = strdup(val_arg);
         }
       break;
-    case 41: /* practices */
+    case 43: /* practices */
       GET_PRACTICES(vict) = RANGE(0, 100);
       break;
-    case 42: /* quest */
+    case 44: /* quest */
       SET_OR_REMOVE(PRF_FLAGS(vict), PRF_QUEST);
       break;
-    case 43: /* room */
+    case 45: /* room */
       if ((rnum = real_room(value)) == NOWHERE) {
         send_to_char(ch, "No room exists with that number.\r\n");
         return (0);
@@ -3220,23 +3230,23 @@ static int perform_set(struct char_data *ch, struct char_data *vict, int mode, c
         char_from_room(vict);
       char_to_room(vict, rnum);
       break;
-    case 44: /* screenwidth */
+    case 46: /* screenwidth */
       GET_SCREEN_WIDTH(vict) = RANGE(40, 200);
       break;
-    case 45: /* sex */
+    case 47: /* sex */
       if ((i = search_block(val_arg, genders, FALSE)) < 0) {
         send_to_char(ch, "Must be 'male', 'female', or 'neutral'.\r\n");
         return (0);
       }
       GET_SEX(vict) = i;
       break;
-    case 46: /* showvnums */
+    case 48: /* showvnums */
       SET_OR_REMOVE(PRF_FLAGS(vict), PRF_SHOWVNUMS);
       break;
-    case 47: /* siteok */
+    case 49: /* siteok */
       SET_OR_REMOVE(PLR_FLAGS(vict), PLR_SITEOK);
       break;
-    case 48: /* str */
+    case 50: /* str */
       if (IS_NPC(vict) || GET_LEVEL(vict) >= LVL_GRGOD)
         RANGE(3, 25);
       else
@@ -3245,16 +3255,16 @@ static int perform_set(struct char_data *ch, struct char_data *vict, int mode, c
       vict->real_abils.str_add = 0;
       affect_total(vict);
       break;
-    case 49: /* stradd */
+    case 51: /* stradd */
       vict->real_abils.str_add = RANGE(0, 100);
       if (value > 0)
         vict->real_abils.str = 18;
       affect_total(vict);
       break;
-    case 50: /* thief */
+    case 52: /* thief */
       SET_OR_REMOVE(PLR_FLAGS(vict), PLR_THIEF);
       break;
-    case 51: /* thirst */
+    case 53: /* thirst */
       if (!str_cmp(val_arg, "off")) {
         GET_COND(vict, THIRST) = -1;
         send_to_char(ch, "%s's thirst is now off.\r\n", GET_NAME(vict));
@@ -3268,17 +3278,17 @@ static int perform_set(struct char_data *ch, struct char_data *vict, int mode, c
         return (0);
       }
       break;
-    case 52: /* title */
+    case 54: /* title */
       set_title(vict, val_arg);
       send_to_char(ch, "%s's title is now: %s\r\n", GET_NAME(vict), GET_TITLE(vict));
       break;
-    case 53: /* variable */
+    case 55: /* variable */
       return perform_set_dg_var(ch, vict, val_arg);
-    case 54: /* weight */
+    case 56: /* weight */
       GET_WEIGHT(vict) = value;
       affect_total(vict);
       break;
-    case 55: /* wis */
+    case 57: /* wis */
       if (IS_NPC(vict) || GET_LEVEL(vict) >= LVL_GRGOD)
         RANGE(3, 25);
       else
@@ -3286,10 +3296,10 @@ static int perform_set(struct char_data *ch, struct char_data *vict, int mode, c
       vict->real_abils.wis = value;
       affect_total(vict);
       break;
-    case 56: /* questpoints */
+    case 58: /* questpoints */
       GET_QUESTPOINTS(vict) = RANGE(0, 100000000);
       break;
-    case 57: /* questhistory */
+    case 59: /* questhistory */
       qvnum = atoi(val_arg);
       if (real_quest(qvnum) == NOTHING) {
         send_to_char(ch, "That quest doesn't exist.\r\n");

@@ -563,7 +563,7 @@ void advance_level(struct char_data *ch)
   ch->points.max_move += MAX(1, add_move);
   ch->points.max_stun += MAX(1, add_stun);
 
-  if (GET_LEVEL(ch) > 1)
+  if (GET_LEVEL(ch) >= 1)
     ch->points.max_mana += add_mana;
     ch->points.max_stun += add_stun;
 
