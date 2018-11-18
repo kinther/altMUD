@@ -493,11 +493,12 @@ ACMD(do_report)
     return;
   }
 
-  send_to_group(NULL, group, "%s reports: %d/%dH, %d/%dM, %d/%dV\r\n",
+  send_to_group(NULL, group, "%s reports: %d/%dH, %d/%dM, %d/%dV, %d/%dS.\r\n",
 	  GET_NAME(ch),
 	  GET_HIT(ch), GET_MAX_HIT(ch),
 	  GET_MANA(ch), GET_MAX_MANA(ch),
-	  GET_MOVE(ch), GET_MAX_MOVE(ch));
+	  GET_MOVE(ch), GET_MAX_MOVE(ch),
+    GET_STUN(ch), GET_MAX_STUN(ch));
 }
 
 ACMD(do_split)
@@ -634,7 +635,7 @@ ACMD(do_display)
   skip_spaces(&argument);
 
   if (!*argument) {
-    send_to_char(ch, "Usage: prompt { { H | M | V } | all | auto | none }\r\n");
+    send_to_char(ch, "Usage: prompt { { H | M | V | S } | all | auto | none }\r\n");
     return;
   }
 
@@ -648,14 +649,17 @@ ACMD(do_display)
     SET_BIT_AR(PRF_FLAGS(ch), PRF_DISPHP);
     SET_BIT_AR(PRF_FLAGS(ch), PRF_DISPMANA);
     SET_BIT_AR(PRF_FLAGS(ch), PRF_DISPMOVE);
+    SET_BIT_AR(PRF_FLAGS(ch), PRF_DISPSTUN);
   } else if (!str_cmp(argument, "off") || !str_cmp(argument, "none")) {
     REMOVE_BIT_AR(PRF_FLAGS(ch), PRF_DISPHP);
     REMOVE_BIT_AR(PRF_FLAGS(ch), PRF_DISPMANA);
     REMOVE_BIT_AR(PRF_FLAGS(ch), PRF_DISPMOVE);
+    REMOVE_BIT_AR(PRF_FLAGS(ch), PRF_DISPSTUN);
   } else {
     REMOVE_BIT_AR(PRF_FLAGS(ch), PRF_DISPHP);
     REMOVE_BIT_AR(PRF_FLAGS(ch), PRF_DISPMANA);
     REMOVE_BIT_AR(PRF_FLAGS(ch), PRF_DISPMOVE);
+    REMOVE_BIT_AR(PRF_FLAGS(ch), PRF_DISPSTUN);
 
     for (i = 0; i < strlen(argument); i++) {
       switch (LOWER(argument[i])) {
@@ -667,9 +671,12 @@ ACMD(do_display)
 	break;
       case 'v':
         SET_BIT_AR(PRF_FLAGS(ch), PRF_DISPMOVE);
+  break;
+      case 't':
+        SET_BIT_AR(PRF_FLAGS(ch), PRF_DISPSTUN);
 	break;
       default:
-	send_to_char(ch, "Usage: prompt { { H | M | V } | all | auto | none }\r\n");
+	send_to_char(ch, "Usage: prompt { { H | M | V | S } | all | auto | none }\r\n");
 	return;
       }
     }

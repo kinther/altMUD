@@ -124,6 +124,7 @@ int	perform_move(struct char_data *ch, int dir, int following);
 int	mana_gain(struct char_data *ch);
 int	hit_gain(struct char_data *ch);
 int	move_gain(struct char_data *ch);
+int	move_stun(struct char_data *ch);
 void	set_title(struct char_data *ch, char *title);
 void	gain_exp(struct char_data *ch, int gain);
 void	gain_exp_regardless(struct char_data *ch, int gain);
@@ -523,6 +524,10 @@ do                                                              \
 #define GET_MANA(ch)	  ((ch)->points.mana)
 /** Maximum mana points (magic) of ch. */
 #define GET_MAX_MANA(ch)  ((ch)->points.max_mana)
+/** Current stun points of ch. */
+#define GET_STUN(ch)	  ((ch)->points.stun)
+/** Maximum stun points of ch. */
+#define GET_MAX_STUN(ch)  ((ch)->points.max_stun)
 /** Gold on ch. */
 #define GET_GOLD(ch)	  ((ch)->points.gold)
 /** Gold in bank of ch. */

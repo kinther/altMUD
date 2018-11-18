@@ -456,9 +456,10 @@ void do_start(struct char_data *ch)
   set_title(ch, NULL);
   roll_real_abils(ch);
 
-  GET_MAX_HIT(ch)  = 10;
+  GET_MAX_HIT(ch)  = 100;
   GET_MAX_MANA(ch) = 100;
-  GET_MAX_MOVE(ch) = 82;
+  GET_MAX_MOVE(ch) = 100;
+  GET_MAX_STUN(ch) = 100;
 
   switch (GET_CLASS(ch)) {
 
@@ -507,6 +508,7 @@ void do_start(struct char_data *ch)
   GET_HIT(ch) = GET_MAX_HIT(ch);
   GET_MANA(ch) = GET_MAX_MANA(ch);
   GET_MOVE(ch) = GET_MAX_MOVE(ch);
+  GET_STUN(ch) = GET_MAX_STUN(ch);
 
   GET_COND(ch, THIRST) = 24;
   GET_COND(ch, HUNGER) = 24;
@@ -520,7 +522,7 @@ void do_start(struct char_data *ch)
  * class every time they gain a level. */
 void advance_level(struct char_data *ch)
 {
-  int add_hp, add_mana = 0, add_move = 0, i;
+  int add_hp, add_mana = 0, add_move = 0, add_stun = 0, i;
 
   add_hp = con_app[GET_CON(ch)].hitp;
 
@@ -531,6 +533,7 @@ void advance_level(struct char_data *ch)
     add_mana = rand_number(GET_LEVEL(ch), (int)(1.5 * GET_LEVEL(ch)));
     add_mana = MIN(add_mana, 10);
     add_move = rand_number(0, 2);
+    add_stun = rand_number(0, 2);
     break;
 
   case CLASS_CLERIC:
@@ -538,23 +541,27 @@ void advance_level(struct char_data *ch)
     add_mana = rand_number(GET_LEVEL(ch), (int)(1.5 * GET_LEVEL(ch)));
     add_mana = MIN(add_mana, 10);
     add_move = rand_number(0, 2);
+    add_stun = rand_number(0, 2);
     break;
 
   case CLASS_THIEF:
     add_hp += rand_number(7, 13);
     add_mana = 0;
     add_move = rand_number(1, 3);
+    add_stun = rand_number(1, 4);
     break;
 
   case CLASS_WARRIOR:
     add_hp += rand_number(10, 15);
     add_mana = 0;
     add_move = rand_number(1, 3);
+    add_stun = rand_number(1, 4);
     break;
   }
 
   ch->points.max_hit += MAX(1, add_hp);
   ch->points.max_move += MAX(1, add_move);
+  ch->points.max_stun += MAX(1, add_stun);
 
   if (GET_LEVEL(ch) > 1)
     ch->points.max_mana += add_mana;

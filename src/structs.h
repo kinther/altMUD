@@ -235,36 +235,37 @@
 #define PRF_DISPHP        4   /**< Display hit points in prompt */
 #define PRF_DISPMANA      5   /**< Display mana points in prompt */
 #define PRF_DISPMOVE      6   /**< Display move points in prompt */
-#define PRF_AUTOEXIT      7   /**< Display exits in a room */
-#define PRF_NOHASSLE      8   /**< Aggr mobs won't attack */
-#define PRF_QUEST         9   /**< On quest */
-#define PRF_SUMMONABLE   10   /**< Can be summoned */
-#define PRF_NOREPEAT     11   /**< No repetition of comm commands */
-#define PRF_HOLYLIGHT    12   /**< Can see in dark */
-#define PRF_COLOR_1      13   /**< Color (low bit) */
-#define PRF_COLOR_2      14   /**< Color (high bit) */
-#define PRF_NOWIZ        15   /**< Can't hear wizline */
-#define PRF_LOG1         16   /**< On-line System Log (low bit) */
-#define PRF_LOG2         17   /**< On-line System Log (high bit) */
-#define PRF_NOAUCT       18   /**< Can't hear auction channel */
-#define PRF_NOGOSS       19   /**< Can't hear gossip channel */
-#define PRF_NOGRATZ      20   /**< Can't hear grats channel */
-#define PRF_SHOWVNUMS    21   /**< Can see VNUMs */
-#define PRF_DISPAUTO     22   /**< Show prompt HP, MP, MV when < 25% */
-#define PRF_CLS          23   /**< Clear screen in OLC */
-#define PRF_BUILDWALK    24   /**< Build new rooms while walking */
-#define PRF_AFK          25   /**< AFK flag */
-#define PRF_AUTOLOOT     26   /**< Loot everything from a corpse */
-#define PRF_AUTOGOLD     27   /**< Loot gold from a corpse */
-#define PRF_AUTOSPLIT    28   /**< Split gold with group */
-#define PRF_AUTOSAC      29   /**< Sacrifice a corpse */
-#define PRF_AUTOASSIST   30   /**< Auto-assist toggle */
-#define PRF_AUTOMAP      31   /**< Show map at the side of room descs */
-#define PRF_AUTOKEY      32   /**< Automatically unlock locked doors when opening */
-#define PRF_AUTODOOR     33   /**< Use the next available door */
-#define PRF_ZONERESETS   34
+#define PRF_DISPSTUN      7   /**< Display stun points in prompt */
+#define PRF_AUTOEXIT      8   /**< Display exits in a room */
+#define PRF_NOHASSLE      9   /**< Aggr mobs won't attack */
+#define PRF_QUEST         10   /**< On quest */
+#define PRF_SUMMONABLE   11   /**< Can be summoned */
+#define PRF_NOREPEAT     12   /**< No repetition of comm commands */
+#define PRF_HOLYLIGHT    13   /**< Can see in dark */
+#define PRF_COLOR_1      14   /**< Color (low bit) */
+#define PRF_COLOR_2      15   /**< Color (high bit) */
+#define PRF_NOWIZ        16   /**< Can't hear wizline */
+#define PRF_LOG1         17   /**< On-line System Log (low bit) */
+#define PRF_LOG2         18   /**< On-line System Log (high bit) */
+#define PRF_NOAUCT       19   /**< Can't hear auction channel */
+#define PRF_NOGOSS       20   /**< Can't hear gossip channel */
+#define PRF_NOGRATZ      21   /**< Can't hear grats channel */
+#define PRF_SHOWVNUMS    22   /**< Can see VNUMs */
+#define PRF_DISPAUTO     23   /**< Show prompt HP, MP, MV , ST when < 25% */
+#define PRF_CLS          24   /**< Clear screen in OLC */
+#define PRF_BUILDWALK    25   /**< Build new rooms while walking */
+#define PRF_AFK          26   /**< AFK flag */
+#define PRF_AUTOLOOT     27   /**< Loot everything from a corpse */
+#define PRF_AUTOGOLD     28   /**< Loot gold from a corpse */
+#define PRF_AUTOSPLIT    29   /**< Split gold with group */
+#define PRF_AUTOSAC      30   /**< Sacrifice a corpse */
+#define PRF_AUTOASSIST   31   /**< Auto-assist toggle */
+#define PRF_AUTOMAP      32   /**< Show map at the side of room descs */
+#define PRF_AUTOKEY      33   /**< Automatically unlock locked doors when opening */
+#define PRF_AUTODOOR     34   /**< Use the next available door */
+#define PRF_ZONERESETS   35
 /** Total number of available PRF flags */
-#define NUM_PRF_FLAGS    35
+#define NUM_PRF_FLAGS    36
 
 /* Affect bits: used in char_data.char_specials.saved.affected_by */
 /* WARNING: In the world files, NEVER set the bits marked "R" ("Reserved") */
@@ -444,18 +445,19 @@
 #define APPLY_MANA             12	/**< Apply to max mana		*/
 #define APPLY_HIT              13	/**< Apply to max hit points	*/
 #define APPLY_MOVE             14	/**< Apply to max move points	*/
-#define APPLY_GOLD             15	/**< Reserved			*/
-#define APPLY_EXP              16	/**< Reserved			*/
-#define APPLY_AC               17	/**< Apply to Armor Class		*/
-#define APPLY_HITROLL          18	/**< Apply to hitroll		*/
-#define APPLY_DAMROLL          19	/**< Apply to damage roll		*/
-#define APPLY_SAVING_PARA      20	/**< Apply to save throw: paralysis	*/
-#define APPLY_SAVING_ROD       21	/**< Apply to save throw: rods	*/
-#define APPLY_SAVING_PETRI     22	/**< Apply to save throw: petrif	*/
-#define APPLY_SAVING_BREATH    23	/**< Apply to save throw: breath	*/
-#define APPLY_SAVING_SPELL     24	/**< Apply to save throw: spells	*/
+#define APPLY_STUN             15	/**< Apply to max stun points	*/
+#define APPLY_GOLD             16	/**< Reserved			*/
+#define APPLY_EXP              17	/**< Reserved			*/
+#define APPLY_AC               18	/**< Apply to Armor Class		*/
+#define APPLY_HITROLL          19	/**< Apply to hitroll		*/
+#define APPLY_DAMROLL          20	/**< Apply to damage roll		*/
+#define APPLY_SAVING_PARA      21	/**< Apply to save throw: paralysis	*/
+#define APPLY_SAVING_ROD       22	/**< Apply to save throw: rods	*/
+#define APPLY_SAVING_PETRI     23	/**< Apply to save throw: petrif	*/
+#define APPLY_SAVING_BREATH    24	/**< Apply to save throw: breath	*/
+#define APPLY_SAVING_SPELL     25	/**< Apply to save throw: spells	*/
 /** Total number of applies */
-#define NUM_APPLIES   25
+#define NUM_APPLIES   26
 
 /* Equals the total number of SAVING_* defines in spells.h */
 #define NUM_OF_SAVING_THROWS  5
@@ -894,6 +896,8 @@ struct char_point_data
   sh_int max_hit;  /**< Max hit point, or health, level */
   sh_int move;     /**< Current move point, or stamina, level */
   sh_int max_move; /**< Max move point, or stamina, level */
+  sh_int stun;     /**< Current stun point level */
+  sh_int max_stun; /**< Max stun point level */
 
   /** Current armor class. Internal use goes from -100 (totally armored) to
    * 100 (totally naked). Externally expressed as -10 (totally armored) to

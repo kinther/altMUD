@@ -2439,6 +2439,7 @@ struct char_data *read_mobile(mob_vnum nr, int type) /* and mob_rnum */
   mob->points.hit = mob->points.max_hit;
   mob->points.mana = mob->points.max_mana;
   mob->points.move = mob->points.max_move;
+  mob->points.stun = mob->points.max_stun;
 
   mob->player.time.birth = time(0);
   mob->player.time.played = 0;
