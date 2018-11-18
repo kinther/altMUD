@@ -1549,9 +1549,11 @@ static void parse_simple_mob(FILE *mob_f, int i, int nr)
   GET_HIT(mob_proto + i) = t[3];
   GET_MANA(mob_proto + i) = t[4];
   GET_MOVE(mob_proto + i) = t[5];
+  GET_STUN(mob_proto + i) = t[6];
 
   GET_MAX_MANA(mob_proto + i) = 10;
   GET_MAX_MOVE(mob_proto + i) = 50;
+  GET_MAX_STUN(mob_proto + i) = 60;
 
   mob_proto[i].mob_specials.damnodice = t[6];
   mob_proto[i].mob_specials.damsizedice = t[7];
@@ -3444,6 +3446,8 @@ void reset_char(struct char_data *ch)
     GET_MOVE(ch) = 1;
   if (GET_MANA(ch) <= 0)
     GET_MANA(ch) = 1;
+  if (GET_STUN(ch) <= 0)
+    GET_STUN(ch) = 1;
 
   GET_LAST_TELL(ch) = NOBODY;
 }
@@ -3494,9 +3498,11 @@ void init_char(struct char_data *ch)
     GET_MAX_HIT(ch) = 500;
     GET_MAX_MANA(ch) = 100;
     GET_MAX_MOVE(ch) = 82;
+    GET_MAX_STUN(ch) = 999;
     GET_HIT(ch) = GET_MAX_HIT(ch);
     GET_MANA(ch) = GET_MAX_MANA(ch);
     GET_MOVE(ch) = GET_MAX_MOVE(ch);
+    GET_STUN(ch) = GET_MAX_STUN(ch);
   }
 
   set_title(ch, NULL);
@@ -3569,6 +3575,7 @@ void init_char(struct char_data *ch)
   SET_BIT_AR(PRF_FLAGS(ch), PRF_DISPHP);
   SET_BIT_AR(PRF_FLAGS(ch), PRF_DISPMANA);
   SET_BIT_AR(PRF_FLAGS(ch), PRF_DISPMOVE);
+  SET_BIT_AR(PRF_FLAGS(ch), PRF_DISPSTUN);
 }
 
 /* returns the real number of the room with given virtual number */

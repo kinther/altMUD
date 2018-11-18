@@ -138,7 +138,7 @@ static int handle_oset(struct obj_data * obj, char * argument)
   int i = 0;
   bool found = FALSE;
   char value[MAX_INPUT_LENGTH];
-  
+
   struct oset_handler {
     const char * type;
     bool (* name)(struct obj_data *, char *);
@@ -149,24 +149,24 @@ static int handle_oset(struct obj_data * obj, char * argument)
     { "shortdesc", oset_short_description},
     { "\n", NULL }
   };
-  
+
   if (!obj || !*argument)
     return 0;
-  
+
   argument = one_argument(argument, value);
-  
+
   while (*handler[i].type != '\n') {
     if (is_abbrev(value, handler[i].type)) {
       found = TRUE;
       break;
     }
     i++;
-  } 
-  
+  }
+
   if (!found)
     return 0;
-    
-  handler[i].name(obj, argument);  
+
+  handler[i].name(obj, argument);
   return 1;
 }
 
@@ -900,6 +900,20 @@ void find_replacement(void *go, struct script_data *sc, trig_data *trig,
             }
             snprintf(str, slen, "%d", GET_MOVE(c));
           }
+          else if (!str_cmp(field, "maxstun")) {
+            if (subfield && *subfield) {
+              int addition = atoi(subfield);
+              GET_MAX_STUN(c) = MAX(GET_MAX_STUN(c) + addition, 1);
+            }
+            snprintf(str, slen, "%d", GET_MAX_STUN(c));
+          }
+          else if (!str_cmp(field, "stun")) {
+            if (subfield && *subfield) {
+              int addition = atoi(subfield);
+              GET_STUN(c) += addition;
+            }
+            snprintf(str, slen, "%d", GET_STUN(c));
+          }
           break;
         case 'n':
           if (!str_cmp(field, "name"))
@@ -1108,9 +1122,9 @@ void find_replacement(void *go, struct script_data *sc, trig_data *trig,
           else if (!str_cmp(field, "vnum")) {
             if (subfield && *subfield) {
              /* When this had -1 at the end of the line it returned true for PC's if you did
-              * something like if %actor.vnum(500)%. It should return false for PC's instead 
+              * something like if %actor.vnum(500)%. It should return false for PC's instead
               * -- Fizban 02/18
-              */ 
+              */
               snprintf(str, slen, "%d", IS_NPC(c) ? (int)(GET_MOB_VNUM(c) == atoi(subfield)) : 0 );
             } else {
               if (IS_NPC(c))
@@ -1139,8 +1153,8 @@ void find_replacement(void *go, struct script_data *sc, trig_data *trig,
             }
             snprintf(str, slen, "%d", GET_WIS(c));
           }
-          
-          else if (!str_cmp(field, "wait")) 
+
+          else if (!str_cmp(field, "wait"))
           {
             if (subfield && *subfield)
             {

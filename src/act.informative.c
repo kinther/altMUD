@@ -806,10 +806,8 @@ ACMD(do_score)
   else
     send_to_char(ch, "\r\n");
 
-  send_to_char(ch, "You have %d(%d) hit, %d(%d) mana.\r\n",
-	  GET_HIT(ch), GET_MAX_HIT(ch), GET_MANA(ch), GET_MAX_MANA(ch));
-
-  send_to_char(ch, "You have %d(%d) movement, and %d(%d) stun.\r\n",
+  send_to_char(ch, "%d/%dhp %d/%dmana %d/%dmv %d/%dst.\r\n",
+	  GET_HIT(ch), GET_MAX_HIT(ch), GET_MANA(ch), GET_MAX_MANA(ch),
     GET_MOVE(ch), GET_MAX_MOVE(ch), GET_STUN(ch), GET_MAX_STUN(ch));
 
   send_to_char(ch, "Your armor class is %d/10, and your alignment is %d.\r\n",
@@ -1991,29 +1989,31 @@ ACMD(do_toggle)
     "         NoTell: %-3s    "
     "       NoRepeat: %-3s\r\n"
 
+    "   Stun Display: %-3s    "
     "      AutoExits: %-3s    "
-    "        NoShout: %-3s    "
-    "          Wimpy: %-3s\r\n"
+    "        NoShout: %-3s\r\n"
 
+    "          Wimpy: %-3s    "
     "       NoGossip: %-3s    "
-    "      NoAuction: %-3s    "
-    "        NoGrats: %-3s\r\n"
+    "      NoAuction: %-3s\r\n"
 
+    "        NoGrats: %-3s    "
     "       AutoLoot: %-3s    "
-    "       AutoGold: %-3s    "
-    "      AutoSplit: %-3s\r\n"
+    "       AutoGold: %-3s\r\n"
 
+    "      AutoSplit: %-3s    "
     "        AutoSac: %-3s    "
-    "     AutoAssist: %-3s    "
-    "        AutoMap: %-3s\r\n"
+    "     AutoAssist: %-3s\r\n"
 
+    "        AutoMap: %-3s    "
     "     Pagelength: %-3d    "
-    "    Screenwidth: %-3d    "
-    "            AFK: %-3s\r\n"
+    "    Screenwidth: %-3d\r\n"
 
+    "            AFK: %-3s    "
     "        Autokey: %-3s    "
-    "       Autodoor: %-3s    "
-    "          Color: %s     \r\n ",
+    "       Autodoor: %-3s\r\n"
+
+    "          Color: %s\r\n ",
 
     ONOFF(PRF_FLAGGED(ch, PRF_DISPHP)),
     ONOFF(PRF_FLAGGED(ch, PRF_BRIEF)),
@@ -2027,6 +2027,7 @@ ACMD(do_toggle)
     ONOFF(PRF_FLAGGED(ch, PRF_NOTELL)),
     ONOFF(PRF_FLAGGED(ch, PRF_NOREPEAT)),
 
+    ONOFF(PRF_FLAGGED(ch, PRF_DISPSTUN)),
     ONOFF(PRF_FLAGGED(ch, PRF_AUTOEXIT)),
     ONOFF(PRF_FLAGGED(ch, PRF_NOSHOUT)),
     buf2,

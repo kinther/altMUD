@@ -825,10 +825,11 @@ static void do_stat_character(struct char_data *ch, struct char_data *k)
 	  CCCYN(ch, C_NRM), GET_CON(k), CCNRM(ch, C_NRM),
 	  CCCYN(ch, C_NRM), GET_CHA(k), CCNRM(ch, C_NRM));
 
-  send_to_char(ch, "Hit p.:[%s%d/%d+%d%s]  Mana p.:[%s%d/%d+%d%s]  Move p.:[%s%d/%d+%d%s]\r\n",
+  send_to_char(ch, "Hit p.:[%s%d/%d+%d%s]  Mana p.:[%s%d/%d+%d%s]  Move p.:[%s%d/%d+%d%s]  Stun p.:[%s%d/%d+%d%s]\r\n",
 	  CCGRN(ch, C_NRM), GET_HIT(k), GET_MAX_HIT(k), hit_gain(k), CCNRM(ch, C_NRM),
 	  CCGRN(ch, C_NRM), GET_MANA(k), GET_MAX_MANA(k), mana_gain(k), CCNRM(ch, C_NRM),
-	  CCGRN(ch, C_NRM), GET_MOVE(k), GET_MAX_MOVE(k), move_gain(k), CCNRM(ch, C_NRM));
+	  CCGRN(ch, C_NRM), GET_MOVE(k), GET_MAX_MOVE(k), move_gain(k), CCNRM(ch, C_NRM),
+    CCGRN(ch, C_NRM), GET_STUN(k), GET_MAX_STUN(k), stun_gain(k), CCNRM(ch, C_NRM));
 
   send_to_char(ch, "Gold: [%9d], Bank: [%9d] (Total: %d), ",
 	  GET_GOLD(k), GET_BANK_GOLD(k), GET_GOLD(k) + GET_BANK_GOLD(k));
@@ -1590,6 +1591,7 @@ ACMD(do_restore)
       GET_HIT(vict)  = GET_MAX_HIT(vict);
       GET_MANA(vict) = GET_MAX_MANA(vict);
       GET_MOVE(vict) = GET_MAX_MOVE(vict);
+      GET_STUN(vict) = GET_MAX_STUN(vict);
 
       update_pos(vict);
       send_to_char(ch, "%s has been fully healed.\r\n", GET_NAME(vict));
@@ -1606,6 +1608,7 @@ ACMD(do_restore)
     GET_HIT(vict) = GET_MAX_HIT(vict);
     GET_MANA(vict) = GET_MAX_MANA(vict);
     GET_MOVE(vict) = GET_MAX_MOVE(vict);
+    GET_STUN(vict) = GET_MAX_STUN(vict);
 
     if (!IS_NPC(vict) && GET_LEVEL(ch) >= LVL_GRGOD) {
       if (GET_LEVEL(vict) >= LVL_IMMORT)

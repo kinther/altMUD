@@ -480,6 +480,7 @@ static void medit_disp_stats_menu(struct descriptor_data *d)
   "(%s3%s) HP NumDice:  %s[%s%5d%s]%s    (%s6%s) BHD NumDice:  %s[%s%5d%s]%s\r\n"
   "(%s4%s) HP SizeDice: %s[%s%5d%s]%s    (%s7%s) BHD SizeDice: %s[%s%5d%s]%s\r\n"
   "(%s5%s) HP Addition: %s[%s%5d%s]%s    (%s8%s) DamRoll:      %s[%s%5d%s]%s\r\n"
+  "(%s9%s) StaminaDice:      %s[%s%5d%s]%s\r\n"
   "%-*s(range %s%d%s to %s%d%s)\r\n\r\n"
 
   "(%sA%s) Armor Class: %s[%s%4d%s]%s        (%sD%s) Hitroll:   %s[%s%5d%s]%s\r\n"
@@ -491,6 +492,7 @@ static void medit_disp_stats_menu(struct descriptor_data *d)
       cyn, nrm, cyn, yel, GET_HIT(mob), cyn, nrm,   cyn, nrm, cyn, yel, GET_NDD(mob), cyn, nrm,
       cyn, nrm, cyn, yel, GET_MANA(mob), cyn, nrm,  cyn, nrm, cyn, yel, GET_SDD(mob), cyn, nrm,
       cyn, nrm, cyn, yel, GET_MOVE(mob), cyn, nrm,  cyn, nrm, cyn, yel, GET_DAMROLL(mob), cyn, nrm,
+      cyn, nrm, cyn, yel, GET_STUN(mob), cyn, nrm,
 
       count_color_chars(buf)+28, buf,
       yel, GET_NDD(mob) + GET_DAMROLL(mob), nrm,
@@ -702,6 +704,10 @@ void medit_parse(struct descriptor_data *d, char *arg)
       break;
     case '8':
       OLC_MODE(d) = MEDIT_DAMROLL;
+      i++;
+      break;
+    case '9':
+      OLC_MODE(d) = MEDIT_ADD_ST;
       i++;
       break;
     case 'a':
@@ -956,6 +962,12 @@ void medit_parse(struct descriptor_data *d, char *arg)
     medit_disp_stats_menu(d);
     return;
 
+  case MEDIT_ADD_ST:
+    GET_STUN(OLC_MOB(d)) = LIMIT(i, 0, 30000);
+    OLC_VAL(d) = TRUE;
+    medit_disp_stats_menu(d);
+    return;
+
   case MEDIT_AC:
     GET_AC(OLC_MOB(d)) = LIMIT(i, -200, 200);
     OLC_VAL(d) = TRUE;
@@ -1124,6 +1136,7 @@ void medit_autoroll_stats(struct descriptor_data *d)
   GET_MOVE(OLC_MOB(d))    = mob_lev*10;          /* hit point bonus (mobs don't use movement points */
   GET_HIT(OLC_MOB(d))     = mob_lev/5;           /* number of hitpoint dice */
   GET_MANA(OLC_MOB(d))    = mob_lev/5;           /* size of hitpoint dice   */
+  GET_STUN(OLC_MOB(d))    = mob_lev/5;           /* size of stamina  dice   */
 
   GET_NDD(OLC_MOB(d))     = MAX(1, mob_lev/6);   /* number damage dice 1-5  */
   GET_SDD(OLC_MOB(d))     = MAX(2, mob_lev/6);   /* size of damage dice 2-5 */

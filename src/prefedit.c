@@ -103,8 +103,8 @@ static void prefedit_disp_main_menu(struct descriptor_data *d)
   /* Set up the required variables and strings */
   vict = PREFEDIT_GET_CHAR;
 
-  sprintf(prompt_string, "%s%s%s", PREFEDIT_FLAGGED(PRF_DISPHP) ? "H" : "",   PREFEDIT_FLAGGED(PRF_DISPMANA) ? "M" : "",
-                                   PREFEDIT_FLAGGED(PRF_DISPMOVE) ? "V" : "" );
+  sprintf(prompt_string, "%s%s%s%s", PREFEDIT_FLAGGED(PRF_DISPHP) ? "H" : "",   PREFEDIT_FLAGGED(PRF_DISPMANA) ? "M" : "",
+                                   PREFEDIT_FLAGGED(PRF_DISPMOVE) ? "V" : "", PREFEDIT_FLAGGED(PRF_DISPSTUN) ? "S" : "" );
 
   sprintf(color_string, "%s", multi_types[(PREFEDIT_FLAGGED(PRF_COLOR_1) ? 1 : 0) + (PREFEDIT_FLAGGED(PRF_COLOR_2) ? 2 : 0)]);
 
@@ -299,8 +299,8 @@ static void prefedit_disp_prompt_menu(struct descriptor_data *d)
   if (PREFEDIT_FLAGGED(PRF_DISPAUTO))
     sprintf(prompt_string, "<Auto>");
   else
-    sprintf(prompt_string, "%s%s%s", PREFEDIT_FLAGGED(PRF_DISPHP) ? "H" : "",   PREFEDIT_FLAGGED(PRF_DISPMANA) ? "M" : "",
-                                     PREFEDIT_FLAGGED(PRF_DISPMOVE) ? "V" : "");
+    sprintf(prompt_string, "%s%s%s%s", PREFEDIT_FLAGGED(PRF_DISPHP) ? "H" : "",   PREFEDIT_FLAGGED(PRF_DISPMANA) ? "M" : "",
+                                     PREFEDIT_FLAGGED(PRF_DISPMOVE) ? "V" : "", PREFEDIT_FLAGGED(PRF_DISPSTUN) ? "S" : "");
 
   send_to_char(d->character, "%sPrompt Settings\r\n"
                              "%s1%s) Toggle HP\r\n"
@@ -364,7 +364,7 @@ void prefedit_parse(struct descriptor_data * d, char *arg)
     case 'y':
     case 'Y':
       prefedit_save_to_char(d);
-      mudlog(CMP, MAX(LVL_BUILDER, GET_INVIS_LEV(d->character)), TRUE, "OLC: %s edits toggles for %s", 
+      mudlog(CMP, MAX(LVL_BUILDER, GET_INVIS_LEV(d->character)), TRUE, "OLC: %s edits toggles for %s",
         GET_NAME(d->character), GET_NAME(OLC_PREFS(d)->ch));
       /*. No strings to save - cleanup all .*/
       cleanup_olc(d, CLEANUP_ALL);
@@ -641,22 +641,22 @@ void prefedit_parse(struct descriptor_data * d, char *arg)
       case 'I':
         TOGGLE_BIT_AR(PREFEDIT_GET_FLAGS, PRF_COMPACT);
         break;
-        
+
       case 'j':
       case 'J':
         TOGGLE_VAR(d->pProtocol->pVariables[eMSDP_XTERM_256_COLORS]->ValueInt);
         break;
-        
+
       case 'k':
       case 'K':
         TOGGLE_VAR(d->pProtocol->pVariables[eMSDP_ANSI_COLORS]->ValueInt);
-        break;        
+        break;
 
       case 'l':
       case 'L':
         TOGGLE_VAR(d->pProtocol->bCHARSET);
-        break;        
-        
+        break;
+
       case 'm':
       case 'M':
         TOGGLE_VAR(d->pProtocol->pVariables[eMSDP_MXP]->ValueInt);
@@ -666,11 +666,11 @@ void prefedit_parse(struct descriptor_data * d, char *arg)
       case 'N':
         TOGGLE_VAR(d->pProtocol->bMSDP);
         break;
-        
+
       case 'o':
       case 'O':
         TOGGLE_VAR(d->pProtocol->bATCP);
-        break;      
+        break;
 
       case 'p':
       case 'P':
@@ -680,7 +680,7 @@ void prefedit_parse(struct descriptor_data * d, char *arg)
       case 'r':
       case 'R':
         TOGGLE_VAR(d->pProtocol->bMSP);
-        break;   
+        break;
 
       default  : send_to_char(d->character, "Invalid Choice, try again (Q to Quit to main menu): ");
                  return;
@@ -742,6 +742,13 @@ void prefedit_parse(struct descriptor_data * d, char *arg)
         }
         else if (number == 4)
         {
+          if (PREFEDIT_FLAGGED(PRF_DISPSTUN))
+            REMOVE_BIT_AR(PREFEDIT_GET_FLAGS, PRF_DISPSTUN);
+          else
+            SET_BIT_AR(PREFEDIT_GET_FLAGS, PRF_DISPSTUN);
+        }
+        else if (number == 5)
+        {
           if (PREFEDIT_FLAGGED(PRF_DISPAUTO))
             REMOVE_BIT_AR(PREFEDIT_GET_FLAGS, PRF_DISPAUTO);
           else
@@ -792,6 +799,10 @@ void prefedit_Restore_Defaults(struct descriptor_data *d)
   /* PRF_DISPMOVE   - On */
   if (!PREFEDIT_FLAGGED(PRF_DISPMOVE))
      SET_BIT_AR(PREFEDIT_GET_FLAGS, PRF_DISPMOVE);
+
+  /* PRF_DISPSTUN   - On */
+  if (!PREFEDIT_FLAGGED(PRF_DISPSTUN))
+    SET_BIT_AR(PREFEDIT_GET_FLAGS, PRF_DISPSTUN);
 
   /* PRF_AUTOEXIT   - On */
   if (!PREFEDIT_FLAGGED(PRF_AUTOEXIT))
@@ -1000,4 +1011,3 @@ ACMD(do_oasis_prefedit)
 /* No need - done elsewhere */
 //  mudlog(CMP, LVL_IMMORT, TRUE, "OLC: (prefedit) %s starts editing toggles for %s", GET_NAME(ch), GET_NAME(vict));
 }
-

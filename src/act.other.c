@@ -335,12 +335,13 @@ static void print_group(struct char_data *ch)
   send_to_char(ch, "Your group consists of:\r\n");
 
   while ((k = (struct char_data *) simple_list(ch->group->members)) != NULL)
-    send_to_char(ch, "%-*s: %s[%4d/%-4d]H [%4d/%-4d]M [%4d/%-4d]V%s\r\n",
+    send_to_char(ch, "%-*s: %s[%4d/%-4d]H [%4d/%-4d]M [%4d/%-4d]V [%4d/%-4d]S%s\r\n",
 	    count_color_chars(GET_NAME(k))+22, GET_NAME(k),
 	    GROUP_LEADER(GROUP(ch)) == k ? CBGRN(ch, C_NRM) : CCGRN(ch, C_NRM),
 	    GET_HIT(k), GET_MAX_HIT(k),
 	    GET_MANA(k), GET_MAX_MANA(k),
 	    GET_MOVE(k), GET_MAX_MOVE(k),
+      GET_STUN(k), GET_MAX_STUN(k),
 	    CCNRM(ch, C_NRM));
 }
 
@@ -660,9 +661,9 @@ ACMD(do_display)
     REMOVE_BIT_AR(PRF_FLAGS(ch), PRF_DISPMANA);
     REMOVE_BIT_AR(PRF_FLAGS(ch), PRF_DISPMOVE);
     REMOVE_BIT_AR(PRF_FLAGS(ch), PRF_DISPSTUN);
-
-    for (i = 0; i < strlen(argument); i++) {
-      switch (LOWER(argument[i])) {
+    
+  for (i = 0; i < strlen(argument); i++) {
+    switch (LOWER(argument[i])) {
       case 'h':
         SET_BIT_AR(PRF_FLAGS(ch), PRF_DISPHP);
 	break;

@@ -51,7 +51,7 @@ static int graf(int grafage, int p0, int p1, int p2, int p3, int p4, int p5, int
     return (p6);					/* >= 80 */
 }
 
-/* The hit_limit, mana_limit, and move_limit functions are gone.  They added an
+/* The hit_limit, mana_limit, move_limit, and stun_limit functions are gone.  They added an
  * unnecessary level of complexity to the internal structure, weren't
  * particularly useful, and led to some annoying bugs.  From the players' point
  * of view, the only difference the removal of these functions will make is
@@ -141,6 +141,42 @@ int hit_gain(struct char_data *ch)
 
 /* move gain pr. game hour */
 int move_gain(struct char_data *ch)
+{
+  int gain;
+
+  if (IS_NPC(ch)) {
+    /* Neat and fast */
+    gain = GET_LEVEL(ch);
+  } else {
+    gain = graf(age(ch)->year, 16, 20, 24, 20, 16, 12, 10);
+
+    /* Class/Level calculations */
+    /* Skill/Spell calculations */
+    /* Position calculations    */
+    switch (GET_POS(ch)) {
+    case POS_SLEEPING:
+      gain += (gain / 2);	/* Divide by 2 */
+      break;
+    case POS_RESTING:
+      gain += (gain / 4);	/* Divide by 4 */
+      break;
+    case POS_SITTING:
+      gain += (gain / 8);	/* Divide by 8 */
+      break;
+    }
+
+    if ((GET_COND(ch, HUNGER) == 0) || (GET_COND(ch, THIRST) == 0))
+      gain /= 4;
+  }
+
+  if (AFF_FLAGGED(ch, AFF_POISON))
+    gain /= 4;
+
+  return (gain);
+}
+
+/* move gain pr. game hour */
+int stun_gain(struct char_data *ch)
 {
   int gain;
 
@@ -393,6 +429,7 @@ void point_update(void)
       GET_HIT(i) = MIN(GET_HIT(i) + hit_gain(i), GET_MAX_HIT(i));
       GET_MANA(i) = MIN(GET_MANA(i) + mana_gain(i), GET_MAX_MANA(i));
       GET_MOVE(i) = MIN(GET_MOVE(i) + move_gain(i), GET_MAX_MOVE(i));
+      GET_STUN(i) = MIN(GET_STUN(i) + stun_gain(i), GET_MAX_STUN(i));
       if (AFF_FLAGGED(i, AFF_POISON))
 	if (damage(i, i, 2, SPELL_POISON) == -1)
 	  continue;	/* Oops, they died. -gg 6/24/98 */
