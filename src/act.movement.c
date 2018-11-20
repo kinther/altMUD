@@ -907,6 +907,8 @@ ACMD(do_wake)
       act("$E is already awake.", FALSE, ch, 0, vict, TO_CHAR);
     else if (AFF_FLAGGED(vict, AFF_SLEEP))
       act("You can't wake $M up!", FALSE, ch, 0, vict, TO_CHAR);
+    else if (GET_STUN(vict) <= 0)
+      act("You can't wake $M up!", FALSE, ch, 0, vict, TO_CHAR);
     else if (GET_POS(vict) < POS_SLEEPING)
       act("$E's in pretty bad shape!", FALSE, ch, 0, vict, TO_CHAR);
     else {
@@ -918,6 +920,8 @@ ACMD(do_wake)
       return;
   }
   if (AFF_FLAGGED(ch, AFF_SLEEP))
+    send_to_char(ch, "You can't wake up!\r\n");
+  if (GET_STUN(ch) <= 0)
     send_to_char(ch, "You can't wake up!\r\n");
   else if (GET_POS(ch) > POS_SLEEPING)
     send_to_char(ch, "You are already awake...\r\n");

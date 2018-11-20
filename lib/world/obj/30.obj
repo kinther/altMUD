@@ -155,12 +155,12 @@ A small sword lies here.~
 0 1 6 11
 3 60 10 0 0
 E
-inscription~
-   It says: 'May this sword be a good companion.  '
-~
-E
 sword small~
    The small sword seems to have an inscription of some sort.
+~
+E
+inscription~
+   It says: 'May this sword be a good companion.  '
 ~
 #3022
 sword long~
@@ -628,6 +628,14 @@ leather wristguard~
 supportive.  It is laced with some leather string to loosen and tighten to
 almost any size.    
 ~
+#3090
+mace giant~
+a giant mace~
+A giant mace is lying here.~
+~
+5 ab 0 0 0 an 0 0 0 0 0 0 0
+1 1 1 5
+0 0 0 0 0
 #3096
 boards social bulletin gen_boards~
 a social bulletin board~
@@ -637,12 +645,12 @@ A large, sociable bulletin board is mounted on a wall here.~
 0 0 0 0
 0 0 0 0 0
 E
-social bulletin~
-   Use 'look board' to read the board.  
-~
-E
 board~
    If you can read this, the board is not working.  
+~
+E
+social bulletin~
+   Use 'look board' to read the board.  
 ~
 #3097
 boards frozen bulletin gen_boards~
@@ -653,12 +661,12 @@ A large bulletin board is here, carved from a block of ice.~
 0 0 0 0
 0 0 0 0 0
 E
-freeze bulletin~
-   Use 'look board' to read the board.  
-~
-E
 board~
    If you can read this, the board is not working.  
+~
+E
+freeze bulletin~
+   Use 'look board' to read the board.  
 ~
 #3098
 boards holy bulletin gen_boards~
@@ -669,12 +677,12 @@ A large bulletin board is mounted on a wall here.  It glows with a faint aura.~
 0 0 0 0
 0 0 0 0 0
 E
-holy bulletin~
-   Use 'look board' to read the board.  
-~
-E
 board~
    If you can read this, the board is not working.  
+~
+E
+holy bulletin~
+   Use 'look board' to read the board.  
 ~
 #3099
 boards bulletin gen_boards~
@@ -685,11 +693,11 @@ A large bulletin board is mounted on a wall here.~
 0 0 0 0
 0 0 0 0 0
 E
-bulletin~
-   Use 'look board' to read the board.  
-~
-E
 board~
    If you can read this, the board is not working.  
+~
+E
+bulletin~
+   Use 'look board' to read the board.  
 ~
 $~
