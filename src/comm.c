@@ -1187,6 +1187,7 @@ static char *make_prompt(struct descriptor_data *d)
         if (count >= 0)
           len += count;
       }
+
       if (PRF_FLAGGED(d->character, PRF_DISPSTUN) && len < sizeof(prompt)) {
         count = snprintf(prompt + len, sizeof(prompt) - len, "%dS ", GET_STUN(d->character));
         if (count >= 0)

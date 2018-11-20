@@ -3562,6 +3562,7 @@ static struct zcheck_affs {
   {APPLY_MANA,       -50,  50, "mana"},
   {APPLY_HIT,        -50,  50, "hit points"},
   {APPLY_MOVE,       -50,  50, "movement"},
+  {APPLY_STUN,       -50,  50, "stun"},
   {APPLY_GOLD,         0,   0, "gold"},
   {APPLY_EXP,          0,   0, "experience"},
   {APPLY_AC,         -10,  10, "magical AC"},

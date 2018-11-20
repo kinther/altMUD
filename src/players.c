@@ -396,6 +396,7 @@ int load_char(const char *name, struct char_data *ch)
       case 'M':
 	     if (!strcmp(tag, "Mana"))	load_HMVS(ch, line, LOAD_MANA);
 	else if (!strcmp(tag, "Move"))	load_HMVS(ch, line, LOAD_MOVE);
+  else if (!strcmp(tag, "Stun"))	load_HMVS(ch, line, LOAD_STUN);
 	break;
 
       case 'N':
@@ -635,7 +636,7 @@ void save_char(struct char_data * ch)
   if (GET_HIT(ch)	   != PFDEF_HIT  || GET_MAX_HIT(ch)  != PFDEF_MAXHIT)  fprintf(fl, "Hit : %d/%d\n", GET_HIT(ch),  GET_MAX_HIT(ch));
   if (GET_MANA(ch)	   != PFDEF_MANA || GET_MAX_MANA(ch) != PFDEF_MAXMANA) fprintf(fl, "Mana: %d/%d\n", GET_MANA(ch), GET_MAX_MANA(ch));
   if (GET_MOVE(ch)	   != PFDEF_MOVE || GET_MAX_MOVE(ch) != PFDEF_MAXMOVE) fprintf(fl, "Move: %d/%d\n", GET_MOVE(ch), GET_MAX_MOVE(ch));
-  if (GET_STUN(ch)	   != PFDEF_MOVE || GET_MAX_STUN(ch) != PFDEF_MAXSTUN) fprintf(fl, "Stun: %d/%d\n", GET_STUN(ch), GET_MAX_STUN(ch));
+  if (GET_STUN(ch)	   != PFDEF_STUN || GET_MAX_STUN(ch) != PFDEF_MAXSTUN) fprintf(fl, "Stun: %d/%d\n", GET_STUN(ch), GET_MAX_STUN(ch));
 
   if (GET_STR(ch)	   != PFDEF_STR  || GET_ADD(ch)      != PFDEF_STRADD)  fprintf(fl, "Str : %d/%d\n", GET_STR(ch),  GET_ADD(ch));
 

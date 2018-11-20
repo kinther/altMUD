@@ -277,104 +277,104 @@ int sprintascii(char *out, bitvector_t bits)
   return j;
 }
 
-/* converts illegal filename chars into appropriate equivalents */ 
-static char *fix_filename(char *str) 
-{ 
-  static char good_file_name[MAX_STRING_LENGTH]; 
-  char *cindex = good_file_name; 
- 
-  while(*str) { 
-    switch(*str) { 
-      case ' ': *cindex = '_'; cindex++; break; 
-      case '(': *cindex = '{'; cindex++; break; 
-      case ')': *cindex = '}'; cindex++; break; 
- 
-      /* skip the following */ 
-      case '\'':             break; 
-      case '"':              break; 
- 
-      /* Legal character */ 
-      default: *cindex = *str;  cindex++;break; 
-    } 
-    str++; 
-  } 
-  *cindex = '\0'; 
- 
-  return good_file_name; 
+/* converts illegal filename chars into appropriate equivalents */
+static char *fix_filename(char *str)
+{
+  static char good_file_name[MAX_STRING_LENGTH];
+  char *cindex = good_file_name;
+
+  while(*str) {
+    switch(*str) {
+      case ' ': *cindex = '_'; cindex++; break;
+      case '(': *cindex = '{'; cindex++; break;
+      case ')': *cindex = '}'; cindex++; break;
+
+      /* skip the following */
+      case '\'':             break;
+      case '"':              break;
+
+      /* Legal character */
+      default: *cindex = *str;  cindex++;break;
+    }
+    str++;
+  }
+  *cindex = '\0';
+
+  return good_file_name;
 }
 
-/* Export command by Kyle */ 
-ACMD(do_export_zone) 
-{ 
-  zone_rnum zrnum; 
-  zone_vnum zvnum; 
-  char sysbuf[MAX_INPUT_LENGTH]; 
-  char zone_name[MAX_INPUT_LENGTH], *f; 
+/* Export command by Kyle */
+ACMD(do_export_zone)
+{
+  zone_rnum zrnum;
+  zone_vnum zvnum;
+  char sysbuf[MAX_INPUT_LENGTH];
+  char zone_name[MAX_INPUT_LENGTH], *f;
   int success;
 
   /* system command locations are relative to where the binary IS, not where it
-   * was run from, thus we act like we are in the bin folder, because we are*/ 
-  char *path = "../lib/world/export/"; 
+   * was run from, thus we act like we are in the bin folder, because we are*/
+  char *path = "../lib/world/export/";
 
-  if (IS_NPC(ch) || GET_LEVEL(ch) < LVL_IMPL) 
-    return; 
+  if (IS_NPC(ch) || GET_LEVEL(ch) < LVL_IMPL)
+    return;
 
-  skip_spaces(&argument); 
-  if (!*argument){ 
-    send_to_char(ch, "Syntax: export <zone vnum>"); 
-    return; 
-  } 
-
-  zvnum = atoi(argument); 
-  zrnum = real_zone(zvnum); 
-
-  if (zrnum == NOWHERE) { 
-    send_to_char(ch, "Export which zone?\r\n"); 
-    return; 
-  } 
-
-  /* If we fail, it might just be because the directory didn't exist.  Can't 
-   * hurt to try again. Do it silently though ( no logs ). */ 
-  if (!export_info_file(zrnum)) { 
-    sprintf(sysbuf, "mkdir %s", path); 
-  } 
-						      
-  if (!(success = export_info_file(zrnum))) 
-    send_to_char(ch, "Info file not saved!\r\n"); 
-  if (!(success = export_save_shops(zrnum))) 
-    send_to_char(ch, "Shops not saved!\r\n"); 
-  if (!(success = export_save_mobiles(zrnum))) 
-    send_to_char(ch, "Mobiles not saved!\r\n"); 
-  if (!(success = export_save_objects(zrnum))) 
-    send_to_char(ch, "Objects not saved!\r\n"); 
-  if (!(success = export_save_zone(zrnum))) 
-    send_to_char(ch, "Zone info not saved!\r\n"); 
-  if (!(success = export_save_rooms(zrnum))) 
-    send_to_char(ch, "Rooms not saved!\r\n"); 
-  if (!(success = export_save_triggers(zrnum))) 
-    send_to_char(ch, "Triggers not saved!\r\n"); 
-
-  /* If anything went wrong, don't try to tar the files. */ 
-  if (success) { 
-    send_to_char(ch, "Individual files saved to /lib/world/export.\r\n"); 
-    snprintf(zone_name, sizeof(zone_name), "%s", zone_table[zrnum].name); 
-  } else { 
-    send_to_char(ch, "Ran into problems writing to files.\r\n"); 
-    return; 
+  skip_spaces(&argument);
+  if (!*argument){
+    send_to_char(ch, "Syntax: export <zone vnum>");
+    return;
   }
-  /* Make sure the name of the zone doesn't make the filename illegal. */ 
-  f = fix_filename(zone_name); 
 
-  /* Remove the old copy. */ 
+  zvnum = atoi(argument);
+  zrnum = real_zone(zvnum);
+
+  if (zrnum == NOWHERE) {
+    send_to_char(ch, "Export which zone?\r\n");
+    return;
+  }
+
+  /* If we fail, it might just be because the directory didn't exist.  Can't
+   * hurt to try again. Do it silently though ( no logs ). */
+  if (!export_info_file(zrnum)) {
+    sprintf(sysbuf, "mkdir %s", path);
+  }
+
+  if (!(success = export_info_file(zrnum)))
+    send_to_char(ch, "Info file not saved!\r\n");
+  if (!(success = export_save_shops(zrnum)))
+    send_to_char(ch, "Shops not saved!\r\n");
+  if (!(success = export_save_mobiles(zrnum)))
+    send_to_char(ch, "Mobiles not saved!\r\n");
+  if (!(success = export_save_objects(zrnum)))
+    send_to_char(ch, "Objects not saved!\r\n");
+  if (!(success = export_save_zone(zrnum)))
+    send_to_char(ch, "Zone info not saved!\r\n");
+  if (!(success = export_save_rooms(zrnum)))
+    send_to_char(ch, "Rooms not saved!\r\n");
+  if (!(success = export_save_triggers(zrnum)))
+    send_to_char(ch, "Triggers not saved!\r\n");
+
+  /* If anything went wrong, don't try to tar the files. */
+  if (success) {
+    send_to_char(ch, "Individual files saved to /lib/world/export.\r\n");
+    snprintf(zone_name, sizeof(zone_name), "%s", zone_table[zrnum].name);
+  } else {
+    send_to_char(ch, "Ran into problems writing to files.\r\n");
+    return;
+  }
+  /* Make sure the name of the zone doesn't make the filename illegal. */
+  f = fix_filename(zone_name);
+
+  /* Remove the old copy. */
   snprintf(sysbuf, MAX_INPUT_LENGTH, "rm %s%s.tar.gz", path, f);
 
-  /* Tar the new copy. */ 
+  /* Tar the new copy. */
   snprintf(sysbuf, MAX_INPUT_LENGTH, "tar -cf %s%s.tar %sqq.info %sqq.wld %sqq.zon %sqq.mob %sqq.obj %sqq.trg %sqq.shp", path, f, path, path, path, path, path, path, path);
 
-  /* Gzip it. */ 
+  /* Gzip it. */
   snprintf(sysbuf, MAX_INPUT_LENGTH, "gzip %s%s.tar", path, f);
 
-  send_to_char(ch, "Files tar'ed to \"%s%s.tar.gz\"\r\n", path, f); 
+  send_to_char(ch, "Files tar'ed to \"%s%s.tar.gz\"\r\n", path, f);
 }
 
 static int export_info_file(zone_rnum zrnum)
@@ -587,14 +587,14 @@ static int export_mobile_record(mob_vnum mvnum, struct char_data *mob, FILE *fd)
   );
 
   fprintf(fd, "%d %d %d %d %d %d %d %d %d E\n"
-      "%d %d %d %dd%d+%d %dd%d+%d\n",
+      "%d %d %d %dd%d+%d %d %dd%d+%d\n",
       MOB_FLAGS(mob)[0], MOB_FLAGS(mob)[1],
       MOB_FLAGS(mob)[2], MOB_FLAGS(mob)[3],
       AFF_FLAGS(mob)[0], AFF_FLAGS(mob)[1],
       AFF_FLAGS(mob)[2], AFF_FLAGS(mob)[3],
       GET_ALIGNMENT(mob),
       GET_LEVEL(mob), 20 - GET_HITROLL(mob), GET_AC(mob) / 10, GET_HIT(mob),
-      GET_MANA(mob), GET_MOVE(mob), GET_NDD(mob), GET_SDD(mob),
+      GET_MANA(mob), GET_MOVE(mob), GET_STUN(mob), GET_NDD(mob), GET_SDD(mob),
       GET_DAMROLL(mob));
 
   fprintf(fd, 	"%d %d\n"

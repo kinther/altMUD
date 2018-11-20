@@ -225,7 +225,7 @@ static void init_mobile(struct char_data *mob)
   clear_char(mob);
 
   GET_HIT(mob) = GET_MANA(mob) = 1;
-  GET_MAX_MANA(mob) = GET_MAX_MOVE(mob) = 100;
+  GET_MAX_MANA(mob) = GET_MAX_MOVE(mob) = GET_MAX_STUN(mob) = 100;
   GET_NDD(mob) = GET_SDD(mob) = 1;
   GET_WEIGHT(mob) = 200;
   GET_HEIGHT(mob) = 198;
@@ -480,7 +480,7 @@ static void medit_disp_stats_menu(struct descriptor_data *d)
   "(%s3%s) HP NumDice:  %s[%s%5d%s]%s    (%s6%s) BHD NumDice:  %s[%s%5d%s]%s\r\n"
   "(%s4%s) HP SizeDice: %s[%s%5d%s]%s    (%s7%s) BHD SizeDice: %s[%s%5d%s]%s\r\n"
   "(%s5%s) HP Addition: %s[%s%5d%s]%s    (%s8%s) DamRoll:      %s[%s%5d%s]%s\r\n"
-  "(%s9%s) StaminaDice:      %s[%s%5d%s]%s\r\n"
+  "(%s9%s) StunDice:      %s[%s%5d%s]%s\r\n"
   "%-*s(range %s%d%s to %s%d%s)\r\n\r\n"
 
   "(%sA%s) Armor Class: %s[%s%4d%s]%s        (%sD%s) Hitroll:   %s[%s%5d%s]%s\r\n"
@@ -1136,7 +1136,7 @@ void medit_autoroll_stats(struct descriptor_data *d)
   GET_MOVE(OLC_MOB(d))    = mob_lev*10;          /* hit point bonus (mobs don't use movement points */
   GET_HIT(OLC_MOB(d))     = mob_lev/5;           /* number of hitpoint dice */
   GET_MANA(OLC_MOB(d))    = mob_lev/5;           /* size of hitpoint dice   */
-  GET_STUN(OLC_MOB(d))    = mob_lev/5;           /* size of stamina  dice   */
+  GET_STUN(OLC_MOB(d))    = mob_lev/5;           /* size of stun  dice   */
 
   GET_NDD(OLC_MOB(d))     = MAX(1, mob_lev/6);   /* number damage dice 1-5  */
   GET_SDD(OLC_MOB(d))     = MAX(2, mob_lev/6);   /* size of damage dice 2-5 */
