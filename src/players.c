@@ -396,7 +396,6 @@ int load_char(const char *name, struct char_data *ch)
       case 'M':
 	     if (!strcmp(tag, "Mana"))	load_HMVS(ch, line, LOAD_MANA);
 	else if (!strcmp(tag, "Move"))	load_HMVS(ch, line, LOAD_MOVE);
-  else if (!strcmp(tag, "Stun"))	load_HMVS(ch, line, LOAD_STUN);
 	break;
 
       case 'N':
@@ -441,6 +440,7 @@ int load_char(const char *name, struct char_data *ch)
   else if (!strcmp(tag, "ScrW"))  GET_SCREEN_WIDTH(ch) = atoi(line);
 	else if (!strcmp(tag, "Skil"))	load_skills(fl, ch);
 	else if (!strcmp(tag, "Str "))	load_HMVS(ch, line, LOAD_STRENGTH);
+  else if (!strcmp(tag, "Stun"))	load_HMVS(ch, line, LOAD_STUN);
 	break;
 
       case 'T':

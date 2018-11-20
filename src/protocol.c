@@ -146,7 +146,7 @@ static variable_name_t VariableNameTable[eMSDP_MAX+1] =
    { eMSDP_MOVEMENT,         "MOVEMENT",         NUMBER_READ_ONLY },
    { eMSDP_MOVEMENT_MAX,     "MOVEMENT_MAX",     NUMBER_READ_ONLY },
    { eMSDP_STUN,             "STUN",             NUMBER_READ_ONLY },
-   { eMSDP_STUN_MAX,         "MOVEMENT_STUN",    NUMBER_READ_ONLY },
+   { eMSDP_STUN_MAX,         "STUN_MAX",         NUMBER_READ_ONLY },
    { eMSDP_HITROLL,          "HITROLL",          NUMBER_READ_ONLY },
    { eMSDP_DAMROLL,          "DAMROLL",          NUMBER_READ_ONLY },
    { eMSDP_AC,               "AC",               NUMBER_READ_ONLY },
