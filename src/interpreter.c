@@ -233,6 +233,7 @@ cpp_extern const struct command_info cmd_info[] = {
   { "oedit"    , "oedit"   , POS_DEAD    , do_oasis_oedit, LVL_BUILDER, 0 },
   { "oset"     , "oset"    , POS_DEAD    , do_oset,        LVL_BUILDER, 0 },
   { "ocopy"    , "ocopy"   , POS_DEAD    , do_oasis_copy, LVL_GOD, CON_OEDIT },
+  { "ooc"      , "ooc"     , POS_RESTING , do_say_ooc      , 0, 0 },
 
   { "put"      , "p"       , POS_RESTING , do_put      , 0, 0 },
   { "peace"    , "pe"      , POS_DEAD    , do_peace    , LVL_BUILDER, 0 },

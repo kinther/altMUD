@@ -42,6 +42,7 @@ ACMD(do_spec_comm);
 #define SCMD_ASK      1
 /* functions without subcommands */
 ACMD(do_say);
+ACMD(do_say_ooc);
 ACMD(do_gsay);
 ACMD(do_page);
 ACMD(do_reply);
