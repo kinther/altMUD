@@ -806,19 +806,21 @@ ACMD(do_score)
   else
     send_to_char(ch, "\r\n");
 
-  send_to_char(ch, "%d/%dhp %d/%dmana %d/%dmv %d/%dst.\r\n",
+  send_to_char(ch, "You have %d/%dhp, %d/%dmana, %d/%dmv, and %d/%dst.\r\n",
 	  GET_HIT(ch), GET_MAX_HIT(ch), GET_MANA(ch), GET_MAX_MANA(ch),
     GET_MOVE(ch), GET_MAX_MOVE(ch), GET_STUN(ch), GET_MAX_STUN(ch));
+
+  send_to_char(ch, "You have %d strength, %d constitution, %d dexterity,\r\n",
+    GET_STR(ch), GET_CON(ch), GET_DEX(ch));
+
+  send_to_char(ch, "%d wisdom, %d intelligence, and %d charisma.\r\n",
+    GET_WIS(ch), GET_INT(ch), GET_CHA(ch));
 
   send_to_char(ch, "Your armor class is %d/10, and your alignment is %d.\r\n",
 	  compute_armor_class(ch), GET_ALIGNMENT(ch));
 
-  send_to_char(ch, "You have %d exp, %d gold coins, and %d questpoints.\r\n",
-	  GET_EXP(ch), GET_GOLD(ch), GET_QUESTPOINTS(ch));
-
-  if (GET_LEVEL(ch) < LVL_IMMORT)
-    send_to_char(ch, "You need %d exp to reach your next level.\r\n",
-	level_exp(GET_CLASS(ch), GET_LEVEL(ch) + 1) - GET_EXP(ch));
+  send_to_char(ch, "You have %d gold coins, and %d questpoints.\r\n",
+	  GET_GOLD(ch), GET_QUESTPOINTS(ch));
 
   send_to_char(ch, "You have earned %d quest points.\r\n", GET_QUESTPOINTS(ch));
   send_to_char(ch, "You have completed %d quest%s, ",
