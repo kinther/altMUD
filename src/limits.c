@@ -431,15 +431,15 @@ void point_update(void)
       GET_MOVE(i) = MIN(GET_MOVE(i) + move_gain(i), GET_MAX_MOVE(i));
       GET_STUN(i) = MIN(GET_STUN(i) + stun_gain(i), GET_MAX_STUN(i));
       if (AFF_FLAGGED(i, AFF_POISON))
-	if (damage(i, i, 2, SPELL_POISON) == -1)
+	if (damage(i, i, 2, 0, SPELL_POISON) == -1)
 	  continue;	/* Oops, they died. -gg 6/24/98 */
       if (GET_POS(i) <= POS_STUNNED)
 	update_pos(i);
     } else if (GET_POS(i) == POS_INCAP) {
-      if (damage(i, i, 1, TYPE_SUFFERING) == -1)
+      if (damage(i, i, 1, 0, TYPE_SUFFERING) == -1)
 	continue;
     } else if (GET_POS(i) == POS_MORTALLYW) {
-      if (damage(i, i, 2, TYPE_SUFFERING) == -1)
+      if (damage(i, i, 2, 0, TYPE_SUFFERING) == -1)
 	continue;
     }
     if (!IS_NPC(i)) {
