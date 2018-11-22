@@ -167,13 +167,13 @@ ACMD(do_backstab)
   percent = rand_number(1, 101);	/* 101% is a complete failure */
   prob = GET_SKILL(ch, SKILL_BACKSTAB);
 
-  /* Successful backstab is skill (prob) lower than prob */
   if (AWAKE(vict) && (percent > prob)){
     damage(ch, vict, 0, SKILL_BACKSTAB);
+    send_to_char(ch, "Successful backstab?");
   }
-  /* Failed backstab otherwise and combat initiates */
   else{
     hit(ch, vict, SKILL_BACKSTAB);
+    send_to_char(ch, "Failure backstab?");
     improve_skill(ch, SKILL_BACKSTAB);
   }
 

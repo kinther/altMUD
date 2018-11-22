@@ -25,7 +25,6 @@ void appear(struct char_data *ch);
 void check_killer(struct char_data *ch, struct char_data *vict);
 int compute_armor_class(struct char_data *ch);
 int damage(struct char_data *ch, struct char_data *victim, int dam, int attacktype);
-int stun_damage(struct char_data *ch, struct char_data *victim, int stun_dam, int attacktype);
 void death_cry(struct char_data *ch);
 void die(struct char_data * ch, struct char_data * killer);
 void hit(struct char_data *ch, struct char_data *victim, int type);
