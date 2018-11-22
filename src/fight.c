@@ -91,12 +91,29 @@ int compute_armor_class(struct char_data *ch)
   return (MAX(-100, armorclass));      /* -100 is lowest */
 }
 
+/* Function call for when a player is knocked out by combat, skills, etc */
+void knocked_out(struct char_data *ch, int duration)
+{
+  struct affected_type af;
+
+  act("Your vision goes black...", FALSE, ch, 0, 0, TO_CHAR);
+  stop_fighting(ch);
+  GET_STUN(ch) = 0;
+  GET_POS(ch) = POS_SLEEPING;
+  af.duration = duration;
+  act("In the new knocked out block.", FALSE, ch, 0, 0, TO_CHAR);
+}
+
 void update_pos(struct char_data *victim)
 {
+  /* Stun damage checked before physical damage for consistency */
+  if (GET_STUN(victim) <= 0 && AWAKE(victim)){
+    knocked_out(victim, 1);
+  }
+
+  /* Physical damage checked for consistency */
   if ((GET_HIT(victim) > 0) && (GET_POS(victim) > POS_STUNNED))
     return;
-  else if (GET_STUN(victim) <= 0)
-    GET_POS(victim) = POS_SLEEPING;
   else if (GET_HIT(victim) > 0)
     GET_POS(victim) = POS_STANDING;
   else if (GET_HIT(victim) <= -11)
@@ -105,8 +122,6 @@ void update_pos(struct char_data *victim)
     GET_POS(victim) = POS_MORTALLYW;
   else if (GET_HIT(victim) <= -3)
     GET_POS(victim) = POS_INCAP;
-  else if (GET_STUN(victim) <= 0)
-    GET_POS(victim) = POS_SLEEPING;
   else
     GET_POS(victim) = POS_STUNNED;
 }
@@ -787,154 +802,79 @@ int damage(struct char_data *ch, struct char_data *victim, int dam, int attackty
 }
 
 /* This function returns the following codes:
- *	<= 0	Victim is sleeping already.
- *	> 0	How much stun damage done. */
- int stun_damage(struct char_data *ch, struct char_data *victim, int stun_dam, int attacktype)
- {
+ *	<= Victim is knocked out
+ *	> 0	How much damage done. */
+int stun_damage(struct char_data *ch, struct char_data *victim, int stun_dam, int attacktype)
+{
 
-   if (GET_POS(victim) <= POS_DEAD) {
-     /* This is "normal"-ish now with delayed extraction. -gg 3/15/2001 */
-     if (PLR_FLAGGED(victim, PLR_NOTDEADYET) || MOB_FLAGGED(victim, MOB_NOTDEADYET))
-       return (-1);
+  if (GET_POS(victim) <= POS_DEAD) {
+    /* This is "normal"-ish now with delayed extraction. -gg 3/15/2001 */
+    if (PLR_FLAGGED(victim, PLR_NOTDEADYET) || MOB_FLAGGED(victim, MOB_NOTDEADYET))
+      return (-1);
 
-     log("SYSERR: Attempt to damage corpse '%s' in room #%d by '%s'.",
-         GET_NAME(victim), GET_ROOM_VNUM(IN_ROOM(victim)), GET_NAME(ch));
-     die(victim, ch);
-     return (-1);			/* -je, 7/7/92 */
-   }
+    log("SYSERR: Attempt to damage corpse '%s' in room #%d by '%s'.",
+        GET_NAME(victim), GET_ROOM_VNUM(IN_ROOM(victim)), GET_NAME(ch));
+    die(victim, ch);
+    return (-1);			/* -je, 7/7/92 */
+  }
 
-   /* peaceful rooms */
-   if (ch->nr != real_mobile(DG_CASTER_PROXY) &&
-       ch != victim && ROOM_FLAGGED(IN_ROOM(ch), ROOM_PEACEFUL)) {
-     send_to_char(ch, "This room just has such a peaceful, easy feeling...\r\n");
-     return (0);
-   }
+  /* peaceful rooms */
+  if (ch->nr != real_mobile(DG_CASTER_PROXY) &&
+      ch != victim && ROOM_FLAGGED(IN_ROOM(ch), ROOM_PEACEFUL)) {
+    send_to_char(ch, "This room just has such a peaceful, easy feeling...\r\n");
+    return (0);
+  }
 
-   /* shopkeeper and MOB_NOKILL protection */
-   if (!ok_damage_shopkeeper(ch, victim) || MOB_FLAGGED(victim, MOB_NOKILL)) {
-     send_to_char(ch, "This mob is protected.\r\n");
-     return (0);
-   }
+  /* shopkeeper and MOB_NOKILL protection */
+  if (!ok_damage_shopkeeper(ch, victim) || MOB_FLAGGED(victim, MOB_NOKILL)) {
+    send_to_char(ch, "This mob is protected.\r\n");
+    return (0);
+  }
 
-   /* You can't damage an immortal! */
-   if (!IS_NPC(victim) && ((GET_LEVEL(victim) >= LVL_IMMORT) && PRF_FLAGGED(victim, PRF_NOHASSLE)))
-     stun_dam = 0;
+  /* You can't damage an immortal! */
+  if (!IS_NPC(victim) && ((GET_LEVEL(victim) >= LVL_IMMORT) && PRF_FLAGGED(victim, PRF_NOHASSLE)))
+    stun_dam = 0;
 
-   if (victim != ch) {
-     /* Start the attacker fighting the victim */
-     if (GET_POS(ch) > POS_STUNNED && (FIGHTING(ch) == NULL))
-       set_fighting(ch, victim);
+  /* If we weren't fighting before, we are now! */
+  if (victim != ch) {
+    /* Start the attacker fighting the victim */
+    if (GET_POS(ch) > POS_STUNNED && (FIGHTING(ch) == NULL))
+      set_fighting(ch, victim);
 
-     /* Start the victim fighting the attacker */
-     if (GET_POS(victim) > POS_STUNNED && (FIGHTING(victim) == NULL)) {
-       set_fighting(victim, ch);
-       if (MOB_FLAGGED(victim, MOB_MEMORY) && !IS_NPC(ch))
- 	     remember(victim, ch);
-     }
-   }
+    /* Start the victim fighting the attacker */
+    if (GET_POS(victim) > POS_STUNNED && (FIGHTING(victim) == NULL)) {
+      set_fighting(victim, ch);
+      if (MOB_FLAGGED(victim, MOB_MEMORY) && !IS_NPC(ch))
+	     remember(victim, ch);
+    }
+  }
 
-   /* If you attack a pet, it hates your guts */
-   if (victim->master == ch)
-     stop_follower(victim);
+  /* If you attack a pet, it hates your guts */
+  if (victim->master == ch)
+    stop_follower(victim);
 
-   /* If the attacker is invisible, he becomes visible */
-   if (AFF_FLAGGED(ch, AFF_INVISIBLE) || AFF_FLAGGED(ch, AFF_HIDE))
-     appear(ch);
+  /* If the attacker is invisible, he becomes visible */
+  if (AFF_FLAGGED(ch, AFF_INVISIBLE) || AFF_FLAGGED(ch, AFF_HIDE))
+    appear(ch);
 
-   /* Cut damage in half if victim has sanct, to a minimum 1 */
-   if (AFF_FLAGGED(victim, AFF_SANCTUARY) && stun_dam >= 2)
-     stun_dam /= 2;
+  /* Cut damage in half if victim has sanct, to a minimum 1 */
+  if (AFF_FLAGGED(victim, AFF_SANCTUARY) && stun_dam >= 2)
+    stun_dam /= 2;
 
-   /* Check for PK if this is not a PK MUD */
-   if (!CONFIG_PK_ALLOWED) {
-     check_killer(ch, victim);
-     if (PLR_FLAGGED(ch, PLR_KILLER) && (ch != victim))
-       stun_dam = 0;
-   }
+  /* Check for PK if this is not a PK MUD */
+  if (!CONFIG_PK_ALLOWED) {
+    check_killer(ch, victim);
+    if (PLR_FLAGGED(ch, PLR_KILLER) && (ch != victim))
+      stun_dam = 0;
+  }
 
-   /* Set the maximum damage per round and subtract the hit points */
-   stun_dam = MAX(MIN(stun_dam, 100), 0);
-   GET_STUN(victim) -= stun_dam;
+  /* Set the maximum damage per round and subtract the hit points */
+  stun_dam = MAX(MIN(stun_dam, 100), 0);
+  GET_STUN(victim) -= stun_dam;
 
-   update_pos(victim);
+  update_pos(victim);
 
-   /* skill_message sends a message from the messages file in lib/misc.
-    * dam_message just sends a generic "You hit $n extremely hard.".
-    * skill_message is preferable to dam_message because it is more
-    * descriptive.
-    *
-    * If we are _not_ attacking with a weapon (i.e. a spell), always use
-    * skill_message. If we are attacking with a weapon: If this is a miss or a
-    * death blow, send a skill_message if one exists; if not, default to a
-    * dam_message. Otherwise, always send a dam_message. */
-   if (!IS_WEAPON(attacktype))
-     skill_message(stun_dam, ch, victim, attacktype);
-   else {
-     if (GET_POS(victim) == POS_DEAD || stun_dam == 0) {
-       if (!skill_message(stun_dam, ch, victim, attacktype))
- 	      dam_message(stun_dam, ch, victim, attacktype);
-     }
-     else {
-       dam_message(stun_dam, ch, victim, attacktype);
-     }
-   }
-
-   /* Use send_to_char -- act() doesn't send message if you are DEAD. */
-   switch (GET_POS(victim)) {
-   case POS_MORTALLYW:
-     act("$n is mortally wounded, and will die soon, if not aided.", TRUE, victim, 0, 0, TO_ROOM);
-     send_to_char(victim, "You are mortally wounded, and will die soon, if not aided.\r\n");
-     break;
-   case POS_INCAP:
-     act("$n is incapacitated and will slowly die, if not aided.", TRUE, victim, 0, 0, TO_ROOM);
-     send_to_char(victim, "You are incapacitated and will slowly die, if not aided.\r\n");
-     break;
-   case POS_STUNNED:
-     act("$n is stunned, but will probably regain consciousness again.", TRUE, victim, 0, 0, TO_ROOM);
-     send_to_char(victim, "You're stunned, but will probably regain consciousness again.\r\n");
-     break;
-   case POS_SLEEPING:
-     act("$n eyes roll back in their head.", TRUE, victim, 0, 0, TO_ROOM);
-     send_to_char(victim, "Your eyes roll back in your head.\r\n");
-     break;
-   case POS_DEAD:
-     act("$n is dead!  R.I.P.", FALSE, victim, 0, 0, TO_ROOM);
-     send_to_char(victim, "You are dead!  Sorry...\r\n");
-     break;
-
-   default:			/* >= POSITION SLEEPING */
-     if (stun_dam > (GET_MAX_STUN(victim) / 4)){
-       send_to_char(victim, "You reel from the blow!\r\n");
-       WAIT_STATE(victim, PULSE_VIOLENCE);
-     }
-     break;
-   }
-
-   /* stop someone from fighting if they're stunned or worse */
-   if (GET_POS(victim) <= POS_STUNNED && FIGHTING(victim) != NULL)
-     stop_fighting(victim);
-
-   /* Uh oh.  Victim died. */
-   if (GET_POS(victim) == POS_DEAD) {
-     if (ch != victim && (IS_NPC(victim) || victim->desc)) {
-       if (GROUP(ch))
- 	      group_gain(ch, victim);
-       else
-         solo_gain(ch, victim);
-     }
-
-     if (!IS_NPC(victim)) {
-       mudlog(BRF, MAX(LVL_IMMORT, MAX(GET_INVIS_LEV(ch), GET_INVIS_LEV(victim))),
-         TRUE, "%s killed by %s at %s", GET_NAME(victim), GET_NAME(ch), world[IN_ROOM(victim)].name);
-       if (MOB_FLAGGED(ch, MOB_MEMORY))
- 	     forget(ch, victim);
-     }
-
-     die(victim, ch);
-
-     return (-1);
-   }
-   return (stun_dam);
+  return (stun_dam);
 }
 
 /* Calculate the THAC0 of the attacker. 'victim' currently isn't used but you
@@ -994,49 +934,46 @@ void hit(struct char_data *ch, struct char_data *victim, int type)
   diceroll = rand_number(1, 20);
 
   /* Begin weapon skill to hit bonuses */
-
   if (w_type == TYPE_HIT && GET_SKILL(ch, SKILL_UNARMED) > 80)
-    diceroll += 4;
+    diceroll = diceroll + 4;
   else if (w_type == TYPE_HIT && GET_SKILL(ch, SKILL_UNARMED) > 60)
-    diceroll += 3;
+    diceroll = diceroll + 3;
   else if (w_type == TYPE_HIT && GET_SKILL(ch, SKILL_UNARMED) > 40)
-    diceroll += 2;
+    diceroll = diceroll + 2;
   else if (w_type == TYPE_HIT && GET_SKILL(ch, SKILL_UNARMED) > 20)
-    diceroll += 1;
+    diceroll = diceroll + 1;
   else if (w_type == TYPE_SLASH && GET_SKILL(ch, SKILL_SLASHING_WEAPONS) > 80)
-    diceroll += 4;
+    diceroll = diceroll + 4;
   else if (w_type == TYPE_SLASH && GET_SKILL(ch, SKILL_SLASHING_WEAPONS) > 60)
-    diceroll += 3;
+    diceroll = diceroll + 3;
   else if (w_type == TYPE_SLASH && GET_SKILL(ch, SKILL_SLASHING_WEAPONS) > 40)
-    diceroll += 2;
+    diceroll = diceroll + 2;
   else if (w_type == TYPE_SLASH && GET_SKILL(ch, SKILL_SLASHING_WEAPONS) > 20)
-    diceroll += 1;
+    diceroll = diceroll + 1;
   else if (w_type == TYPE_BLUDGEON && GET_SKILL(ch, SKILL_BLUDGEONING_WEAPONS) > 80)
-    diceroll += 4;
+    diceroll = diceroll + 4;
   else if (w_type == TYPE_BLUDGEON && GET_SKILL(ch, SKILL_BLUDGEONING_WEAPONS) > 60)
-    diceroll += 3;
+    diceroll = diceroll + 3;
   else if (w_type == TYPE_BLUDGEON && GET_SKILL(ch, SKILL_BLUDGEONING_WEAPONS) > 40)
-    diceroll += 2;
+    diceroll = diceroll + 2;
   else if (w_type == TYPE_BLUDGEON && GET_SKILL(ch, SKILL_BLUDGEONING_WEAPONS) > 20)
-    diceroll += 1;
+    diceroll = diceroll + 1;
   else if (w_type == TYPE_PIERCE && GET_SKILL(ch, SKILL_PIERCING_WEAPONS) > 80)
-    diceroll += 4;
+    diceroll = diceroll + 4;
   else if (w_type == TYPE_PIERCE && GET_SKILL(ch, SKILL_PIERCING_WEAPONS) > 60)
-    diceroll += 3;
+    diceroll = diceroll + 3;
   else if (w_type == TYPE_PIERCE && GET_SKILL(ch, SKILL_PIERCING_WEAPONS) > 40)
-    diceroll += 2;
+    diceroll = diceroll + 2;
   else if (w_type == TYPE_PIERCE && GET_SKILL(ch, SKILL_PIERCING_WEAPONS) > 20)
-    diceroll += 1;
+    diceroll = diceroll + 1;
   else if (w_type == TYPE_STAB && GET_SKILL(ch, SKILL_STABBING_WEAPONS) > 80)
-    diceroll += 4;
+    diceroll = diceroll + 4;
   else if (w_type == TYPE_STAB && GET_SKILL(ch, SKILL_STABBING_WEAPONS) > 60)
-    diceroll += 3;
+    diceroll = diceroll + 3;
   else if (w_type == TYPE_STAB && GET_SKILL(ch, SKILL_STABBING_WEAPONS) > 40)
-    diceroll += 2;
+    diceroll = diceroll + 2;
   else if (w_type == TYPE_STAB && GET_SKILL(ch, SKILL_STABBING_WEAPONS) > 20)
-    diceroll += 1;
-
-  /* End weapon skill to hit bonuses */
+    diceroll = diceroll + 1;
 
   /* report for debugging if necessary */
   if (CONFIG_DEBUG_MODE >= NRM)
@@ -1048,20 +985,15 @@ void hit(struct char_data *ch, struct char_data *victim, int type)
    *     1   = Automatic miss.
    *   2..19 = Checked vs. AC.
    *    20+   = Automatic hit. */
-  if (diceroll >= 20 || !AWAKE(victim)){
+  if (diceroll >= 20 )
     dam = TRUE;
-    stun_dam = TRUE;
-  }
-  else if (diceroll == 1){
+  else if (diceroll == 1)
     dam = FALSE;
-    stun_dam = FALSE;
-  }
-  else{
+  else
     dam = (calc_thaco - diceroll <= victim_ac);
-    stun_dam = (calc_thaco - diceroll <= victim_ac);
-  }
   /* End hit calculation based on 1d20 roll */
 
+  send_to_char(ch, "You have %d diceroll.\r\n", diceroll);
   if (!dam){
     /* the attacker missed the victim */
     /* this is where we add skill improvements */
@@ -1082,7 +1014,13 @@ void hit(struct char_data *ch, struct char_data *victim, int type)
      * Start with the damage bonuses: the damroll and strength apply */
     dam = str_app[STRENGTH_APPLY_INDEX(ch)].todam;
     dam += GET_DAMROLL(ch);
-    stun_dam = str_app[STRENGTH_APPLY_INDEX(ch)].tostun;
+    send_to_char(ch, "You have %d damage right now.\r\n", dam);
+
+    /* If you're wielding a bludgeoning weapon, we apply stun damage too */
+    if (wielded && w_type == TYPE_BLUDGEON){
+    stun_dam = (GET_SKILL(ch, SKILL_BLUDGEONING_WEAPONS)/5 + ((GET_STR(ch)/5)));
+    send_to_char(ch, "You have %d stun damage right now.\r\n", stun_dam);
+    }
 
     /* Maybe holding arrow? */
     if (wielded && GET_OBJ_TYPE(wielded) == ITEM_WEAPON) {
@@ -1090,48 +1028,59 @@ void hit(struct char_data *ch, struct char_data *victim, int type)
       dam += dice(GET_OBJ_VAL(wielded, 1), GET_OBJ_VAL(wielded, 2));
 
       /* Begin weapon skill damage bonuses */
-      if (w_type == TYPE_SLASH && GET_SKILL(ch, SKILL_SLASHING_WEAPONS) > 80)
+      if (wielded && w_type == TYPE_SLASH
+      && GET_SKILL(ch, SKILL_SLASHING_WEAPONS) > 80)
         dam += rand_number(3,7);
-      else if (w_type == TYPE_SLASH && GET_SKILL(ch, SKILL_SLASHING_WEAPONS) > 60)
+      else if (wielded && w_type == TYPE_SLASH
+      && GET_SKILL(ch, SKILL_SLASHING_WEAPONS) > 60)
         dam += rand_number(2,6);
-      else if (w_type == TYPE_SLASH && GET_SKILL(ch, SKILL_SLASHING_WEAPONS) > 40)
+      else if (wielded && w_type == TYPE_SLASH
+      && GET_SKILL(ch, SKILL_SLASHING_WEAPONS) > 40)
         dam += rand_number(1,4);
-      else if (w_type == TYPE_SLASH && GET_SKILL(ch, SKILL_SLASHING_WEAPONS) > 20)
+      else if (wielded && w_type == TYPE_SLASH
+      && GET_SKILL(ch, SKILL_SLASHING_WEAPONS) > 20)
         dam += rand_number(1,2);
-      else if (w_type == TYPE_BLUDGEON && GET_SKILL(ch, SKILL_BLUDGEONING_WEAPONS) > 80){
+      else if (wielded && w_type == TYPE_BLUDGEON
+      && GET_SKILL(ch, SKILL_BLUDGEONING_WEAPONS) > 80)
         dam += rand_number(3,5);
-        stun_dam += rand_number(1,10);
-      }
-      else if (w_type == TYPE_BLUDGEON && GET_SKILL(ch, SKILL_BLUDGEONING_WEAPONS) > 60){
+      else if (wielded && w_type == TYPE_BLUDGEON
+      && GET_SKILL(ch, SKILL_BLUDGEONING_WEAPONS) > 60)
         dam += rand_number(2,4);
-        stun_dam += rand_number(1,7);
-      }
-      else if (w_type == TYPE_BLUDGEON && GET_SKILL(ch, SKILL_BLUDGEONING_WEAPONS) > 40){
+      else if (wielded && w_type == TYPE_BLUDGEON
+      && GET_SKILL(ch, SKILL_BLUDGEONING_WEAPONS) > 40)
         dam += rand_number(1,3);
-        stun_dam += rand_number(1,4);
-      }
-      else if (w_type == TYPE_BLUDGEON && GET_SKILL(ch, SKILL_BLUDGEONING_WEAPONS) > 20)
+      else if (wielded && w_type == TYPE_BLUDGEON
+      && GET_SKILL(ch, SKILL_BLUDGEONING_WEAPONS) > 20)
         dam += rand_number(1,2);
-      else if (w_type == TYPE_PIERCE && GET_SKILL(ch, SKILL_PIERCING_WEAPONS) > 80)
+      else if (wielded && w_type == TYPE_PIERCE
+      && GET_SKILL(ch, SKILL_PIERCING_WEAPONS) > 80)
         dam += rand_number(3,6);
-      else if (w_type == TYPE_PIERCE && GET_SKILL(ch, SKILL_PIERCING_WEAPONS) > 60)
+      else if (wielded && w_type == TYPE_PIERCE
+      && GET_SKILL(ch, SKILL_PIERCING_WEAPONS) > 60)
         dam += rand_number(2,5);
-      else if (w_type == TYPE_PIERCE && GET_SKILL(ch, SKILL_PIERCING_WEAPONS) > 40)
+      else if (wielded && w_type == TYPE_PIERCE
+      && GET_SKILL(ch, SKILL_PIERCING_WEAPONS) > 40)
         dam += rand_number(1,4);
-      else if (w_type == TYPE_PIERCE && GET_SKILL(ch, SKILL_PIERCING_WEAPONS) > 20)
+      else if (wielded && w_type == TYPE_PIERCE
+      && GET_SKILL(ch, SKILL_PIERCING_WEAPONS) > 20)
         dam += rand_number(1,2);
-      else if (w_type == TYPE_STAB && GET_SKILL(ch, SKILL_STABBING_WEAPONS) > 80)
+      else if (wielded && w_type == TYPE_PIERCE
+      && GET_SKILL(ch, SKILL_STABBING_WEAPONS) > 80)
         dam += rand_number(3,6);
-      else if (w_type == TYPE_STAB && GET_SKILL(ch, SKILL_STABBING_WEAPONS) > 60)
+      else if (wielded && w_type == TYPE_PIERCE
+      && GET_SKILL(ch, SKILL_STABBING_WEAPONS) > 60)
         dam += rand_number(2,5);
-      else if (w_type == TYPE_STAB && GET_SKILL(ch, SKILL_STABBING_WEAPONS) > 40)
+      else if (wielded && w_type == TYPE_PIERCE
+      && GET_SKILL(ch, SKILL_STABBING_WEAPONS) > 40)
         dam += rand_number(1,4);
-      else if (w_type == TYPE_STAB && GET_SKILL(ch, SKILL_STABBING_WEAPONS) > 20)
+      else if (wielded && w_type == TYPE_PIERCE
+      && GET_SKILL(ch, SKILL_STABBING_WEAPONS) > 20)
         dam += rand_number(1,2);
       /* End weapon skill damage bonuses */
     }
 
     else {
+      send_to_char(ch, "You have %d damage after bonuses.\r\n", dam);
       /* If no weapon, add bare hand damage instead */
       if (IS_NPC(ch)) {
         dam += dice(ch->mob_specials.damnodice, ch->mob_specials.damsizedice);
@@ -1173,9 +1122,13 @@ void hit(struct char_data *ch, struct char_data *victim, int type)
 
     if (type == SKILL_BACKSTAB)
       damage(ch, victim, dam * backstab_mult(GET_LEVEL(ch)), SKILL_BACKSTAB);
-    else
+    else{
       damage(ch, victim, dam, w_type);
-      stun_damage(ch, victim, stun_dam, w_type);
+      send_to_char(ch, "We are now in the damage block.\r\n");
+      if (wielded && w_type == TYPE_BLUDGEON){
+        stun_damage(ch, victim, stun_dam, w_type);
+      }
+    }
   }
 
   /* check if the victim has a hitprcnt trigger */
