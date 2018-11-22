@@ -1101,3 +1101,16 @@ void improve_skill(struct char_data *ch, int skill)
   percent += newpercent;
   SET_SKILL(ch, skill, percent);
 }
+
+/* Used when a player falls below 0 stun */
+/* Maybe move this to utils.c ? */
+void knocked_out(struct char_data *ch, int duration)
+{
+  struct affected_type af;
+
+  send_to_char(ch, "Your vision goes black...");
+  GET_POS(ch) = POS_SLEEPING;
+  GET_STUN(ch) = 0;
+  af.duration = duration;
+
+}
