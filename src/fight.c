@@ -93,6 +93,12 @@ int compute_armor_class(struct char_data *ch)
 
 void update_pos(struct char_data *victim)
 {
+  /* If a player drops below 0 stun, we knock them out */
+  if (GET_STUN(victim) <= 0){
+    knocked_out(victim, 1);
+  }
+
+  /* Standard combat position checks */
   if ((GET_HIT(victim) > 0) && (GET_POS(victim) > POS_STUNNED))
     return;
   else if (GET_HIT(victim) > 0)
