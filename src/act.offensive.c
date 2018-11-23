@@ -168,7 +168,7 @@ ACMD(do_backstab)
   prob = GET_SKILL(ch, SKILL_BACKSTAB);
 
   if (AWAKE(vict) && (percent > prob)){
-    damage(ch, vict, 0, 0, SKILL_BACKSTAB);
+    damage(ch, vict, 0, SKILL_BACKSTAB);
     send_to_char(ch, "Successful backstab?");
   }
   else{
@@ -314,7 +314,7 @@ ACMD(do_bash)
     percent = 101;
 
   if (percent > prob) {
-    damage(ch, vict, 0, 0, SKILL_BASH);
+    damage(ch, vict, 0, SKILL_BASH);
     GET_POS(ch) = POS_SITTING;
     improve_skill(ch, SKILL_BASH);
   } else {
@@ -324,7 +324,7 @@ ACMD(do_bash)
      * first to make sure they don't flee, then we can't bash them!  So now
      * we only set them sitting if they didn't flee. -gg 9/21/98
      */
-    if (damage(ch, vict, 1, 0, SKILL_BASH) > 0) {	/* -1 = dead, 0 = miss */
+    if (damage(ch, vict, 1, SKILL_BASH) > 0) {	/* -1 = dead, 0 = miss */
       WAIT_STATE(vict, PULSE_VIOLENCE);
       if (IN_ROOM(ch) == IN_ROOM(vict))
         GET_POS(vict) = POS_SITTING;
@@ -525,10 +525,10 @@ ACMD(do_kick)
   prob = GET_SKILL(ch, SKILL_KICK);
 
   if (percent > prob) {
-    damage(ch, vict, 0, 0, SKILL_KICK);
+    damage(ch, vict, 0, SKILL_KICK);
     improve_skill(ch, SKILL_KICK);
   } else
-    damage(ch, vict, GET_LEVEL(ch) / 2, 0, SKILL_KICK);
+    damage(ch, vict, GET_LEVEL(ch) / 2, SKILL_KICK);
 
   WAIT_STATE(ch, PULSE_VIOLENCE * 3);
 }
@@ -573,7 +573,7 @@ ACMD(do_bandage)
     act("Your attempt to bandage fails.", FALSE, ch, 0, 0, TO_CHAR);
     act("$n tries to bandage $N, but fails miserably.", TRUE, ch,
       0, vict, TO_NOTVICT);
-    damage(vict, vict, 2, 0, TYPE_SUFFERING);
+    damage(vict, vict, 2, TYPE_SUFFERING);
     improve_skill(ch, SKILL_BANDAGE);
     return;
   }

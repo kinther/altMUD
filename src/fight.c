@@ -583,7 +583,7 @@ int skill_message(int dam, struct char_data *ch, struct char_data *vict,
  *	< 0	Victim died.
  *	= 0	No damage.
  *	> 0	How much damage done. */
-int damage(struct char_data *ch, struct char_data *victim, int dam, int stun_dam, int attacktype)
+int damage(struct char_data *ch, struct char_data *victim, int dam, int attacktype)
 {
   long local_gold = 0, happy_gold = 0;
   char local_buf[256];
@@ -653,10 +653,6 @@ int damage(struct char_data *ch, struct char_data *victim, int dam, int stun_dam
   /* Set the maximum damage per round and subtract the hit points */
   dam = MAX(MIN(dam, 100), 0);
   GET_HIT(victim) -= dam;
-
-  /* Set the maximum damage per round and subtract the hit points */
-  stun_dam = MAX(MIN(stun_dam, 100), 0);
-  GET_STUN(victim) -= stun_dam;
 
   /* Gain exp for the hit */
   if (ch != victim)
@@ -911,7 +907,7 @@ void hit(struct char_data *ch, struct char_data *victim, int type)
   if (!dam){
     /* the attacker missed the victim */
     /* this is where we add skill improvements */
-    damage(ch, victim, 0, 0, type == SKILL_BACKSTAB ? SKILL_BACKSTAB : w_type);
+    damage(ch, victim, 0, type == SKILL_BACKSTAB ? SKILL_BACKSTAB : w_type);
     if (w_type == TYPE_HIT)
       improve_skill(ch, SKILL_UNARMED);
     else if (w_type == TYPE_SLASH)
@@ -1011,9 +1007,9 @@ void hit(struct char_data *ch, struct char_data *victim, int type)
     dam = MAX(1, dam);
 
     if (type == SKILL_BACKSTAB)
-      damage(ch, victim, dam * backstab_mult(GET_LEVEL(ch)), 0, SKILL_BACKSTAB);
+      damage(ch, victim, dam * backstab_mult(GET_LEVEL(ch)), SKILL_BACKSTAB);
     else
-      damage(ch, victim, dam, 0, w_type);
+      damage(ch, victim, dam, w_type);
   }
 
   /* check if the victim has a hitprcnt trigger */

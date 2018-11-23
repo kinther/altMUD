@@ -24,17 +24,21 @@ struct attack_hit_type {
 void appear(struct char_data *ch);
 void check_killer(struct char_data *ch, struct char_data *vict);
 int compute_armor_class(struct char_data *ch);
+<<<<<<< HEAD
 int damage(struct char_data *ch, struct char_data *victim, int dam, int stun_dam,
           int attacktype);
+=======
+int damage(struct char_data *ch, struct char_data *victim, int dam, int attacktype);
+>>>>>>> parent of 34a69d5... Updated int damage
 void death_cry(struct char_data *ch);
 void die(struct char_data * ch, struct char_data * killer);
 void hit(struct char_data *ch, struct char_data *victim, int type);
 void perform_violence(void);
 void raw_kill(struct char_data * ch, struct char_data * killer);
-void set_fighting(struct char_data *ch, struct char_data *victim);
+void  set_fighting(struct char_data *ch, struct char_data *victim);
 int skill_message(int dam, struct char_data *ch, struct char_data *vict,
           int attacktype);
-void stop_fighting(struct char_data *ch);
+void  stop_fighting(struct char_data *ch);
 void improve_skill(struct char_data *ch, int skill);
 void knocked_out(struct char_data *ch, int duration);
 

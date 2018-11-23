@@ -291,7 +291,7 @@ int mag_damage(int level, struct char_data *ch, struct char_data *victim,
     dam /= 2;
 
   /* and finally, inflict the damage */
-  return (damage(ch, victim, dam, 0, spellnum));
+  return (damage(ch, victim, dam, spellnum));
 }
 
 
