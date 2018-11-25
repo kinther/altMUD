@@ -225,6 +225,7 @@ const char *preference_bits[] = {
   "D_HP",
   "D_MANA",
   "D_MOVE",
+  "D_STUN",
   "AUTOEX",
   "NO_HASS",
   "QUEST",
@@ -473,6 +474,7 @@ const char *apply_types[] = {
   "MAXMANA",
   "MAXHIT",
   "MAXMOVE",
+  "MAXSTUN",
   "GOLD",
   "EXP",
   "ARMOR",
@@ -967,4 +969,3 @@ const char *ibt_bits[] = {
 	extra_bits_count = sizeof(extra_bits) / sizeof(extra_bits[0]) - 1,
 	/** Number of defined wear bit descriptions. */
 	wear_bits_count = sizeof(wear_bits) / sizeof(wear_bits[0]) - 1;
-
