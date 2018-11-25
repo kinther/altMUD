@@ -476,7 +476,9 @@ static void dam_message(int dam, struct char_data *ch, struct char_data *victim,
 
   w_type -= TYPE_HIT;		/* Change to base of table with text */
 
-  if (dam == 0)		msgnum = 0;
+  if (!AWAKE(victim))
+    return;
+  else if (dam == 0)		msgnum = 0;
   else if (dam <= 2)    msgnum = 1;
   else if (dam <= 4)    msgnum = 2;
   else if (dam <= 6)    msgnum = 3;
@@ -1127,6 +1129,9 @@ void perform_violence(void)
       }
     }
 
+    if (GET_POS(ch) == POS_SLEEPING)
+      continue;
+
     if (GET_POS(ch) < POS_FIGHTING) {
       send_to_char(ch, "You can't fight while sitting!!\r\n");
       continue;
@@ -1185,6 +1190,8 @@ void knocked_out(struct char_data *ch, int duration)
 {
   struct affected_type af;
 
+  if (GET_POS(ch) == POS_SLEEPING)
+    return;
   send_to_char(ch, "Your vision goes black...");
   GET_POS(ch) = POS_SLEEPING;
   GET_STUN(ch) = 0;
