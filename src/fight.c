@@ -785,6 +785,81 @@ int damage(struct char_data *ch, struct char_data *victim, int dam, int attackty
   return (dam);
 }
 
+/* This function returns the following codes:
+ *	<= 0	Victim is knocked out.
+ *	> 0	How much stun damage done. */
+int stun_damage(struct char_data *ch, struct char_data *victim, int stun_dam, int attacktype)
+{
+
+  if (GET_POS(victim) <= POS_DEAD) {
+    /* This is "normal"-ish now with delayed extraction. -gg 3/15/2001 */
+    if (PLR_FLAGGED(victim, PLR_NOTDEADYET) || MOB_FLAGGED(victim, MOB_NOTDEADYET))
+      return (-1);
+
+    log("SYSERR: Attempt to damage corpse '%s' in room #%d by '%s'.",
+        GET_NAME(victim), GET_ROOM_VNUM(IN_ROOM(victim)), GET_NAME(ch));
+    die(victim, ch);
+    return (-1);			/* -je, 7/7/92 */
+  }
+
+  /* peaceful rooms */
+  if (ch->nr != real_mobile(DG_CASTER_PROXY) &&
+      ch != victim && ROOM_FLAGGED(IN_ROOM(ch), ROOM_PEACEFUL)) {
+    send_to_char(ch, "This room just has such a peaceful, easy feeling...\r\n");
+    return (0);
+  }
+
+  /* shopkeeper and MOB_NOKILL protection */
+  if (!ok_damage_shopkeeper(ch, victim) || MOB_FLAGGED(victim, MOB_NOKILL)) {
+    send_to_char(ch, "This mob is protected.\r\n");
+    return (0);
+  }
+
+  /* You can't cause stun damage on an immortal! */
+  if (!IS_NPC(victim) && ((GET_LEVEL(victim) >= LVL_IMMORT) && PRF_FLAGGED(victim, PRF_NOHASSLE)))
+    stun_dam = 0;
+
+  if (victim != ch) {
+    /* Start the attacker fighting the victim */
+    if (GET_POS(ch) > POS_STUNNED && (FIGHTING(ch) == NULL))
+      set_fighting(ch, victim);
+
+    /* Start the victim fighting the attacker */
+    if (GET_POS(victim) > POS_STUNNED && (FIGHTING(victim) == NULL)) {
+      set_fighting(victim, ch);
+      if (MOB_FLAGGED(victim, MOB_MEMORY) && !IS_NPC(ch))
+	remember(victim, ch);
+    }
+  }
+
+  /* If you attack a pet, it hates your guts */
+  if (victim->master == ch)
+    stop_follower(victim);
+
+  /* If the attacker is invisible, he becomes visible */
+  if (AFF_FLAGGED(ch, AFF_INVISIBLE) || AFF_FLAGGED(ch, AFF_HIDE))
+    appear(ch);
+
+  /* Cut damage in half if victim has sanct, to a minimum 1 */
+  if (AFF_FLAGGED(victim, AFF_SANCTUARY) && stun_dam >= 2)
+    stun_dam /= 2;
+
+  /* Check for PK if this is not a PK MUD */
+  if (!CONFIG_PK_ALLOWED) {
+    check_killer(ch, victim);
+    if (PLR_FLAGGED(ch, PLR_KILLER) && (ch != victim))
+      stun_dam = 0;
+  }
+
+  /* Set the maximum damage per round and subtract the hit points */
+  stun_dam = MAX(MIN(stun_dam, 100), 0);
+  GET_STUN(victim) -= stun_dam;
+
+  update_pos(victim);
+
+  return (stun_dam);
+}
+
 /* Calculate the THAC0 of the attacker. 'victim' currently isn't used but you
  * could use it for special cases like weapons that hit evil creatures easier
  * or a weapon that always misses attacking an animal. */
@@ -807,7 +882,7 @@ static int compute_thaco(struct char_data *ch, struct char_data *victim)
 void hit(struct char_data *ch, struct char_data *victim, int type)
 {
   struct obj_data *wielded = GET_EQ(ch, WEAR_WIELD);
-  int w_type, victim_ac, calc_thaco, dam, diceroll;
+  int w_type, victim_ac, calc_thaco, dam, stun_dam, diceroll;
 
   /* Check that the attacker and victim exist */
   if (!ch || !victim) return;
@@ -924,48 +999,47 @@ void hit(struct char_data *ch, struct char_data *victim, int type)
      * Start with the damage bonuses: the damroll and strength apply */
     dam = str_app[STRENGTH_APPLY_INDEX(ch)].todam;
     dam += GET_DAMROLL(ch);
+    stun_dam = GET_STR(ch)/4;
 
     /* Maybe holding arrow? */
     if (wielded && GET_OBJ_TYPE(wielded) == ITEM_WEAPON) {
       /* Add weapon-based damage if a weapon is being wielded */
       dam += dice(GET_OBJ_VAL(wielded, 1), GET_OBJ_VAL(wielded, 2));
-
-      /* Begin weapon skill damage bonuses */
-      if (w_type == TYPE_SLASH && GET_SKILL(ch, SKILL_SLASHING_WEAPONS) > 80)
-        dam += rand_number(3,6);
-      else if (w_type == TYPE_SLASH && GET_SKILL(ch, SKILL_SLASHING_WEAPONS) > 60)
-        dam += rand_number(2,5);
-      else if (w_type == TYPE_SLASH && GET_SKILL(ch, SKILL_SLASHING_WEAPONS) > 40)
-        dam += rand_number(1,4);
-      else if (w_type == TYPE_SLASH && GET_SKILL(ch, SKILL_SLASHING_WEAPONS) > 20)
-        dam += rand_number(1,2);
-      else if (w_type == TYPE_BLUDGEON && GET_SKILL(ch, SKILL_BLUDGEONING_WEAPONS) > 80)
-        dam += rand_number(3,6);
-      else if (w_type == TYPE_BLUDGEON && GET_SKILL(ch, SKILL_BLUDGEONING_WEAPONS) > 60)
-        dam += rand_number(2,5);
-      else if (w_type == TYPE_BLUDGEON && GET_SKILL(ch, SKILL_BLUDGEONING_WEAPONS) > 40)
-        dam += rand_number(1,4);
-      else if (w_type == TYPE_BLUDGEON && GET_SKILL(ch, SKILL_BLUDGEONING_WEAPONS) > 20)
-        dam += rand_number(1,2);
-      else if (w_type == TYPE_PIERCE && GET_SKILL(ch, SKILL_PIERCING_WEAPONS) > 80)
-        dam += rand_number(3,6);
-      else if (w_type == TYPE_PIERCE && GET_SKILL(ch, SKILL_PIERCING_WEAPONS) > 60)
-        dam += rand_number(2,5);
-      else if (w_type == TYPE_PIERCE && GET_SKILL(ch, SKILL_PIERCING_WEAPONS) > 40)
-        dam += rand_number(1,4);
-      else if (w_type == TYPE_PIERCE && GET_SKILL(ch, SKILL_PIERCING_WEAPONS) > 20)
-        dam += rand_number(1,2);
-      else if (w_type == TYPE_STAB && GET_SKILL(ch, SKILL_STABBING_WEAPONS) > 80)
-        dam += rand_number(3,6);
-      else if (w_type == TYPE_STAB && GET_SKILL(ch, SKILL_STABBING_WEAPONS) > 60)
-        dam += rand_number(2,5);
-      else if (w_type == TYPE_STAB && GET_SKILL(ch, SKILL_STABBING_WEAPONS) > 40)
-        dam += rand_number(1,4);
-      else if (w_type == TYPE_STAB && GET_SKILL(ch, SKILL_STABBING_WEAPONS) > 20)
-        dam += rand_number(1,2);
-      /* End weapon skill damage bonuses */
     }
-
+    /* Begin weapon skill damage bonuses */
+    else if (w_type == TYPE_SLASH && GET_SKILL(ch, SKILL_SLASHING_WEAPONS) > 80)
+      dam += rand_number(3,6);
+    else if (w_type == TYPE_SLASH && GET_SKILL(ch, SKILL_SLASHING_WEAPONS) > 60)
+      dam += rand_number(2,5);
+    else if (w_type == TYPE_SLASH && GET_SKILL(ch, SKILL_SLASHING_WEAPONS) > 40)
+      dam += rand_number(1,4);
+    else if (w_type == TYPE_SLASH && GET_SKILL(ch, SKILL_SLASHING_WEAPONS) > 20)
+      dam += rand_number(1,2);
+    else if (w_type == TYPE_BLUDGEON && GET_SKILL(ch, SKILL_BLUDGEONING_WEAPONS) > 80)
+      dam += rand_number(3,6);
+    else if (w_type == TYPE_BLUDGEON && GET_SKILL(ch, SKILL_BLUDGEONING_WEAPONS) > 60)
+      dam += rand_number(2,5);
+    else if (w_type == TYPE_BLUDGEON && GET_SKILL(ch, SKILL_BLUDGEONING_WEAPONS) > 40)
+      dam += rand_number(1,4);
+    else if (w_type == TYPE_BLUDGEON && GET_SKILL(ch, SKILL_BLUDGEONING_WEAPONS) > 20)
+      dam += rand_number(1,2);
+    else if (w_type == TYPE_PIERCE && GET_SKILL(ch, SKILL_PIERCING_WEAPONS) > 80)
+      dam += rand_number(3,6);
+    else if (w_type == TYPE_PIERCE && GET_SKILL(ch, SKILL_PIERCING_WEAPONS) > 60)
+      dam += rand_number(2,5);
+    else if (w_type == TYPE_PIERCE && GET_SKILL(ch, SKILL_PIERCING_WEAPONS) > 40)
+      dam += rand_number(1,4);
+    else if (w_type == TYPE_PIERCE && GET_SKILL(ch, SKILL_PIERCING_WEAPONS) > 20)
+      dam += rand_number(1,2);
+    else if (w_type == TYPE_STAB && GET_SKILL(ch, SKILL_STABBING_WEAPONS) > 80)
+      dam += rand_number(3,6);
+    else if (w_type == TYPE_STAB && GET_SKILL(ch, SKILL_STABBING_WEAPONS) > 60)
+      dam += rand_number(2,5);
+    else if (w_type == TYPE_STAB && GET_SKILL(ch, SKILL_STABBING_WEAPONS) > 40)
+      dam += rand_number(1,4);
+    else if (w_type == TYPE_STAB && GET_SKILL(ch, SKILL_STABBING_WEAPONS) > 20)
+      dam += rand_number(1,2);
+    /* End weapon skill damage bonuses */
     else {
       /* If no weapon, add bare hand damage instead */
       if (IS_NPC(ch)) {
@@ -1010,6 +1084,7 @@ void hit(struct char_data *ch, struct char_data *victim, int type)
       damage(ch, victim, dam * backstab_mult(GET_LEVEL(ch)), SKILL_BACKSTAB);
     else
       damage(ch, victim, dam, w_type);
+      stun_damage(ch, victim, stun_dam, w_type);
   }
 
   /* check if the victim has a hitprcnt trigger */
