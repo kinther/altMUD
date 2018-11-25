@@ -476,9 +476,7 @@ static void dam_message(int dam, struct char_data *ch, struct char_data *victim,
 
   w_type -= TYPE_HIT;		/* Change to base of table with text */
 
-  if (!AWAKE(victim))
-    return;
-  else if (dam == 0)		msgnum = 0;
+  if (dam == 0)		msgnum = 0;
   else if (dam <= 2)    msgnum = 1;
   else if (dam <= 4)    msgnum = 2;
   else if (dam <= 6)    msgnum = 3;
@@ -506,8 +504,13 @@ static void dam_message(int dam, struct char_data *ch, struct char_data *victim,
     send_to_char(victim, "\tR(%d)", dam);
   buf = replace_string(dam_weapons[msgnum].to_victim,
 	  attack_hit_text[w_type].singular, attack_hit_text[w_type].plural);
+  if (GET_POS(victim) == POS_SLEEPING){
+    return;
+  }
+  else {
   act(buf, FALSE, ch, NULL, victim, TO_VICT | TO_SLEEP);
   send_to_char(victim, CCNRM(victim, C_CMP));
+  }
 }
 
 /*  message for doing damage with a spell or skill. Also used for weapon
@@ -1192,7 +1195,7 @@ void knocked_out(struct char_data *ch, int duration)
 
   if (GET_POS(ch) == POS_SLEEPING)
     return;
-  send_to_char(ch, "Your vision goes black...");
+  send_to_char(ch, "Your vision goes black...\r\n");
   GET_POS(ch) = POS_SLEEPING;
   GET_STUN(ch) = 0;
   af.duration = duration;
