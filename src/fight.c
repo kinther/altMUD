@@ -699,10 +699,6 @@ int damage(struct char_data *ch, struct char_data *victim, int dam, int attackty
     act("$n is stunned, but will probably regain consciousness again.", TRUE, victim, 0, 0, TO_ROOM);
     send_to_char(victim, "You're stunned, but will probably regain consciousness again.\r\n");
     break;
-  case POS_SLEEPING:
-    act("$n eyes roll back in their head.", TRUE, victim, 0, 0, TO_ROOM);
-    send_to_char(victim, "Your eyes roll back in your head.\r\n");
-    break;
   case POS_DEAD:
     act("$n is dead!  R.I.P.", FALSE, victim, 0, 0, TO_ROOM);
     send_to_char(victim, "You are dead!  Sorry...\r\n");
@@ -1195,6 +1191,7 @@ void knocked_out(struct char_data *ch, int duration)
 
   if (GET_POS(ch) == POS_SLEEPING)
     return;
+  act("$n eyes roll back in their head.", TRUE, ch, 0, 0, TO_ROOM);
   send_to_char(ch, "Your vision goes black...\r\n");
   GET_POS(ch) = POS_SLEEPING;
   GET_STUN(ch) = 0;
