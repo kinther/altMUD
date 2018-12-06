@@ -887,6 +887,7 @@ static int compute_thaco(struct char_data *ch, struct char_data *victim)
 void hit(struct char_data *ch, struct char_data *victim, int type)
 {
   struct obj_data *wielded = GET_EQ(ch, WEAR_WIELD);
+  struct obj_data *shielded = GET_EQ(victim, WEAR_SHIELD);
   int w_type, victim_ac, calc_thaco, dam, stun_dam, diceroll;
 
   /* Check that the attacker and victim exist */
@@ -922,7 +923,6 @@ void hit(struct char_data *ch, struct char_data *victim, int type)
   diceroll = rand_number(1, 20);
 
   /* Begin weapon skill to hit bonuses */
-
   if (w_type == TYPE_HIT && GET_SKILL(ch, SKILL_UNARMED) > 80)
     diceroll += 4;
   else if (w_type == TYPE_HIT && GET_SKILL(ch, SKILL_UNARMED) > 60)
@@ -963,8 +963,18 @@ void hit(struct char_data *ch, struct char_data *victim, int type)
     diceroll += 2;
   else if (w_type == TYPE_STAB && GET_SKILL(ch, SKILL_STABBING_WEAPONS) > 20)
     diceroll += 1;
-
   /* End weapon skill to hit bonuses */
+
+  /* Begin combat skill to hit bonuses */
+  if (shielded && GET_SKILL(victim, SKILL_SHIELD_USE) > 80)
+    diceroll -= 4;
+  else if (shielded && GET_SKILL(victim, SKILL_SHIELD_USE) > 60)
+    diceroll -= 3;
+  else if (shielded && GET_SKILL(victim, SKILL_SHIELD_USE) > 40)
+    diceroll -= 2;
+  else if (shielded && GET_SKILL(victim, SKILL_SHIELD_USE) > 20)
+    diceroll -= 1;
+  /* End combat skill to hit bonuses */
 
   /* report for debugging if necessary */
   if (CONFIG_DEBUG_MODE >= NRM)
@@ -1005,6 +1015,9 @@ void hit(struct char_data *ch, struct char_data *victim, int type)
     dam = str_app[STRENGTH_APPLY_INDEX(ch)].todam;
     dam += GET_DAMROLL(ch);
     stun_dam = GET_STR(ch)/4;
+    if (shielded){
+      improve_skill(victim, SKILL_SHIELD_USE);
+    }
 
     /* Maybe holding arrow? */
     if (wielded && GET_OBJ_TYPE(wielded) == ITEM_WEAPON) {

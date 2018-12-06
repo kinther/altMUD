@@ -965,6 +965,7 @@ void mag_assign_spells(void)
   skillo(SKILL_KICK, "kick");
   skillo(SKILL_RESCUE, "rescue");
   skillo(SKILL_DISARM, "disarm");
+  skillo(SKILL_SHIELD_USE, "shield use");
 
   /* Weapon skills */
   skillo(SKILL_UNARMED, "unarmed");

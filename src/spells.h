@@ -119,6 +119,7 @@
 #define SKILL_SLASHING_WEAPONS      146 /* Reserved Skill[] DO NOT CHANGE */
 #define SKILL_BLUDGEONING_WEAPONS   147 /* Reserved Skill[] DO NOT CHANGE */
 #define SKILL_STABBING_WEAPONS      148 /* Reserved Skill[] DO NOT CHANGE */
+#define SKILL_SHIELD_USE            149 /* Reserved Skill[] DO NOT CHANGE */
 
 /* New skills may be added here up to MAX_SKILLS (200) */
 

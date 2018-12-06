@@ -466,12 +466,14 @@ void do_start(struct char_data *ch)
   case CLASS_MAGIC_USER:
     SET_SKILL(ch, SKILL_FORAGE, 10);
     SET_SKILL(ch, SKILL_UNARMED, 10);
+    SET_SKILL(ch, SKILL_SHIELD_USE, 10);
     break;
 
   case CLASS_CLERIC:
     SET_SKILL(ch, SKILL_FORAGE, 10);
     SET_SKILL(ch, SKILL_UNARMED, 10);
     SET_SKILL(ch, SKILL_PIERCING_WEAPONS, 10);
+    SET_SKILL(ch, SKILL_SHIELD_USE, 10);
     break;
 
   case CLASS_THIEF:
@@ -485,6 +487,7 @@ void do_start(struct char_data *ch)
     SET_SKILL(ch, SKILL_UNARMED, 10);
     SET_SKILL(ch, SKILL_PIERCING_WEAPONS, 10);
     SET_SKILL(ch, SKILL_STABBING_WEAPONS, 10);
+    SET_SKILL(ch, SKILL_SHIELD_USE, 10);
     break;
 
   case CLASS_WARRIOR:
@@ -500,6 +503,7 @@ void do_start(struct char_data *ch)
     SET_SKILL(ch, SKILL_PIERCING_WEAPONS, 10);
     SET_SKILL(ch, SKILL_SLASHING_WEAPONS, 10);
     SET_SKILL(ch, SKILL_BLUDGEONING_WEAPONS, 10);
+    SET_SKILL(ch, SKILL_SHIELD_USE, 10);
     break;
   }
 
@@ -645,6 +649,7 @@ void init_spell_levels(void)
   spell_level(SPELL_ENCHANT_WEAPON, CLASS_MAGIC_USER, 1);
   spell_level(SPELL_CLONE, CLASS_MAGIC_USER, 1);
   spell_level(SKILL_UNARMED, CLASS_MAGIC_USER, 1);
+  spell_level(SKILL_SHIELD_USE, CLASS_MAGIC_USER, 1);
 
   /* CLERICS */
   spell_level(SPELL_CURE_LIGHT, CLASS_CLERIC, 1);
@@ -680,6 +685,7 @@ void init_spell_levels(void)
   spell_level(SPELL_REMOVE_CURSE, CLASS_CLERIC, 1);
   spell_level(SKILL_UNARMED, CLASS_CLERIC, 1);
   spell_level(SKILL_PIERCING_WEAPONS, CLASS_CLERIC, 1);
+  spell_level(SKILL_SHIELD_USE, CLASS_CLERIC, 1);
 
   /* THIEVES */
   spell_level(SKILL_SNEAK, CLASS_THIEF, 1);
@@ -691,6 +697,7 @@ void init_spell_levels(void)
   spell_level(SKILL_UNARMED, CLASS_THIEF, 1);
   spell_level(SKILL_PIERCING_WEAPONS, CLASS_THIEF, 1);
   spell_level(SKILL_STABBING_WEAPONS, CLASS_THIEF, 1);
+  spell_level(SKILL_SHIELD_USE, CLASS_THIEF, 1);
 
   /* WARRIORS */
   spell_level(SKILL_KICK, CLASS_WARRIOR, 1);
@@ -705,6 +712,7 @@ void init_spell_levels(void)
   spell_level(SKILL_PIERCING_WEAPONS, CLASS_WARRIOR, 1);
   spell_level(SKILL_SLASHING_WEAPONS, CLASS_WARRIOR, 1);
   spell_level(SKILL_BLUDGEONING_WEAPONS, CLASS_WARRIOR, 1);
+  spell_level(SKILL_SHIELD_USE, CLASS_WARRIOR, 1);
 }
 
 /* This is the exp given to implementors -- it must always be greater than the
