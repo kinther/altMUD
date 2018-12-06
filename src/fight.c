@@ -94,7 +94,9 @@ int compute_armor_class(struct char_data *ch)
 void update_pos(struct char_data *victim)
 {
   /* If a player drops below 0 stun, we knock them out */
-  if (GET_STUN(victim) <= 0){
+  /* Player must be not be affected by KO flag or already dead */
+  if (GET_STUN(victim) <= 0 && (!AFF_FLAGGED(victim, AFF_KO))
+    && GET_HIT(victim) >= 1){
     knocked_out(victim, 1);
   }
 
@@ -679,8 +681,9 @@ int damage(struct char_data *ch, struct char_data *victim, int dam, int attackty
   else {
     if (GET_POS(victim) == POS_DEAD || dam == 0) {
       if (!skill_message(dam, ch, victim, attacktype))
-	dam_message(dam, ch, victim, attacktype);
-    } else {
+	    dam_message(dam, ch, victim, attacktype);
+    }
+    else {
       dam_message(dam, ch, victim, attacktype);
     }
   }
@@ -705,10 +708,10 @@ int damage(struct char_data *ch, struct char_data *victim, int dam, int attackty
     break;
 
   default:			/* >= POSITION SLEEPING */
-    if (dam > (GET_MAX_HIT(victim) / 4))
+    if ((dam > GET_MAX_HIT(victim) / 4) && (!AFF_FLAGGED(victim, AFF_KO)))
       send_to_char(victim, "That really did HURT!\r\n");
 
-    if (GET_HIT(victim) < (GET_MAX_HIT(victim) / 4)) {
+    if ((GET_HIT(victim) < (GET_MAX_HIT(victim) / 4)) && (!AFF_FLAGGED(victim, AFF_KO))) {
       send_to_char(victim, "%sYou wish that your wounds would stop BLEEDING so much!%s\r\n",
 		CCRED(victim, C_SPR), CCNRM(victim, C_SPR));
       if (ch != victim && MOB_FLAGGED(victim, MOB_WIMPY))
@@ -1085,7 +1088,8 @@ void hit(struct char_data *ch, struct char_data *victim, int type)
       damage(ch, victim, dam * backstab_mult(GET_LEVEL(ch)), SKILL_BACKSTAB);
     else
       damage(ch, victim, dam, w_type);
-      stun_damage(ch, victim, stun_dam, w_type);
+      if (GET_STUN(victim) >= 1)
+        stun_damage(ch, victim, stun_dam, w_type);
   }
 
   /* check if the victim has a hitprcnt trigger */
