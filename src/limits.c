@@ -446,7 +446,8 @@ void point_update(void)
     }
 
     /* Normal point returns each tick */
-    if (GET_POS(i) >= POS_STUNNED && (!AFF_FLAGGED(i, AFF_KO))) {
+    /* Players in combat do not gain any points back */
+    if (GET_POS(i) >= POS_STUNNED && GET_POS(i) != POS_FIGHTING && (!AFF_FLAGGED(i, AFF_KO))) {
       GET_HIT(i) = MIN(GET_HIT(i) + hit_gain(i), GET_MAX_HIT(i));
       GET_MANA(i) = MIN(GET_MANA(i) + mana_gain(i), GET_MAX_MANA(i));
       GET_MOVE(i) = MIN(GET_MOVE(i) + move_gain(i), GET_MAX_MOVE(i));
