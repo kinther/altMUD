@@ -175,7 +175,7 @@ int move_gain(struct char_data *ch)
   return (gain);
 }
 
-/* move gain pr. game hour */
+/* stun gain pr. game hour */
 int stun_gain(struct char_data *ch)
 {
   int gain;
@@ -191,8 +191,13 @@ int stun_gain(struct char_data *ch)
     /* Position calculations    */
     switch (GET_POS(ch)) {
     case POS_SLEEPING:
+      if (AFF_FLAGGED(ch, AFF_KO)){
+        break;
+      }
+      else{
       gain += (gain / 2);	/* Divide by 2 */
       break;
+      }
     case POS_RESTING:
       gain += (gain / 4);	/* Divide by 4 */
       break;
@@ -425,7 +430,12 @@ void point_update(void)
     gain_condition(i, DRUNK, -1);
     gain_condition(i, THIRST, -1);
 
-    if (GET_POS(i) >= POS_STUNNED) {
+    if (AFF_FLAGGED(i, AFF_KO)){
+      GET_HIT(i) = MIN(GET_HIT(i) + hit_gain(i), GET_MAX_HIT(i));
+      GET_MANA(i) = MIN(GET_MANA(i) + mana_gain(i), GET_MAX_MANA(i));
+      GET_MOVE(i) = MIN(GET_MOVE(i) + move_gain(i), GET_MAX_MOVE(i));
+    }
+    if (GET_POS(i) >= POS_STUNNED && (!AFF_FLAGGED(i, AFF_KO))) {
       GET_HIT(i) = MIN(GET_HIT(i) + hit_gain(i), GET_MAX_HIT(i));
       GET_MANA(i) = MIN(GET_MANA(i) + mana_gain(i), GET_MAX_MANA(i));
       GET_MOVE(i) = MIN(GET_MOVE(i) + move_gain(i), GET_MAX_MOVE(i));

@@ -1195,6 +1195,9 @@ void knocked_out(struct char_data *ch, int duration)
   send_to_char(ch, "Your vision goes black...\r\n");
   GET_POS(ch) = POS_SLEEPING;
   GET_STUN(ch) = 0;
-  af.duration = duration;
 
+  new_affect(&af);
+  af.duration = duration;
+  SET_BIT_AR(af.bitvector, AFF_KO);
+  affect_to_char(ch, &af);
 }
