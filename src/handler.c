@@ -214,12 +214,13 @@ static void affect_modify_ar(struct char_data * ch, byte loc, sbyte mod, int bit
       for(j = 0; j < 32; j++)
         if(IS_SET_AR(bitv, (i*32)+j))
           SET_BIT_AR(AFF_FLAGS(ch), (i*32)+j);
-  } else {
+  }
+  else {
     for(i = 0; i < AF_ARRAY_MAX; i++)
       for(j = 0; j < 32; j++)
         if(IS_SET_AR(bitv, (i*32)+j))
           REMOVE_BIT_AR(AFF_FLAGS(ch), (i*32)+j);
-    mod = -mod;
+          mod = -mod;
   }
 
   aff_apply_modify(ch, loc, mod, "affect_modify_ar");
@@ -946,7 +947,7 @@ void extract_char_final(struct char_data *ch)
     if (FIGHTING(k) == ch)
       stop_fighting(k);
   }
-  
+
   /* Whipe character from the memory of hunters and other intelligent NPCs... */
   for (temp = character_list; temp; temp = temp->next) {
     /* PCs can't use MEMORY, and don't use HUNTING() */
@@ -955,8 +956,8 @@ void extract_char_final(struct char_data *ch)
     /* If "temp" is hunting our extracted char, stop the hunt. */
     if (HUNTING(temp) == ch)
       HUNTING(temp) = NULL;
-    /* If "temp" has allocated memory data and our ch is a PC, forget the 
-     * extracted character (if he/she is remembered) */  
+    /* If "temp" has allocated memory data and our ch is a PC, forget the
+     * extracted character (if he/she is remembered) */
     if (!IS_NPC(ch) && GET_POS(ch) == POS_DEAD && MEMORY(temp))
       forget(temp, ch); /* forget() is safe to use without a check. */
   }
@@ -1410,28 +1411,28 @@ int find_all_dots(char *arg)
 }
 
 /* Group Handlers */
-struct group_data * create_group(struct char_data * leader) 
+struct group_data * create_group(struct char_data * leader)
 {
   struct group_data * new_group;
-  
+
   /* Allocate Group Memory & Attach to Group List*/
   CREATE(new_group, struct group_data, 1);
   add_to_list(new_group, group_list);
-  
+
   /* Allocate Members List */
   new_group->members = create_list();
-  
+
   /* Clear Data */
   new_group->group_flags = 0;
-  
+
   /* Assign Data */
   SET_BIT(GROUP_FLAGS(new_group), GROUP_OPEN);
-  
+
   if (IS_NPC(leader))
     SET_BIT(GROUP_FLAGS(new_group), GROUP_NPC);
-  
+
   join_group(leader, new_group);
-  
+
   return (new_group);
 }
 
@@ -1439,16 +1440,16 @@ void free_group(struct group_data * group)
 {
   struct char_data *tch;
 	struct iterator_data Iterator;
-	
+
   if (group->members->iSize) {
 		for (tch = (struct char_data *) merge_iterator(&Iterator, group->members);
-		  tch; 
+		  tch;
 		    tch = next_in_list(&Iterator))
           leave_group(tch);
-          
+
     remove_iterator(&Iterator);
   }
-  
+
   free_list(group->members);
   remove_from_list(group, group_list);
   free(group);
@@ -1460,7 +1461,7 @@ void leave_group(struct char_data *ch)
   struct char_data *tch;
   struct iterator_data Iterator;
   bool found_pc = FALSE;
-	
+
   if ((group = ch->group) == NULL)
     return;
 
@@ -1468,40 +1469,40 @@ void leave_group(struct char_data *ch)
 
   remove_from_list(ch, group->members);
   ch->group = NULL;
-  
+
   if (group->members->iSize) {
     for (tch = (struct char_data *) merge_iterator(&Iterator, group->members);
       tch; tch = next_in_list(&Iterator))
-        if (!IS_NPC(tch)) 
+        if (!IS_NPC(tch))
           found_pc = TRUE;
-          
-    remove_iterator(&Iterator);  
+
+    remove_iterator(&Iterator);
   }
 
   if (!found_pc)
     SET_BIT(GROUP_FLAGS(group), GROUP_NPC);
-  
+
   if (GROUP_LEADER(group) == ch && group->members->iSize) {
     group->leader = (struct char_data *) random_from_list(group->members);
     send_to_group(NULL, group, "%s has assumed leadership of the group.\r\n", GET_NAME(GROUP_LEADER(group)));
   } else if (group->members->iSize == 0)
-    free_group(group); 
+    free_group(group);
 }
 
 void join_group(struct char_data *ch, struct group_data *group)
 {
   add_to_list(ch, group->members);
-	
+
   if (group->leader == NULL)
     group->leader = ch;
-	  
-  ch->group = group;  
-  
+
+  ch->group = group;
+
   if (IS_SET(group->group_flags, GROUP_NPC) && !IS_NPC(ch))
     REMOVE_BIT(GROUP_FLAGS(group), GROUP_NPC);
-	
+
   if (group->leader == ch)
     send_to_group(NULL, group, "%s becomes leader of the group.\r\n", GET_NAME(ch));
   else
-    send_to_group(NULL, group, "%s joins the group.\r\n", GET_NAME(ch));		
+    send_to_group(NULL, group, "%s joins the group.\r\n", GET_NAME(ch));
 }

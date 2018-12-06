@@ -93,8 +93,9 @@
 #define SPELL_IDENTIFY               52 /* Reserved Skill[] DO NOT CHANGE */
 #define SPELL_FLY                    53 /* Reserved Skill[] DO NOT CHANGE */
 #define SPELL_DARKNESS               54
+#define SPELL_KNOCKED_OUT            55 /* Used to identify when player is KO'd */
 /** Total Number of defined spells */
-#define NUM_SPELLS                   54
+#define NUM_SPELLS                   55
 
 /* Insert new spells here, up to MAX_SPELLS */
 #define MAX_SPELLS		    130

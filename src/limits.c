@@ -426,31 +426,55 @@ void point_update(void)
   for (i = character_list; i; i = next_char) {
     next_char = i->next;
 
+    /* Standard changes to player condition */
     gain_condition(i, HUNGER, -1);
     gain_condition(i, DRUNK, -1);
     gain_condition(i, THIRST, -1);
 
+    /* If a player is knocked out, they do not gain stun points */
     if (AFF_FLAGGED(i, AFF_KO)){
       GET_HIT(i) = MIN(GET_HIT(i) + hit_gain(i), GET_MAX_HIT(i));
       GET_MANA(i) = MIN(GET_MANA(i) + mana_gain(i), GET_MAX_MANA(i));
       GET_MOVE(i) = MIN(GET_MOVE(i) + move_gain(i), GET_MAX_MOVE(i));
+
+      /* Check for damaging affects and apply as necessary */
+      if (AFF_FLAGGED(i, AFF_POISON))
+       if (damage(i, i, 2, SPELL_POISON) == -1)
+        continue;	/* Oops, they died. -gg 6/24/98 */
+        if (GET_POS(i) <= POS_STUNNED)
+         update_pos(i);
     }
+
+    /* Normal point returns each tick */
     if (GET_POS(i) >= POS_STUNNED && (!AFF_FLAGGED(i, AFF_KO))) {
       GET_HIT(i) = MIN(GET_HIT(i) + hit_gain(i), GET_MAX_HIT(i));
       GET_MANA(i) = MIN(GET_MANA(i) + mana_gain(i), GET_MAX_MANA(i));
       GET_MOVE(i) = MIN(GET_MOVE(i) + move_gain(i), GET_MAX_MOVE(i));
-      GET_STUN(i) = MIN(GET_STUN(i) + stun_gain(i), GET_MAX_STUN(i));
+      /* If a player is no longer knocked out and is now regaining stun */
+      if (GET_STUN(i) == 0 && (!AFF_FLAGGED(i, AFF_KO))){
+        GET_STUN(i) += 1;
+        GET_POS(i) = POS_RESTING;
+        act("$n's eyes flutter open.", TRUE, i, 0, 0, TO_ROOM);
+        send_to_char(i, "Your eyes flutter open as you awaken.\r\n");
+      }
+      else{
+        GET_STUN(i) = MIN(GET_STUN(i) + stun_gain(i), GET_MAX_STUN(i));
+      }
+
+      /* Check for damaging affects and apply as necessary */
       if (AFF_FLAGGED(i, AFF_POISON))
-	if (damage(i, i, 2, SPELL_POISON) == -1)
-	  continue;	/* Oops, they died. -gg 6/24/98 */
-      if (GET_POS(i) <= POS_STUNNED)
-	update_pos(i);
-    } else if (GET_POS(i) == POS_INCAP) {
+	     if (damage(i, i, 2, SPELL_POISON) == -1)
+	      continue;	/* Oops, they died. -gg 6/24/98 */
+        if (GET_POS(i) <= POS_STUNNED)
+	       update_pos(i);
+    }
+    else if (GET_POS(i) == POS_INCAP) {
       if (damage(i, i, 1, TYPE_SUFFERING) == -1)
-	continue;
-    } else if (GET_POS(i) == POS_MORTALLYW) {
+	     continue;
+    }
+    else if (GET_POS(i) == POS_MORTALLYW) {
       if (damage(i, i, 2, TYPE_SUFFERING) == -1)
-	continue;
+	     continue;
     }
     if (!IS_NPC(i)) {
       update_char_objects(i);

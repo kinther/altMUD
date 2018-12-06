@@ -166,7 +166,8 @@ void stop_fighting(struct char_data *ch)
   REMOVE_FROM_LIST(ch, combat_list, next_fighting);
   ch->next_fighting = NULL;
   FIGHTING(ch) = NULL;
-  GET_POS(ch) = POS_STANDING;
+  if (!AFF_FLAGGED((ch), AFF_KO))
+    GET_POS(ch) = POS_STANDING;
   update_pos(ch);
 }
 
@@ -1172,6 +1173,7 @@ void perform_violence(void)
 
 /* Used to improve a skill upon failure */
 /* Credit to Nashak <bmw@efn.org> */
+/* Maybe move this to utils.c ? */
 void improve_skill(struct char_data *ch, int skill)
 {
   extern char *spells[];
