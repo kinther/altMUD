@@ -331,6 +331,36 @@
 #define CON_MSGEDIT      31 /**< OLC mode - message editor */
 #define CON_GET_PROTOCOL 32 /**< Used at log-in while attempting to get protocols > */
 
+/* Connection modes added by Kinther to be used for new account system */
+/* May replace connection modes above if they are phased out */
+/* Begin account related connection modes */
+#define CON_LOGON         33 /**< Used to log on or off of the game */
+#define CON_ACCT_NAME     34 /**< Used to get account name */
+#define CON_CNF_ACCT_NAME 35 /**< Used to confirm a new account if not there */
+#define CON_ACCT_PW       36 /**< Used to get account password */
+#define CON_CNF_ACCT_PW   37 /**< Used to confirm new account password */
+#define CON_OLD_ACCT_PW   38 /**< Used to get an old account password */
+#define CON_ACCT_EMAIL    39 /**< Used to get an account email */
+#define CON_CNF_ACCT_EMAIL 40 /**< Used to confirm an account email */
+#define CON_ACCT_MENU     41 /**< At the account main menu */
+/* Begin expanded character creation */
+#define CON_CREATE        42 /**< Used to begin character creation */
+#define CON_CHAR_NAME     43 /**< Used to get character name */
+#define CON_CHAR_SEX      44 /**< Used to set character sex */
+#define CON_CHAR_AGE      45 /**< Used to set character age */
+#define CON_CHAR_STATS    46 /**< Used to set stat priority */
+#define CON_CHAR_CLASS    47 /**< Used to set character class */
+#define CON_CHAR_HEIGHT   48 /**< Used to set character height */
+#define CON_CHAR_WEIGHT   49 /**< Used to set character weight */
+#define CON_CHAR_SDESC    50 /**< Used to set character short description */
+#define CON_CHAR_MDESC    51 /**< Used to set character main description */
+#define CON_CHAR_BACKGROUND 52 /**< Used to set character background */
+#define CON_CHAR_REVIEW   53 /**< Used to review character data before submission */
+#define CON_CHAR_SUBMIT   54 /**< Used to submit a character for review */
+
+/* Begin extra connection properties */
+/* #define CON_LOCATION      ?? Used to determine starting location for char */
+
 /* OLC States range - used by IS_IN_OLC and IS_PLAYING */
 #define FIRST_OLC_STATE CON_OEDIT     /**< The first CON_ state that is an OLC */
 #define LAST_OLC_STATE  CON_MSGEDIT   /**< The last CON_ state that is an OLC  */
@@ -875,6 +905,16 @@ struct char_player_data
   ubyte height;                  /**< PC / NPC height */
 };
 
+/** General info used by PC's and NPC's. */
+struct account_data
+{
+  char passwd[MAX_PWD_LENGTH+1]; /**< Account password */
+  char *name;                    /**< Account name */
+  char *email;                   /**< Account email */
+  char *current_char;            /**< Account current character */
+  int  *chars;                   /**< Total account lifetime characters */
+};
+
 /** Character abilities. Different instances of this structure are used for
  * both inherent and current ability scores (like when poison affects the
  * player strength). */
@@ -1026,6 +1066,8 @@ struct char_data
   room_rnum was_in_room; /**< Previous location for linkdead people  */
   int wait;              /**< wait for how many loops before taking action. */
 
+  struct account_data account;          /**< Account related data */
+
   struct char_player_data player;       /**< General PC/NPC data */
   struct char_ability_data real_abils;  /**< Abilities without modifiers */
   struct char_ability_data aff_abils;   /**< Abilities with modifiers */
@@ -1105,6 +1147,7 @@ struct descriptor_data
   int bufspace;             /**< space left in the output buffer	*/
   struct txt_block *large_outbuf; /**< ptr to large buffer, if we need it */
   struct txt_q input;       /**< q of unprocessed input		*/
+  struct account_data *account; /**< account related information */
   struct char_data *character; /**< linked to char			*/
   struct char_data *original;  /**< original char if switched		*/
   struct descriptor_data *snooping; /**< Who is this char snooping	*/
