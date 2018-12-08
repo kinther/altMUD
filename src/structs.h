@@ -336,27 +336,28 @@
 /* Begin account related connection modes */
 #define CON_LOGON         33 /**< Used to log on or off of the game */
 #define CON_ACCT_NAME     34 /**< Used to get account name */
-#define CON_CNF_ACCT_NAME 35 /**< Used to confirm a new account if not there */
-#define CON_ACCT_PW       36 /**< Used to get account password */
-#define CON_CNF_ACCT_PW   37 /**< Used to confirm new account password */
-#define CON_OLD_ACCT_PW   38 /**< Used to get an old account password */
-#define CON_ACCT_EMAIL    39 /**< Used to get an account email */
-#define CON_CNF_ACCT_EMAIL 40 /**< Used to confirm an account email */
-#define CON_ACCT_MENU     41 /**< At the account main menu */
+#define CON_ACCT_CREATE   35 /**< Used to create an account */
+#define CON_CNF_ACCT_CREATE 36 /**< Used to confirm a new account name */
+#define CON_ACCT_PW       37 /**< Used to get account password */
+#define CON_CNF_ACCT_PW   38 /**< Used to confirm new account password */
+#define CON_OLD_ACCT_PW   39 /**< Used to get an old account password */
+#define CON_ACCT_EMAIL    40 /**< Used to get an account email */
+#define CON_CNF_ACCT_EMAIL 41 /**< Used to confirm an account email */
+#define CON_ACCT_MENU     42 /**< At the account main menu */
 /* Begin expanded character creation */
-#define CON_CREATE        42 /**< Used to begin character creation */
-#define CON_CHAR_NAME     43 /**< Used to get character name */
-#define CON_CHAR_SEX      44 /**< Used to set character sex */
-#define CON_CHAR_AGE      45 /**< Used to set character age */
-#define CON_CHAR_STATS    46 /**< Used to set stat priority */
-#define CON_CHAR_CLASS    47 /**< Used to set character class */
-#define CON_CHAR_HEIGHT   48 /**< Used to set character height */
-#define CON_CHAR_WEIGHT   49 /**< Used to set character weight */
-#define CON_CHAR_SDESC    50 /**< Used to set character short description */
-#define CON_CHAR_MDESC    51 /**< Used to set character main description */
-#define CON_CHAR_BACKGROUND 52 /**< Used to set character background */
-#define CON_CHAR_REVIEW   53 /**< Used to review character data before submission */
-#define CON_CHAR_SUBMIT   54 /**< Used to submit a character for review */
+#define CON_CREATE        43 /**< Used to begin character creation */
+#define CON_CHAR_NAME     44 /**< Used to get character name */
+#define CON_CHAR_SEX      45 /**< Used to set character sex */
+#define CON_CHAR_AGE      46 /**< Used to set character age */
+#define CON_CHAR_STATS    47 /**< Used to set stat priority */
+#define CON_CHAR_CLASS    48 /**< Used to set character class */
+#define CON_CHAR_HEIGHT   49 /**< Used to set character height */
+#define CON_CHAR_WEIGHT   50 /**< Used to set character weight */
+#define CON_CHAR_SDESC    51 /**< Used to set character short description */
+#define CON_CHAR_MDESC    52 /**< Used to set character main description */
+#define CON_CHAR_BACKGROUND 53 /**< Used to set character background */
+#define CON_CHAR_REVIEW   54 /**< Used to review character data before submission */
+#define CON_CHAR_SUBMIT   55 /**< Used to submit a character for review */
 
 /* Begin extra connection properties */
 /* #define CON_LOCATION      ?? Used to determine starting location for char */
@@ -908,6 +909,7 @@ struct char_player_data
 /** General info used by PC's and NPC's. */
 struct account_data
 {
+  int afilepos; /**< Account file pos and id number */
   char passwd[MAX_PWD_LENGTH+1]; /**< Account password */
   char *name;                    /**< Account name */
   char *email;                   /**< Account email */

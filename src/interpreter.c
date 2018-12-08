@@ -1360,6 +1360,25 @@ void nanny(struct descriptor_data *d, char *arg)
   case CON_GET_PROTOCOL:
     write_to_output(d, "Collecting Protocol Information... Please Wait.\r\n");
     return;
+  case CON_LOGON:     /* wait for input at account logon */
+    if (UPPER(*arg) == 'C'){
+      /* Get account name here */
+      write_to_output(d, "Please enter your account name:\r\n");
+    }
+    else if (UPPER(*arg) == 'R'){
+      /* Get new account name here */
+      write_to_output(d, "Please enter a new account name:\r\n");
+      CREATE(d->account, struct account_data, 1);
+    }
+    else if (UPPER(*arg) == 'X'){
+      /* Close connection */
+      write_to_output(d, "See you again soon...\r\n");
+      STATE(d) = CON_CLOSE;
+    }
+    else{
+      /* Close connection */
+      STATE(d) = CON_CLOSE;
+    }
   case CON_GET_NAME:		/* wait for input of name */
     if (d->character == NULL) {
       CREATE(d->character, struct char_data, 1);
