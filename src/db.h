@@ -133,6 +133,7 @@
 
 #define CONFIG_FILE	LIB_ETC"config"    /* OasisOLC * GAME CONFIG FL */
 #define PLAYER_FILE	LIB_ETC"players"   /* the player database	*/
+#define ACCOUNT_FILE	LIB_ETC"accounts"   /* the account database	*/
 #define MAIL_FILE	LIB_ETC"plrmail"   /* for the mudmail system	*/
 #define MAIL_FILE_TMP	LIB_ETC"plrmail_tmp"   /* for the mudmail system	*/
 #define BAN_FILE	LIB_ETC"badsites"  /* for the siteban system	*/
@@ -145,6 +146,12 @@
 #define PINDEX_NODELETE		(1 << 1)	/* protected player	*/
 #define PINDEX_SELFDELETE	(1 << 2)	/* player is selfdeleting*/
 #define PINDEX_NOWIZLIST	(1 << 3)	/* Player shouldn't be on wizlist*/
+
+/* new bitvector data for use in account_index_element */
+#define AINDEX_DELETED		(1 << 0)	/* deleted account	*/
+#define AINDEX_NODELETE		(1 << 1)	/* protected account	*/
+#define AINDEX_SELFDELETE	(1 << 2)	/* account is selfdeleting*/
+#define AINDEX_NOWIZLIST	(1 << 3)	/* account shouldn't be on wizlist*/
 
 #define REAL 0
 #define VIRTUAL 1
@@ -407,6 +414,13 @@ extern int top_of_p_table;
 extern int top_of_p_file;
 extern long top_idnum;
 /* end previously located in players.c */
+
+/* begin index used for accounts */
+extern struct account_index_element *account_table;
+extern int top_of_a_table;
+extern int top_of_a_file;
+extern long top_a_idnum;
+/* end index for accounts */
 
 extern time_t newsmod;
 extern time_t motdmod;

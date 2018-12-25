@@ -161,7 +161,7 @@ void char_from_furniture(struct char_data *ch);
 #define ETEXT_FILE       1 /**< ???? */
 #define SCRIPT_VARS_FILE 2 /**< Reference to a global variable file. */
 #define PLR_FILE         3 /**< The standard player file */
-#define ACCT_FILE        4
+#define ACCT_FILE        4 /**< The standard account file */
 
 #define MAX_FILES        5 /**< Max number of files types vailable */
 
@@ -362,6 +362,15 @@ do                                                              \
 #define CHECK_PLAYER_SPECIAL(ch, var)	(var)
 #endif
 
+/* Account check function */
+/* TO-DO: Does not look right, need to revisit this at some point */
+#if 1
+#define CHECK_ACCOUNT(ch, var) \
+	(*(((ch)->account_data == &dummy_mob) ? (log("SYSERR: Mob using '"#var"' at %s:%d.", __FILE__, __LINE__), &(var)) : &(var)))
+#else
+#define CHECK_ACCOUNT(ch, var)	(var)
+#endif
+
 /** The act flags on a mob. Synonomous with PLR_FLAGS. */
 #define MOB_FLAGS(ch)	((ch)->char_specials.saved.act)
 /** Player flags on a PC. Synonomous with MOB_FLAGS. */
@@ -466,8 +475,11 @@ do                                                              \
 #define GET_ACCOUNT_EMAIL(acct)  ((acct)->account.email)
 /* What is the account's current character name? */
 #define GET_ACCOUNT_CHAR(acct)   ((acct)->account.current_char)
+/* The amount of failed account logins */
+#define GET_ACCT_BAD_PWS(ch)		CHECK_ACCOUNT((ch), ((ch)->account_data->saved.bad_pws))
 /* The account file position */
 #define GET_AFILE_POS(acct)      ((acct)->afilepos)
+
 
 /* char utils */
 /** What room is PC/NPC in? */
