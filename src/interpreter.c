@@ -1400,7 +1400,7 @@ void nanny(struct descriptor_data *d, char *arg)
       }
 
       /* If the account exists, get account file position  */
-      if ((account_i = load_char(tmp_name, d->account)) > -1) {
+      if ((account_i = load_acct(tmp_name, d->account)) > -1) {
         GET_AFILEPOS(d->account) = account_i;
 
         /* Moves on to checking password */
@@ -1424,8 +1424,8 @@ void nanny(struct descriptor_data *d, char *arg)
     }
 
     /* Moves on to create account */
-    CREATE(d->account->account.name, char, strlen(tmp_name) + 1);
-    strcpy(d->account->account.name, CAP(tmp_name));	/* strcpy: OK (size checked above) */
+    CREATE(d->account->name, char, strlen(tmp_name) + 1);
+    strcpy(d->account->name, CAP(tmp_name));	/* strcpy: OK (size checked above) */
 
     write_to_output(d, "Did I get that right, %s (\t(Y\t)/\t(N\t))? ", tmp_name);
     STATE(d) = CON_CNF_ACCT_CREATE;
@@ -1438,7 +1438,7 @@ void nanny(struct descriptor_data *d, char *arg)
     if (UPPER(*arg) == 'Y') {
       /* If you're banned, you can't make new accounts */
       if (isbanned(d->host) >= BAN_NEW) {
-	       mudlog(NRM, LVL_GOD, TRUE, "Request for new account %s denied from [%s] (siteban)", GET_ACCT_NAME(d->account), d->host);
+	       mudlog(NRM, LVL_GOD, TRUE, "Request for new account %s denied from [%s] (siteban)", GET_ACCOUNT_NAME(d->account), d->host);
 	       write_to_output(d, "Sorry, new accounts are not allowed from your site!\r\n");
 	       STATE(d) = CON_CLOSE;
 	       return;
@@ -1446,14 +1446,14 @@ void nanny(struct descriptor_data *d, char *arg)
       /* If game is locked, you can't make new accounts */
       if (circle_restrict) {
 	       write_to_output(d, "Sorry, new accounts can't be created at the moment.\r\n");
-	       mudlog(NRM, LVL_GOD, TRUE, "Request for new account %s denied from [%s] (wizlock)", GET_ACCT_NAME(d->account), d->host);
+	       mudlog(NRM, LVL_GOD, TRUE, "Request for new account %s denied from [%s] (wizlock)", GET_ACCOUNT_NAME(d->account), d->host);
 	       STATE(d) = CON_CLOSE;
 	       return;
       }
       /* TO-DO: Investigate what this next line does */
       perform_new_char_dupe_check(d);
 
-      write_to_output(d, "New account.\r\nGive me a password for %s: ", GET_ACCT_NAME(d->account));
+      write_to_output(d, "New account.\r\nGive me a password for %s: ", GET_ACCOUNT_NAME(d->account));
       echo_off(d);
       STATE(d) = CON_ACCT_PW;
     } else if (*arg == 'n' || *arg == 'N') {
@@ -1478,7 +1478,7 @@ void nanny(struct descriptor_data *d, char *arg)
     else {
       if (strncmp(CRYPT(arg, GET_ACCOUNT_PW(d->account)), GET_ACCOUNT_PW(d->account), MAX_PWD_LENGTH)) {
         mudlog(BRF, LVL_GOD, TRUE, "Bad PW: %s [%s]", GET_ACCOUNT_NAME(d->account), d->host);
-        GET_ACCT_BAD_PWS(d->account)++;
+        GET_ACCOUNT_BAD_PWS(d->account)++;
         save_char(d->account);
         if (++(d->bad_pws) >= CONFIG_MAX_BAD_PWS) {	/* 3 strikes and you're out. */
           write_to_output(d, "Wrong password... disconnecting.\r\n");
@@ -1491,51 +1491,35 @@ void nanny(struct descriptor_data *d, char *arg)
       }
 
       /* Password was correct. */
-      load_result = GET_ACCT_BAD_PWS(d->account);
-      GET_ACCT_BAD_PWS(d->account) = 0;
+      load_result = GET_ACCOUNT_BAD_PWS(d->account);
+      GET_ACCOUNT_BAD_PWS(d->account) = 0;
       d->bad_pws = 0;
 
       if (isbanned(d->host) == BAN_SELECT &&
-      !PLR_FLAGGED(d->account, PLR_SITEOK)) {
+      !ACCT_FLAGGED(d->account, ACCT_BANNED)) {
         write_to_output(d, "Sorry, this account has not been cleared for login from your site!\r\n");
         STATE(d) = CON_CLOSE;
         mudlog(NRM, LVL_GOD, TRUE, "Connection attempt for %s denied from %s",
-        GET_ACCOUNT_NAME(d->account), d->host);
+        GET_ACCOUNT_NAME(d->account->name), d->account_specials_saved->host);
         return;
       }
       if (GET_LEVEL(d->account) < circle_restrict) {
         write_to_output(d, "The game is temporarily restricted.. try again later.\r\n");
         STATE(d) = CON_CLOSE;
         mudlog(NRM, LVL_GOD, TRUE, "Request for login denied for %s [%s] (wizlock)",
-        GET_ACCOUNT_NAME(d->account), d->host);
+        GET_ACCOUNT_NAME(d->account->name), d->account_specials_saved->host);
         return;
       }
       /* check and make sure no other copies of this player are logged in */
       if (perform_dupe_check(d))
         return;
 
-      if (GET_LEVEL(d->account) >= LVL_IMMORT)
-        write_to_output(d, "%s", imotd);
-      else
-        write_to_output(d, "%s", motd);
-
-      if (GET_INVIS_LEV(d->account))
-        mudlog(BRF, MAX(LVL_IMMORT, GET_INVIS_LEV(d->account)), TRUE, "%s has connected. (invis %d)", GET_NAME(d->character), GET_INVIS_LEV(d->character));
-      else
-        mudlog(BRF, LVL_IMMORT, TRUE, "%s has connected.", GET_NAME(d->character));
-
-      /* Add to the list of 'recent' players (since last reboot) */
-      if (AddRecentPlayer(GET_ACCOUNT_NAME(d->account), d->host, FALSE, FALSE) == FALSE)
-      {
-        mudlog(BRF, MAX(LVL_IMMORT, GET_INVIS_LEV(d->account)), TRUE, "Failure to AddRecentPlayer (returned FALSE).");
-      }
-
       if (load_result) {
         write_to_output(d, "\r\n\r\n\007\007\007"
         "%s%d LOGIN FAILURE%s SINCE LAST SUCCESSFUL LOGIN.%s\r\n",
         CCRED(d->account, C_SPR), load_result,
         (load_result > 1) ? "S" : "", CCNRM(d->account, C_SPR));
-        GET_ACCT_BAD_PWS(d->account) = 0;
+        GET_ACCOUNT_BAD_PWS(d->account->account_specials_saved->bad_pws) = 0;
       }
       write_to_output(d, "\r\n*** PRESS RETURN: ");
       STATE(d) = CON_RMOTD;
