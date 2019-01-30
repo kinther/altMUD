@@ -161,9 +161,8 @@ void char_from_furniture(struct char_data *ch);
 #define ETEXT_FILE       1 /**< ???? */
 #define SCRIPT_VARS_FILE 2 /**< Reference to a global variable file. */
 #define PLR_FILE         3 /**< The standard player file */
-#define ACCT_FILE        4
 
-#define MAX_FILES        5 /**< Max number of files types vailable */
+#define MAX_FILES        4 /**< Max number of files types vailable */
 
 /* breadth-first searching for graph function (tracking, etc) */
 #define BFS_ERROR		(-1)       /**< Error in the search. */
@@ -456,18 +455,6 @@ do                                                              \
 /** Pointer to the room function, NULL if there is not one. */
 #define GET_ROOM_SPEC(room) \
 	(VALID_ROOM_RNUM(room) ? world[(room)].func : NULL)
-
-/* account utils */
-/* What is the account name? */
-#define GET_ACCOUNT_NAME(acct)   ((acct)->account.name)
-/* What is the account password? */
-#define GET_ACCOUNT_PW(acct)     ((acct)->account.passwd)
-/* What is the account email? */
-#define GET_ACCOUNT_EMAIL(acct)  ((acct)->account.email)
-/* What is the account's current character name? */
-#define GET_ACCOUNT_CHAR(acct)   ((acct)->account.current_char)
-/* The account file position */
-#define GET_AFILE_POS(acct)      ((acct)->afilepos)
 
 /* char utils */
 /** What room is PC/NPC in? */
