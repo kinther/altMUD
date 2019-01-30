@@ -1324,7 +1324,6 @@ void nanny(struct descriptor_data *d, char *arg)
 {
   int load_result;	/* Overloaded variable */
   int player_i;
-  int account_i;
 
   /* OasisOLC states */
   struct {
@@ -1361,17 +1360,15 @@ void nanny(struct descriptor_data *d, char *arg)
   case CON_GET_PROTOCOL:
     write_to_output(d, "Collecting Protocol Information... Please Wait.\r\n");
     return;
-
   case CON_LOGON:     /* wait for input at account logon */
     if (UPPER(*arg) == 'C'){
       /* Get account name here */
       write_to_output(d, "Please enter your account name:\r\n");
-      STATE(d) = CON_ACCT_NAME;
     }
     else if (UPPER(*arg) == 'R'){
       /* Get new account name here */
       write_to_output(d, "Please enter a new account name:\r\n");
-      STATE(d) = CON_ACCT_CREATE;
+      CREATE(d->account, struct account_data, 1);
     }
     else if (UPPER(*arg) == 'X'){
       /* Close connection */
@@ -1382,222 +1379,6 @@ void nanny(struct descriptor_data *d, char *arg)
       /* Close connection */
       STATE(d) = CON_CLOSE;
     }
-
-  case CON_ACCT_NAME:   /* wait for input at name screen */
-    /* Get account name here through user input  */
-
-    if (!*arg)
-      STATE(d) = CON_CLOSE;
-    else {
-      char buf[MAX_INPUT_LENGTH], tmp_name[MAX_INPUT_LENGTH];
-
-      /* Checks whether someone is trying something funny */
-      if ((_parse_name(arg, tmp_name)) || strlen(tmp_name) < 2 ||
-       strlen(tmp_name) > MAX_NAME_LENGTH || !valid_name(tmp_name) ||
-       fill_word(strcpy(buf, tmp_name)) || reserved_word(buf)) {	/* strcpy: OK (mutual MAX_INPUT_LENGTH) */
-          write_to_output(d, "Invalid name, please try another.\r\nName: ");
-          return;
-      }
-
-      /* If the account exists, get account file position  */
-      if ((account_i = load_char(tmp_name, d->account)) > -1) {
-        GET_AFILEPOS(d->account) = account_i;
-
-        /* Moves on to checking password */
-        write_to_output(d, "Password: ");
-        echo_off(d);
-        d->idle_tics = 0;
-        STATE(d) = CON_ACCT_PW;
-
-      }
-    }
-
-
-  case CON_ACCT_CREATE: /* create new account name */
-
-    char buf[MAX_INPUT_LENGTH], tmp_name[MAX_INPUT_LENGTH];
-
-    /* Check for multiple creations of a character. */
-    if (!valid_name(tmp_name)) {
-      write_to_output(d, "Invalid name, please try another.\r\nName: ");
-      return;
-    }
-
-    /* Moves on to create account */
-    CREATE(d->account->account.name, char, strlen(tmp_name) + 1);
-    strcpy(d->account->account.name, CAP(tmp_name));	/* strcpy: OK (size checked above) */
-
-    write_to_output(d, "Did I get that right, %s (\t(Y\t)/\t(N\t))? ", tmp_name);
-    STATE(d) = CON_CNF_ACCT_CREATE;
-
-    }
-
-
-  case CON_CNF_ACCT_CREATE:  /* confirm new account name */
-    /* Confirm new account name here */
-    if (UPPER(*arg) == 'Y') {
-      /* If you're banned, you can't make new accounts */
-      if (isbanned(d->host) >= BAN_NEW) {
-	       mudlog(NRM, LVL_GOD, TRUE, "Request for new account %s denied from [%s] (siteban)", GET_ACCT_NAME(d->account), d->host);
-	       write_to_output(d, "Sorry, new accounts are not allowed from your site!\r\n");
-	       STATE(d) = CON_CLOSE;
-	       return;
-      }
-      /* If game is locked, you can't make new accounts */
-      if (circle_restrict) {
-	       write_to_output(d, "Sorry, new accounts can't be created at the moment.\r\n");
-	       mudlog(NRM, LVL_GOD, TRUE, "Request for new account %s denied from [%s] (wizlock)", GET_ACCT_NAME(d->account), d->host);
-	       STATE(d) = CON_CLOSE;
-	       return;
-      }
-      /* TO-DO: Investigate what this next line does */
-      perform_new_char_dupe_check(d);
-
-      write_to_output(d, "New account.\r\nGive me a password for %s: ", GET_ACCT_NAME(d->account));
-      echo_off(d);
-      STATE(d) = CON_ACCT_PW;
-    } else if (*arg == 'n' || *arg == 'N') {
-      write_to_output(d, "Okay, what IS it, then? ");
-      free(d->account->account.name);
-      d->account->account.name = NULL;
-      STATE(d) = CON_ACCT_CREATE;
-    } else
-      write_to_output(d, "Please type Yes or No: ");
-    break;
-
-
-  case CON_ACCT_PW:     /* get account password */
-
-    echo_on(d);    /* turn echo back on */
-
-    /* New echo_on() eats the return on telnet. Extra space better than none. */
-    write_to_output(d, "\r\n");
-
-    if (!*arg)
-      STATE(d) = CON_CLOSE;
-    else {
-      if (strncmp(CRYPT(arg, GET_ACCOUNT_PW(d->account)), GET_ACCOUNT_PW(d->account), MAX_PWD_LENGTH)) {
-        mudlog(BRF, LVL_GOD, TRUE, "Bad PW: %s [%s]", GET_ACCOUNT_NAME(d->account), d->host);
-        GET_ACCT_BAD_PWS(d->account)++;
-        save_char(d->account);
-        if (++(d->bad_pws) >= CONFIG_MAX_BAD_PWS) {	/* 3 strikes and you're out. */
-          write_to_output(d, "Wrong password... disconnecting.\r\n");
-          STATE(d) = CON_CLOSE;
-        } else {
-            write_to_output(d, "Wrong password.\r\nPassword: ");
-            echo_off(d);
-          }
-        return;
-      }
-
-      /* Password was correct. */
-      load_result = GET_ACCT_BAD_PWS(d->account);
-      GET_ACCT_BAD_PWS(d->account) = 0;
-      d->bad_pws = 0;
-
-      if (isbanned(d->host) == BAN_SELECT &&
-      !PLR_FLAGGED(d->account, PLR_SITEOK)) {
-        write_to_output(d, "Sorry, this account has not been cleared for login from your site!\r\n");
-        STATE(d) = CON_CLOSE;
-        mudlog(NRM, LVL_GOD, TRUE, "Connection attempt for %s denied from %s",
-        GET_ACCOUNT_NAME(d->account), d->host);
-        return;
-      }
-      if (GET_LEVEL(d->account) < circle_restrict) {
-        write_to_output(d, "The game is temporarily restricted.. try again later.\r\n");
-        STATE(d) = CON_CLOSE;
-        mudlog(NRM, LVL_GOD, TRUE, "Request for login denied for %s [%s] (wizlock)",
-        GET_ACCOUNT_NAME(d->account), d->host);
-        return;
-      }
-      /* check and make sure no other copies of this player are logged in */
-      if (perform_dupe_check(d))
-        return;
-
-      if (GET_LEVEL(d->account) >= LVL_IMMORT)
-        write_to_output(d, "%s", imotd);
-      else
-        write_to_output(d, "%s", motd);
-
-      if (GET_INVIS_LEV(d->account))
-        mudlog(BRF, MAX(LVL_IMMORT, GET_INVIS_LEV(d->account)), TRUE, "%s has connected. (invis %d)", GET_NAME(d->character), GET_INVIS_LEV(d->character));
-      else
-        mudlog(BRF, LVL_IMMORT, TRUE, "%s has connected.", GET_NAME(d->character));
-
-      /* Add to the list of 'recent' players (since last reboot) */
-      if (AddRecentPlayer(GET_ACCOUNT_NAME(d->account), d->host, FALSE, FALSE) == FALSE)
-      {
-        mudlog(BRF, MAX(LVL_IMMORT, GET_INVIS_LEV(d->account)), TRUE, "Failure to AddRecentPlayer (returned FALSE).");
-      }
-
-      if (load_result) {
-        write_to_output(d, "\r\n\r\n\007\007\007"
-        "%s%d LOGIN FAILURE%s SINCE LAST SUCCESSFUL LOGIN.%s\r\n",
-        CCRED(d->account, C_SPR), load_result,
-        (load_result > 1) ? "S" : "", CCNRM(d->account, C_SPR));
-        GET_ACCT_BAD_PWS(d->account) = 0;
-      }
-      write_to_output(d, "\r\n*** PRESS RETURN: ");
-      STATE(d) = CON_RMOTD;
-    }
-    break;
-
-  case CON_CNF_ACCT_PW:     /* confirm account password */
-    /* Confirm account password here */
-
-  case CON_OLD_ACCT_PW:     /* get old account password */
-    /* Used for changing account passwords */
-
-  case CON_ACCT_EMAIL:      /* get account email address */
-    /* Get account email here */
-
-  case CON_CNF_ACCT_EMAIL:  /* confirm account email */
-    /* Confirm account email here */
-
-  case CON_ACCT_MENU:       /* main account menu */
-    /* Lists options for players to create, connect, or disconnect */
-
-  case CON_CREATE:         /* initiates the character creation process */
-    /* Likely just moves on to getting character name */
-
-  case CON_CHAR_NAME:      /* get new character name */
-    /* Get new character name here */
-
-  case CON_CHAR_SEX:       /* select new character sex */
-    /* Male or female, which is it? */
-
-  case CON_CHAR_AGE:       /* get new character's age */
-    /* Range 18-60 */
-
-  case CON_CHAR_STATS:     /* get new character's stat priority for rolls */
-    /* Allows player to define stat priority for higher rolls */
-
-  case CON_CHAR_CLASS:    /* get new character's class */
-    /* Uses original tbaMUD classes for now */
-    /* TO-DO: update classes here */
-
-  case CON_CHAR_HEIGHT:   /* get new character's height */
-    /* Not sure if this is necessary to start with or not */
-
-  case CON_CHAR_WEIGHT:   /* get new character's weight */
-    /* Not sure if this is necessary to start with or not */
-
-  case CON_CHAR_SDESC:    /* get new character's short description */
-    /* e.g. the tall, muscular man */
-
-  case CON_CHAR_MDESC:    /* get new character's main description */
-    /* Enters editor similar to what already exists in tbaMUD  on menu */
-
-  case CON_CHAR_BACKGROUND:   /* get new character's background */
-    /* Enters editor similar to main description */
-
-  case CON_CHAR_REVIEW:      /* allows player to confirm all creation values */
-    /* Prints menu with character creation values entered */
-
-  case CON_CHAR_SUBMIT:      /* sends all character creation data to mud admins */
-    /* Unsure how to proceed here, may use email to mud admin for approval */
-    /* TO-DO: Perhaps add a menu option for immortals to approve or deny? */
-
   case CON_GET_NAME:		/* wait for input of name */
     if (d->character == NULL) {
       CREATE(d->character, struct char_data, 1);

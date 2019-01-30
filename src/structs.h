@@ -915,9 +915,6 @@ struct account_data
   char *email;                   /**< Account email */
   char *current_char;            /**< Account current character */
   int  *chars;                   /**< Total account lifetime characters */
-  ubyte bad_pws;                 /**< Number of bad login attempts */
-  struct descriptor_data *desc; /**< Descriptor/connection info; NPCs = NULL */
-
 };
 
 /** Character abilities. Different instances of this structure are used for
