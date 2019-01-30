@@ -203,12 +203,6 @@
 #define PLR_IDEA         18   /**< Player is writing an idea */
 #define PLR_TYPO         19   /**< Player is writing a typo */
 
-/* Account flags: used by char_data.char_specials.act */
-#define ACCT_PENDING      0   /**< Account is pending approval */
-#define ACCT_ACTIVATED    1   /**< Account has been activated */
-#define ACCT_DEACTIVATED  2   /**< Account has been deactivated */
-#define ACCT_BANNED       3   /**< Account has been banned */
-
 /* Mobile flags: used by char_data.char_specials.act */
 #define MOB_SPEC            0   /**< Mob has a callable spec-proc */
 #define MOB_SENTINEL        1   /**< Mob should not move */
@@ -922,27 +916,8 @@ struct account_data
   char *current_char;            /**< Account current character */
   int  *chars;                   /**< Total account lifetime characters */
   ubyte bad_pws;                 /**< Number of bad login attempts */
+  struct descriptor_data *desc; /**< Descriptor/connection info; NPCs = NULL */
 
-  struct descriptor_data *desc; /**< Descriptor/connection info  */
-  struct account_special_data *account_specials; /**< Account specials */
-  struct account_special_data_saved *account_specials_saved; /**< Account related save data */
-};
-
-/** Special account constants which aren't in afile */
-struct account_special_data
-{
-  struct time_data time;         /**< Account AGE in days */
-};
-
-/** Data only needed by accounts, and needs to be saved to disk. */
-struct account_special_data_saved
-{
-  ubyte bad_pws;          /**< number of bad login attempts */
-  ubyte page_length;      /**< Max number of rows of text to send at once */
-  ubyte screen_width;     /**< How wide the display page is */
-  long acct_idnum;        /**< Account's idnum */
-  char *host;             /**< Resolved hostname, or ip, for account. */
-  int act[PM_ARRAY_MAX]; /**< Account related flags e.g. banned */
 };
 
 /** Character abilities. Different instances of this structure are used for

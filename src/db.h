@@ -226,15 +226,6 @@ struct player_index_element {
    time_t last;
 };
 
-/* Added level, flags, and last, primarily for pfile autocleaning.  You can also
- * use them to keep online statistics, and add race, class, etc if you like. */
-struct account_index_element {
-   char	*name;
-   long id;
-   int flags;
-   time_t last;
-};
-
 struct help_index_element {
    char *index;      /*Future Use */
    char *keywords;   /*Keyword Place holder and sorter */
@@ -311,14 +302,9 @@ void   reset_char(struct char_data *ch);
 void   free_char(struct char_data *ch);
 void   save_player_index(void);
 long   get_ptable_by_name(const char *name);
-long   get_atable_by_name(const char *name);
 void   remove_player(int pfilepos);
 void   clean_pfiles(void);
 void   build_player_index(void);
-
-/* Functions from accounts.c */
-int    load_acct(const char *name, struct account_data *acct);
-void   save_acct(struct account_data *acct);
 
 struct obj_data *create_obj(void);
 void   clear_object(struct obj_data *obj);

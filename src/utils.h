@@ -365,10 +365,10 @@ do                                                              \
 /* Account check function */
 /* TO-DO: Does not look right, need to revisit this at some point */
 #if 1
-#define CHECK_ACCOUNT(acct, var) \
-	(*(((acct)->account_specials == &dummy_mob) ? (log("SYSERR: Mob using '"#var"' at %s:%d.", __FILE__, __LINE__), &(var)) : &(var)))
+#define CHECK_ACCOUNT(ch, var) \
+	(*(((ch)->account_data == &dummy_mob) ? (log("SYSERR: Mob using '"#var"' at %s:%d.", __FILE__, __LINE__), &(var)) : &(var)))
 #else
-#define CHECK_ACCOUNT(acct, var)	(var)
+#define CHECK_ACCOUNT(ch, var)	(var)
 #endif
 
 /** The act flags on a mob. Synonomous with PLR_FLAGS. */
@@ -409,9 +409,6 @@ do                                                              \
 /** 1 if ch is not flagged an NPC and flag is set in the act bitarray, 0 if
  * not. */
 #define PLR_FLAGGED(ch, flag) (!IS_NPC(ch) && IS_SET_AR(PLR_FLAGS(ch), (flag)))
-/** 1 if ch is not flagged an NPC and flag is set in the act bitarray, 0 if
- * not. */
-#define ACCT_FLAGGED(acct, flag) (IS_SET_AR(ACCT_FLAGS(acct), (flag)))
 /** 1 if flag is set in the affect bitarray, 0 if not. */
 #define AFF_FLAGGED(ch, flag) (IS_SET_AR(AFF_FLAGS(ch), (flag)))
 /** 1 if flag is set in the preferences bitarray, 0 if not. */
@@ -471,23 +468,18 @@ do                                                              \
 
 /* account utils */
 /* What is the account name? */
-#define GET_ACCOUNT_NAME(acct)   ((acct)->name)
+#define GET_ACCOUNT_NAME(acct)   ((acct)->account.name)
 /* What is the account password? */
-#define GET_ACCOUNT_PW(acct)     ((acct)->passwd)
+#define GET_ACCOUNT_PW(acct)     ((acct)->account.passwd)
 /* What is the account email? */
-#define GET_ACCOUNT_EMAIL(acct)  ((acct)->email)
+#define GET_ACCOUNT_EMAIL(acct)  ((acct)->account.email)
 /* What is the account's current character name? */
-#define GET_ACCOUNT_CHAR(acct)   ((acct)->current_char)
+#define GET_ACCOUNT_CHAR(acct)   ((acct)->account.current_char)
 /* The amount of failed account logins */
-#define GET_ACCOUNT_BAD_PWS(acct)	 ((acct)->account_specials_saved->bad_pws)
+#define GET_ACCT_BAD_PWS(ch)		CHECK_ACCOUNT((ch), ((ch)->account_data->saved.bad_pws))
 /* The account file position */
-#define GET_AFILEPOS(acct)      ((acct)->afilepos)
-/* The host the account connects from */
-#define GET_ACCOUNT_HOST(acct)		((acct)->account_specials_saved->host))
-/** Unique ID of ch. */
-#define GET_ACCOUNT_IDNUM(acct)	  ((acct)->account_specials_saved->acct_idnum)
-/** Account flags on an account. Synonomous with PLR_FLAGS. */
-#define ACCT_FLAGS(acct)	((acct)->account_specials_saved->act)
+#define GET_AFILE_POS(acct)      ((acct)->afilepos)
+
 
 /* char utils */
 /** What room is PC/NPC in? */
