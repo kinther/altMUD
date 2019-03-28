@@ -1709,31 +1709,17 @@ void nanny(struct descriptor_data *d, char *arg)
       break;
 
     case '2':
-      if (d->character->player.description) {
-	write_to_output(d, "Current description:\r\n%s", d->character->player.description);
-	/* Don't free this now... so that the old description gets loaded as the
-	 * current buffer in the editor.  Do setup the ABORT buffer here, however. */
-	d->backstr = strdup(d->character->player.description);
-      }
-      write_to_output(d, "Enter the new text you'd like others to see when they look at you.\r\n");
-      send_editor_help(d);
-      d->str = &d->character->player.description;
-      d->max_str = PLR_DESC_LENGTH;
-      STATE(d) = CON_PLR_DESC;
-      break;
-
-    case '3':
       page_string(d, background, 0);
       STATE(d) = CON_RMOTD;
       break;
 
-    case '4':
+    case '3':
       write_to_output(d, "\r\nEnter your old password: ");
       echo_off(d);
       STATE(d) = CON_CHPWD_GETOLD;
       break;
 
-    case '5':
+    case '4':
       write_to_output(d, "\r\nEnter your password for verification: ");
       echo_off(d);
       STATE(d) = CON_DELCNF1;
