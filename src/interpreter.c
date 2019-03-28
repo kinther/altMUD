@@ -1629,8 +1629,20 @@ void nanny(struct descriptor_data *d, char *arg)
     init_char(d->character);
     save_char(d->character);
     save_player_index();
-    write_to_output(d, "%s\r\n*** PRESS RETURN: ", motd);
-    STATE(d) = CON_RMOTD;
+
+    /* Switch case to new character description */
+    write_to_output(d, "********************************************************************************\r\n");
+    write_to_output(d, "*                                                                              *\r\n");
+    write_to_output(d, "* This MUD requires a player description to be set during character creation.  *\r\n");
+    write_to_output(d, "* The character description is what other players see when they look at you.   *\r\n");
+    write_to_output(d, "* Please make this realistic for the game setting, and at least four full      *\r\n");
+    write_to_output(d, "* lines.                                                                       *\r\n");
+    write_to_output(d, "*                                                                              *\r\n");
+    write_to_output(d, "********************************************************************************\r\n");
+    send_editor_help(d);
+    d->str = &d->character->player.description;
+    d->max_str = PLR_DESC_LENGTH;
+    STATE(d) = CON_PLR_DESC;
     /* make sure the last log is updated correctly. */
     GET_PREF(d->character)= rand_number(1, 128000);
     GET_HOST(d->character)= strdup(d->host);
