@@ -9,3 +9,4 @@ which allow for "Roleplay Intensive" gameplay.  These include:
 * Account system for reviewing player characters before approval
 * Skills are increased slowly through use
 * Socials are pruned down to those that do not break RP
+* Some new, some old skills found from https://www.circlemud.org/pub/CircleMUD/submissions/snippets/
