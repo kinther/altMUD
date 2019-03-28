@@ -2853,7 +2853,7 @@ static struct set_struct {
    { "frozen",		LVL_GRGOD, 	PC,	BINARY },  /* 15 */
    { "gold",		LVL_BUILDER, 	BOTH, 	NUMBER },
    { "height",		LVL_BUILDER,	BOTH,	NUMBER },
-   { "hitpoints",       LVL_BUILDER, 	BOTH, 	NUMBER },
+   { "hitpoints",       LVL_BUILDER, 	BOTH, 	NUMBER }, /* 18 */
    { "hitroll",		LVL_BUILDER, 	BOTH, 	NUMBER },
    { "hunger",		LVL_BUILDER, 	BOTH, 	MISC },    /* 20 */
    { "int", 		LVL_BUILDER, 	BOTH, 	NUMBER },
@@ -2862,12 +2862,12 @@ static struct set_struct {
    { "killer",		LVL_GOD, 	PC, 	BINARY },
    { "level",		LVL_GRGOD, 	BOTH, 	NUMBER },  /* 25 */
    { "loadroom",	LVL_BUILDER, 	PC, 	MISC },
-   { "mana",		LVL_BUILDER, 	BOTH, 	NUMBER },
-   { "maxhit",	        LVL_BUILDER, 	BOTH, 	NUMBER },
-   { "maxmana",       	LVL_BUILDER, 	BOTH, 	NUMBER },
+   { "mana",		LVL_BUILDER, 	BOTH, 	NUMBER }, /* 27 */
+   { "maxhit",	        LVL_BUILDER, 	BOTH, 	NUMBER }, /* 28 */
+   { "maxmana",       	LVL_BUILDER, 	BOTH, 	NUMBER }, /* 29 */
    { "maxmove",		LVL_BUILDER, 	BOTH, 	NUMBER },  /* 30 */
-   { "maxstun",   LVL_BUILDER,  BOTH,   NUMBER },
-   { "move",		LVL_BUILDER, 	BOTH, 	NUMBER },
+   { "maxstun",   LVL_BUILDER,  BOTH,   NUMBER }, /* 31 */
+   { "move",		LVL_BUILDER, 	BOTH, 	NUMBER }, /* 32 */
    { "name",	LVL_IMMORT, 	PC, 	MISC },
    { "nodelete",	LVL_GOD, 	PC, 	BINARY },
    { "nohassle",	LVL_GOD, 	PC, 	BINARY }, /* 35 */
@@ -2886,7 +2886,7 @@ static struct set_struct {
    { "siteok",   LVL_GOD,  PC,   BINARY },
    { "str",		LVL_BUILDER, 	BOTH, 	NUMBER },
    { "stradd",		LVL_BUILDER, 	BOTH, 	NUMBER }, /* 50 */
-   { "stun",      LVL_BUILDER,  BOTH,   NUMBER },
+   { "stun",      LVL_BUILDER,  BOTH,   NUMBER }, /* 51 */
    { "thief",		LVL_GOD, 	PC, 	BINARY },
    { "thirst",		LVL_BUILDER, 	BOTH, 	MISC },
    { "title",		LVL_GOD, 	PC, 	MISC   },
@@ -3124,19 +3124,15 @@ static int perform_set(struct char_data *ch, struct char_data *vict, int mode, c
       vict->points.max_move = RANGE(1, 5000);
       affect_total(vict);
       break;
-    case 31: /* move */
-      vict->points.move = RANGE(0, vict->points.max_move);
-      affect_total(vict);
-      break;
-    case 32: /* maxstun */
+    case 31: /* maxstun */
       vict->points.max_stun = RANGE(1, 5000);
       affect_total(vict);
       break;
-    case 33: /* stun */
-      vict->points.stun = RANGE(0, vict->points.max_stun);
+    case 32: /* move */
+      vict->points.move = RANGE(0, vict->points.max_move);
       affect_total(vict);
       break;
-    case 34: /* name */
+    case 33: /* name */
       if (ch != vict && GET_LEVEL(ch) < LVL_IMPL) {
         send_to_char(ch, "Only Imps can change the name of other players.\r\n");
         return (0);
@@ -3146,24 +3142,24 @@ static int perform_set(struct char_data *ch, struct char_data *vict, int mode, c
         return (0);
       }
       break;
-    case 35: /* nodelete */
+    case 34: /* nodelete */
       SET_OR_REMOVE(PLR_FLAGS(vict), PLR_NODELETE);
       break;
-    case 36: /* nohassle */
+    case 35: /* nohassle */
       if (GET_LEVEL(ch) < LVL_GOD && ch != vict) {
         send_to_char(ch, "You aren't godly enough for that!\r\n");
         return (0);
       }
       SET_OR_REMOVE(PRF_FLAGS(vict), PRF_NOHASSLE);
       break;
-    case 37: /* nosummon */
+    case 36: /* nosummon */
       SET_OR_REMOVE(PRF_FLAGS(vict), PRF_SUMMONABLE);
       send_to_char(ch, "Nosummon %s for %s.\r\n", ONOFF(!on), GET_NAME(vict));
       break;
-    case 38: /* nowiz */
+    case 37: /* nowiz */
       SET_OR_REMOVE(PLR_FLAGS(vict), PLR_NOWIZLIST);
       break;
-    case 39: /* olc */
+    case 38: /* olc */
       if (is_abbrev(val_arg, "socials") || is_abbrev(val_arg, "actions") || is_abbrev(val_arg, "aedit"))
         GET_OLC_ZONE(vict) = AEDIT_PERMISSION;
       else if (is_abbrev(val_arg, "hedit") || is_abbrev(val_arg, "help"))
@@ -3178,7 +3174,7 @@ static int perform_set(struct char_data *ch, struct char_data *vict, int mode, c
       } else
         GET_OLC_ZONE(vict) = atoi(val_arg);
       break;
-    case 40: /* password */
+    case 39: /* password */
       if (GET_LEVEL(vict) >= LVL_GRGOD) {
         send_to_char(ch, "You cannot change that.\r\n");
         return (0);
@@ -3187,7 +3183,7 @@ static int perform_set(struct char_data *ch, struct char_data *vict, int mode, c
       *(GET_PASSWD(vict) + MAX_PWD_LENGTH) = '\0';
       send_to_char(ch, "Password changed to '%s'.\r\n", val_arg);
       break;
-    case 41: /* poofin */
+    case 40: /* poofin */
       if ((vict == ch) || (GET_LEVEL(ch) == LVL_IMPL)) {
         skip_spaces(&val_arg);
         parse_at(val_arg);
@@ -3201,7 +3197,7 @@ static int perform_set(struct char_data *ch, struct char_data *vict, int mode, c
           POOFIN(vict) = strdup(val_arg);
         }
       break;
-    case 42: /* poofout */
+    case 41: /* poofout */
       if ((vict == ch) || (GET_LEVEL(ch) == LVL_IMPL)) {
         skip_spaces(&val_arg);
         parse_at(val_arg);
@@ -3215,13 +3211,13 @@ static int perform_set(struct char_data *ch, struct char_data *vict, int mode, c
           POOFOUT(vict) = strdup(val_arg);
         }
       break;
-    case 43: /* practices */
+    case 42: /* practices */
       GET_PRACTICES(vict) = RANGE(0, 100);
       break;
-    case 44: /* quest */
+    case 43: /* quest */
       SET_OR_REMOVE(PRF_FLAGS(vict), PRF_QUEST);
       break;
-    case 45: /* room */
+    case 44: /* room */
       if ((rnum = real_room(value)) == NOWHERE) {
         send_to_char(ch, "No room exists with that number.\r\n");
         return (0);
@@ -3230,23 +3226,23 @@ static int perform_set(struct char_data *ch, struct char_data *vict, int mode, c
         char_from_room(vict);
       char_to_room(vict, rnum);
       break;
-    case 46: /* screenwidth */
+    case 45: /* screenwidth */
       GET_SCREEN_WIDTH(vict) = RANGE(40, 200);
       break;
-    case 47: /* sex */
+    case 46: /* sex */
       if ((i = search_block(val_arg, genders, FALSE)) < 0) {
         send_to_char(ch, "Must be 'male', 'female', or 'neutral'.\r\n");
         return (0);
       }
       GET_SEX(vict) = i;
       break;
-    case 48: /* showvnums */
+    case 47: /* showvnums */
       SET_OR_REMOVE(PRF_FLAGS(vict), PRF_SHOWVNUMS);
       break;
-    case 49: /* siteok */
+    case 48: /* siteok */
       SET_OR_REMOVE(PLR_FLAGS(vict), PLR_SITEOK);
       break;
-    case 50: /* str */
+    case 49: /* str */
       if (IS_NPC(vict) || GET_LEVEL(vict) >= LVL_GRGOD)
         RANGE(3, 25);
       else
@@ -3255,10 +3251,14 @@ static int perform_set(struct char_data *ch, struct char_data *vict, int mode, c
       vict->real_abils.str_add = 0;
       affect_total(vict);
       break;
-    case 51: /* stradd */
+    case 50: /* stradd */
       vict->real_abils.str_add = RANGE(0, 100);
       if (value > 0)
         vict->real_abils.str = 18;
+      affect_total(vict);
+      break;
+    case 51: /* stun */
+      vict->points.stun = RANGE(0, vict->points.max_stun);
       affect_total(vict);
       break;
     case 52: /* thief */
