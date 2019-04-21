@@ -480,7 +480,7 @@ static void medit_disp_stats_menu(struct descriptor_data *d)
   "(%s3%s) HP NumDice:  %s[%s%5d%s]%s    (%s6%s) BHD NumDice:  %s[%s%5d%s]%s\r\n"
   "(%s4%s) HP SizeDice: %s[%s%5d%s]%s    (%s7%s) BHD SizeDice: %s[%s%5d%s]%s\r\n"
   "(%s5%s) HP Addition: %s[%s%5d%s]%s    (%s8%s) DamRoll:      %s[%s%5d%s]%s\r\n"
-  "(%s9%s) StunDice:      %s[%s%5d%s]%s\r\n"
+  "(%s9%s) ST Addition: %s[%s%5d%s]%s\r\n"
   "%-*s(range %s%d%s to %s%d%s)\r\n\r\n"
 
   "(%sA%s) Armor Class: %s[%s%4d%s]%s        (%sD%s) Hitroll:   %s[%s%5d%s]%s\r\n"

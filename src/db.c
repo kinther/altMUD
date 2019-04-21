@@ -1533,10 +1533,10 @@ static void parse_simple_mob(FILE *mob_f, int i, int nr)
     exit(1);
   }
 
-  if (sscanf(line, " %d %d %d %dd%d+%d %dd%d+%d ",
-	  t, t + 1, t + 2, t + 3, t + 4, t + 5, t + 6, t + 7, t + 8) != 9) {
+  if (sscanf(line, " %d %d %d %d %dd%d+%d %dd%d+%d ",
+	  t, t + 1, t + 2, t + 3, t + 4, t + 5, t + 6, t + 7, t + 8, t + 9) != 10) {
     log("SYSERR: Format error in mob #%d, first line after S flag\n"
-	"...expecting line of form '# # # #d#+# #d#+#'", nr);
+	"...expecting line of form '# # # # #d#+# #d#+#'", nr);
     exit(1);
   }
 
