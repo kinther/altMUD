@@ -1,4 +1,4 @@
-Files for CircleRPI.
+Files for TestMud.
 
 The goal of this fork is to introduce several features to the tbaMUD codebase
 which allow for "Roleplay Intensive" gameplay.  These include:
