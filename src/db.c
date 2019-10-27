@@ -1533,10 +1533,10 @@ static void parse_simple_mob(FILE *mob_f, int i, int nr)
     exit(1);
   }
 
-  if (sscanf(line, " %d %d %d %d %dd%d+%d %dd%d+%d ",
+  if (sscanf(line, " %d %d %d %dd%d+%dd%d %dd%d+%d ",
 	  t, t + 1, t + 2, t + 3, t + 4, t + 5, t + 6, t + 7, t + 8, t + 9) != 10) {
     log("SYSERR: Format error in mob #%d, first line after S flag\n"
-	"...expecting line of form '# # # # #d#+# #d#+#'", nr);
+	"...expecting line of form '# # # # #d#+#d# #d#+#'", nr);
     exit(1);
   }
 
@@ -1544,7 +1544,7 @@ static void parse_simple_mob(FILE *mob_f, int i, int nr)
   GET_HITROLL(mob_proto + i) = 20 - t[1];
   GET_AC(mob_proto + i) = 10 * t[2];
 
-  /* max hit = 0 is a flag that H, M, V is xdy+z */
+  /* max hit = 0 is a flag that H, M, V, S is hdx+ydz */
   GET_MAX_HIT(mob_proto + i) = 0;
   GET_HIT(mob_proto + i) = t[3];
   GET_MANA(mob_proto + i) = t[4];
