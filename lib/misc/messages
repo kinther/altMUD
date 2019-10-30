@@ -1,4 +1,4 @@
-* TBAMUD Combat Message File
+* ALTMUD Combat Message File
 * burning hands 5
 M
 5
@@ -861,4 +861,3 @@ $N is hit by $n's lightning breath.
 $N is immortal and immune to lightning breath.
 $n tries to breath lightning upon you.
 $n tries to breath lightning upon $N.
-
