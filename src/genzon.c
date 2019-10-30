@@ -1,5 +1,5 @@
 /**************************************************************************
-*  File: genzon.c                                          Part of tbaMUD *
+*  File: genzon.c                                          Part of altMUD *
 *  Usage: Generic OLC Library - Zones.                                    *
 *                                                                         *
 *  Copyright 1996 by Harvey Gilpin, 1997-2001 by George Greer.            *
@@ -379,7 +379,7 @@ int save_zone(zone_rnum zone_num)
     fprintf(zfile, "#%d\n"
                    "%s~\n"
                    "%s~\n"
-                   "%d %d %d %d %s %s %s %s %d %d\n",       /* New tbaMUD data line */
+                   "%d %d %d %d %s %s %s %s %d %d\n",       /* New altMUD data line */
            zone_table[zone_num].number,
           (zone_table[zone_num].builders && *zone_table[zone_num].builders)
                 ? zone_table[zone_num].builders : "None.",
@@ -586,4 +586,3 @@ void delete_zone_command(struct zone_data *zone, int pos)
   /* Ok, let's zap it. */
   remove_cmd_from_list(&zone->cmd, pos);
 }
-

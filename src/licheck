@@ -2,9 +2,9 @@
 
 cat << EOF
 
-TbaMUD is freeware (it doesn't cost anything), but it is copyrighted
+altMUD is freeware (it doesn't cost anything), but it is copyrighted
 and has a license.  You must read and agree to abide by the license before
-using tbaMUD.
+using altMUD.
 
 This message will only appear once (the first time you compile the server),
 but is contained in the file doc/license.txt if you'd like to refer back to

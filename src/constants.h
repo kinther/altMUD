@@ -2,7 +2,7 @@
 * @file constants.h
 * Declares the global constants defined in constants.c.
 *
-* Part of the core tbaMUD source code distribution, which is a derivative
+* Part of the core altMUD source code distribution, which is a derivative
 * of, and continuation of, CircleMUD.
 *
 * All rights reserved.  See license for complete information.
@@ -12,7 +12,7 @@
 #ifndef _CONSTANTS_H_
 #define _CONSTANTS_H_
 
-extern const char *tbamud_version;
+extern const char *altmud_version;
 extern const char *dirs[];
 extern const char *autoexits[];
 extern const char *room_bits[];

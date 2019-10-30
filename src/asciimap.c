@@ -1,5 +1,5 @@
 /**************************************************************************
-*  File: asciimap.c                                        Part of tbaMUD *
+*  File: asciimap.c                                        Part of altMUD *
 *  Usage: Generates an ASCII map of the player's surroundings.            *
 *                                                                         *
 *  All rights reserved.  See license for complete information.            *
@@ -501,7 +501,7 @@ static void perform_map( struct char_data *ch, char *argument, bool worldmap )
   map[centre][centre] = SECT_HERE;
 
   /* Feel free to put your own MUD name or header in here */
-  send_to_char(ch, " \tY-\tytbaMUD Map System\tY-\tn\r\n"
+  send_to_char(ch, " \tY-\tyaltMUD Map System\tY-\tn\r\n"
                    "\tD  .-.__--.,--.__.-.\tn\r\n" );
 
   count += sprintf(buf + count, "\tn\tn\tn%s Up\\\\", door_info[NUM_DOOR_TYPES + DOOR_UP].disp);
@@ -575,7 +575,7 @@ void str_and_map(char *str, struct char_data *ch, room_vnum target_room ) {
       map[x][y]= (!(y%2) && !worldmap) ? DOOR_NONE : SECT_EMPTY;
 
   /* starts the mapping with the center room */
-MapArea(target_room, ch, centre, centre, min, max, ns_size/2, ew_size/2, worldmap ); 
+MapArea(target_room, ch, centre, centre, min, max, ns_size/2, ew_size/2, worldmap );
   map[centre][centre] = SECT_HERE;
 
   /* char_size = rooms + doors + padding */

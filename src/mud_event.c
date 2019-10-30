@@ -1,5 +1,5 @@
 /**************************************************************************
-*  File: mud_event.c                                       Part of tbaMUD *
+*  File: mud_event.c                                       Part of altMUD *
 *  Usage: Handling of the mud event system                                *
 *                                                                         *
 *  By Vatiken. Copyright 2012 by Joseph Arnusch                           *
@@ -96,10 +96,10 @@ void attach_mud_event(struct mud_event_data *pMudEvent, long time)
   struct descriptor_data * d;
   struct char_data * ch;
   struct room_data * room;
-   
+
   pEvent = event_create(mud_event_index[pMudEvent->iId].func, pMudEvent, time);
   pEvent->isMudEvent = TRUE;
-  pMudEvent->pEvent = pEvent;        
+  pMudEvent->pEvent = pEvent;
 
   switch (mud_event_index[pMudEvent->iId].iEvent_Type) {
     case EVENT_WORLD:
@@ -111,18 +111,18 @@ void attach_mud_event(struct mud_event_data *pMudEvent, long time)
     break;
     case EVENT_CHAR:
       ch = (struct char_data *) pMudEvent->pStruct;
-      
+
       if (ch->events == NULL)
         ch->events = create_list();
-              
+
       add_to_list(pEvent, ch->events);
     break;
     case EVENT_ROOM:
       room = (struct room_data *) pMudEvent->pStruct;
-      
+
       if (room->events == NULL)
-        room->events = create_list();      
-      
+        room->events = create_list();
+
       add_to_list(pEvent, room->events);
     break;
   }
@@ -161,7 +161,7 @@ void free_mud_event(struct mud_event_data *pMudEvent)
     case EVENT_CHAR:
       ch = (struct char_data *) pMudEvent->pStruct;
       remove_from_list(pMudEvent->pEvent, ch->events);
-      
+
       if (ch->events->iSize == 0) {
         free_list(ch->events);
         ch->events = NULL;
@@ -170,11 +170,11 @@ void free_mud_event(struct mud_event_data *pMudEvent)
     case EVENT_ROOM:
       room = (struct room_data *) pMudEvent->pStruct;
       remove_from_list(pMudEvent->pEvent, room->events);
-      
-      if (room->events && (room->events->iSize == 0)) { 
+
+      if (room->events && (room->events->iSize == 0)) {
         free_list(room->events);
         room->events = NULL;
-      }      
+      }
     break;
   }
 
@@ -197,7 +197,7 @@ struct mud_event_data * char_has_mud_event(struct char_data * ch, event_id iId)
   if (ch->events->iSize == 0)
     return NULL;
 
-  clear_simple_list();  
+  clear_simple_list();
 
   while ((pEvent = (struct event *) simple_list(ch->events)) != NULL) {
     if (!pEvent->isMudEvent)
@@ -211,23 +211,23 @@ struct mud_event_data * char_has_mud_event(struct char_data * ch, event_id iId)
 
   if (found)
     return (pMudEvent);
-  
+
   return NULL;
-} 
+}
 
 void clear_char_event_list(struct char_data * ch)
 {
   struct event * pEvent;
-    
+
   if (ch->events == NULL)
     return;
-    
+
   if (ch->events->iSize == 0)
     return;
-    
-  clear_simple_list();  
+
+  clear_simple_list();
 
   while ((pEvent = (struct event *) simple_list(ch->events)) != NULL) {
     event_cancel(pEvent);
-  } 
+  }
 }

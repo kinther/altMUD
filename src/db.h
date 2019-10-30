@@ -2,7 +2,7 @@
 * @file db.h
 * Header file for database handling.
 *
-* Part of the core tbaMUD source code distribution, which is a derivative
+* Part of the core altMUD source code distribution, which is a derivative
 * of, and continuation of, CircleMUD.
 *
 * All rights reserved.  See license for complete information.

@@ -1,5 +1,5 @@
 /**************************************************************************
-*  File: magic.c                                           Part of tbaMUD *
+*  File: magic.c                                           Part of altMUD *
 *  Usage: Low-level functions for magic; spell template code.             *
 *                                                                         *
 *  All rights reserved.  See license for complete information.            *
@@ -721,7 +721,7 @@ void mag_summons(int level, struct char_data *ch, struct obj_data *obj,
     /*
      * We have designated the clone spell as the example for how to use the
      * mag_materials function.
-     * In stock tbaMUD it checks to see if the character has item with
+     * In stock altMUD it checks to see if the character has item with
      * vnum 161 which is a set of sacrificial entrails. If we have the entrails
      * the spell will succeed,  and if not, the spell will fail 102% of the time
      * (prevents random success... see below).

@@ -1,5 +1,5 @@
 /**************************************************************************
-*  File: house.c                                           Part of tbaMUD *
+*  File: house.c                                           Part of altMUD *
 *  Usage: Handling of player houses.                                      *
 *                                                                         *
 *  All rights reserved.  See license for complete information.            *
@@ -86,7 +86,7 @@ static int House_load(room_vnum vnum)
   return (1);
 }
 
-/* Save all objects for a house (recursive; initial call must be followed by a 
+/* Save all objects for a house (recursive; initial call must be followed by a
  * call to House_restore_weight)  Assumes file is open already. */
 int House_save(struct obj_data *obj, FILE *fp)
 {
@@ -221,13 +221,13 @@ static void House_save_control(void)
   /* write all the house control recs in one fell swoop.  Pretty nifty, eh? */
   if (fwrite(house_control, sizeof(struct house_control_rec), num_of_houses, fl) != (size_t)num_of_houses) {
     perror("SYSERR: Unable to save house control file.");
-    return;	  
+    return;
   }
 
   fclose(fl);
 }
 
-/* Call from boot_db - will load control recs, load objs, set atrium bits. 
+/* Call from boot_db - will load control recs, load objs, set atrium bits.
  * Should do sanity checks on vnums & remove invalid records. */
 void House_boot(void)
 {
@@ -462,7 +462,7 @@ static void hcontrol_destroy_house(struct char_data *ch, char *arg)
   send_to_char(ch, "House deleted.\r\n");
   House_save_control();
 
-  /* Now, reset the ROOM_ATRIUM flag on all existing houses' atriums, just in 
+  /* Now, reset the ROOM_ATRIUM flag on all existing houses' atriums, just in
    * case the house we just deleted shared an atrium with another house. -JE */
   for (i = 0; i < num_of_houses; i++)
     if ((real_atrium = real_room(house_control[i].atrium)) != NOWHERE)

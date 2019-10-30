@@ -1,5 +1,5 @@
 /**************************************************************************
-*  File: interpreter.c                                     Part of tbaMUD *
+*  File: interpreter.c                                     Part of altMUD *
 *  Usage: Parse user commands, search for specials, call ACMD functions.  *
 *                                                                         *
 *  All rights reserved.  See license for complete information.            *

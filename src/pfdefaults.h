@@ -2,7 +2,7 @@
 * @file pfdefaults.h
 * ASCII player file defaults.
 *
-* Part of the core tbaMUD source code distribution, which is a derivative
+* Part of the core altMUD source code distribution, which is a derivative
 * of, and continuation of, CircleMUD.
 *
 * This set of code was not originally part of the circlemud distribution.

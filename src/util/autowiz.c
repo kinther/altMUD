@@ -1,5 +1,5 @@
 /* ************************************************************************
-*  file:  autowiz.c                                        Part of tbaMUD *
+*  file:  autowiz.c                                        Part of altMUD *
 *  Usage: self-updating wizlists                                          *
 *  Written by Jeremy Elson                                                *
 *  All Rights Reserved                                                    *
@@ -153,7 +153,7 @@ void write_wizlist(FILE * out, int minlev, int maxlev)
 
   fprintf(out,
 "*******************************************************************************\n"
-"*          The following people have reached immortality on tbaMUD.           *\n"
+"*          The following people have reached immortality on altMUD.           *\n"
 "*******************************************************************************\n\n");
 
   for (curr_level = levels; curr_level; curr_level = curr_level->next) {
@@ -253,9 +253,9 @@ char *CAP(char *txt)
   return (txt);
 }
 
-/* get_line reads the next non-blank line off of the input stream. The newline 
- * character is removed from the input.  Lines which begin with '*' are 
- * considered to be comments. Returns the number of lines advanced in the 
+/* get_line reads the next non-blank line off of the input stream. The newline
+ * character is removed from the input.  Lines which begin with '*' are
+ * considered to be comments. Returns the number of lines advanced in the
  * file. */
 int get_line(FILE * fl, char *buf)
 {

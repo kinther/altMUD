@@ -1,5 +1,5 @@
 /**************************************************************************
-*  File: tedit.c                                           Part of tbaMUD *
+*  File: tedit.c                                           Part of altMUD *
 *  Usage: Oasis OLC - Text files.                                         *
 *                                                                         *
 * By Michael Scott [Manx].                                                *

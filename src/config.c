@@ -1,6 +1,6 @@
 /**************************************************************************
-*  File: config.c                                          Part of tbaMUD *
-*  Usage: Configuration of various aspects of tbaMUD operation.           *
+*  File: config.c                                          Part of altMUD *
+*  Usage: Configuration of various aspects of altMUD operation.           *
 *                                                                         *
 *  All rights reserved.  See license for complete information.            *
 *                                                                         *
@@ -22,7 +22,7 @@
  * this file instead.  - Mythran */
 
 /* Below are several constants which you can change to alter certain aspects
- * of the way tbaMUD acts.  Since this is a .c file, all you have to do
+ * of the way altMUD acts.  Since this is a .c file, all you have to do
  * to change one of the constants (assuming you keep your object files around)
  * is change the constant in this file and type 'make'.  Make will recompile
  * this file and relink; you don't have to wait for the whole thing to recompile
@@ -262,8 +262,8 @@ int use_new_socials = YES;
 
 const char *MENU =
 "\r\n"
-"Welcome to tbaMUD!\r\n"
-"\t(0\t)) Exit from tbaMUD.\r\n"
+"Welcome to altMUD!\r\n"
+"\t(0\t)) Exit from altMUD.\r\n"
 "\t(1\t)) Enter the game.\r\n"
 "\t(2\t)) Read the background story.\r\n"
 "\t(3\t)) Change password.\r\n"
@@ -273,11 +273,11 @@ const char *MENU =
 
 const char *WELC_MESSG =
 "\r\n"
-"Welcome to tbaMUD!  May your visit here be... Enlightening"
+"Welcome to altMUD!  May your visit here be... Enlightening"
 "\r\n\r\n";
 
 const char *START_MESSG =
-"Welcome.  This is your new tbaMUD character!  You can now earn gold,\r\n"
+"Welcome.  This is your new altMUD character!  You can now earn gold,\r\n"
 "gain experience, find weapons and equipment, and much more -- while\r\n"
 "meeting people from around the world!\r\n";
 

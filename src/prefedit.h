@@ -1,5 +1,5 @@
 /**************************************************************************
-*  File: prefedit.c                                        Part of tbaMUD *
+*  File: prefedit.c                                        Part of altMUD *
 *  Usage: Player-level OLC for setting preferences and toggles            *
 *                                                                         *
 *  Created by Jamdog for tbaMUD 3.59                                      *
@@ -57,4 +57,3 @@ struct prefs_data
 void prefedit_Restore_Defaults(struct descriptor_data *d);
 void prefedit_parse(struct descriptor_data * d, char *arg);
 ACMD(do_oasis_prefedit);
-

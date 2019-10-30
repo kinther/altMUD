@@ -105,8 +105,8 @@ Specifically, the following are required:
    you are encouraged to do so by all means, but use of any part of the
    CircleMUD or DikuMUD source code requires that their respective licenses
    be followed, including the crediting requirements.
-   
-   
+
+
 The third part of the license simply states that you must comply with the
 DikuMUD license.  This is required because CircleMUD is a DikuMUD derivative.
 The DikuMUD license is included below.
@@ -208,7 +208,7 @@ Rules:
 
    If you wish to setup a version of DikuMud on any computer system, you
    must send us a message , by snail-mail or e-mail, and inform us where
-   and when you are running the game. (remember to include 
+   and when you are running the game. (remember to include
    your address, name etc.)
 
 
@@ -237,5 +237,25 @@ If you make any major improvements on DikuMud we would be happy to
 hear from you. As you will naturally honor the above rules, you will receive
 new updates and improvements made to the game.
 
-If you have any additions or corrections please stop by the Builder Academy at
-telnet://tbamud.com:9091 or email: rumble@tbamud.com -- Rumble
+===========================================================================
+
+
+Everything below this line is the latest unmodified altMUD license.
+You must comply with the CircleMUD license above, as well as the DikuMUD
+license above.  Credit where credit is due - altMUD would not be possible
+without the countless hours of additional work added by the Builder Academy
+team.  Stop by the Builder Academy at telnet://tbamud.com:9091 or
+email: rumble@tbamud.com for more information.
+
+
+---------------------------------------------------------------------------
+
+2019-10-30
+
+altMUD is a modified version of CircleMUD which changes the way the stock
+game is played.  Several community features have been added from publicly
+available source code repositories and snippets from long ago.  Where possible,
+credit is given to those that wrote the code.  If you find that part of the
+source code distributed with altMUD has part of your work within it, and you
+would like credit or to have it removed, please email Kinther at
+xdelaranx@gmail.com.

@@ -1,5 +1,5 @@
 /**************************************************************************
-*  File: lists.c                                           Part of tbaMUD *
+*  File: lists.c                                           Part of altMUD *
 *  Usage: Handling of in-game lists                                       *
 *                                                                         *
 *  By Vatiken. Copyright 2012 by Joseph Arnusch                           *
@@ -20,22 +20,22 @@ static struct list_data *pLastList = NULL;
 struct list_data * global_lists = NULL;
 struct list_data * group_list   = NULL;
 
-struct list_data * create_list(void) 
+struct list_data * create_list(void)
 {
   struct list_data *pNewList;
   static bool first_list = TRUE;
-  
+
   CREATE(pNewList, struct list_data, 1);
-  
+
   pNewList->pFirstItem = NULL;
   pNewList->pLastItem  = NULL;
   pNewList->iIterators = 0;
   pNewList->iSize      = 0;
-  
+
   /* Add to global lists, primarily for debugging purposes */
   if (first_list == FALSE)
     add_to_list(pNewList, global_lists);
-  else 
+  else
     first_list = FALSE;
 
   return (pNewList);
@@ -57,20 +57,20 @@ static struct item_data * create_item(void)
 void free_list(struct list_data * pList)
 {
   void * pContent;
-  
-  clear_simple_list();  
-    
+
+  clear_simple_list();
+
   if (pList->iSize)
     while ((pContent = simple_list(pList)))
       remove_from_list(pContent, pList);
-    
+
   if (pList->iSize > 0)
     mudlog(CMP, LVL_GOD, TRUE, "List being freed while not empty.");
-      
+
   /* Global List for debugging */
   if (pList != global_lists)
-    remove_from_list(pList, global_lists);  
-  
+    remove_from_list(pList, global_lists);
+
   free(pList);
 }
 
@@ -89,7 +89,7 @@ void add_to_list(void * pContent, struct list_data * pList)
   /* If we are the first entry in the list, mark us as such */
   if (pList->pFirstItem == NULL)
     pList->pFirstItem = pNewItem;
- 
+
   /* Grab our last item from the list and attach it to our new item */
   if (pList->pLastItem) {
     pLastItem = pList->pLastItem;
@@ -113,17 +113,17 @@ void remove_from_list(void * pContent, struct list_data * pList)
   }
 
   if (pRemovedItem == pList->pFirstItem)
-    pList->pFirstItem = pRemovedItem->pNextItem;  
+    pList->pFirstItem = pRemovedItem->pNextItem;
 
   if (pRemovedItem == pList->pLastItem)
-    pList->pLastItem = pRemovedItem->pPrevItem;  
- 
+    pList->pLastItem = pRemovedItem->pPrevItem;
+
   if (pRemovedItem->pPrevItem)
     pRemovedItem->pPrevItem->pNextItem = pRemovedItem->pNextItem;
- 
+
   if (pRemovedItem->pNextItem)
     pRemovedItem->pNextItem->pPrevItem = pRemovedItem->pPrevItem;
-  
+
   pList->iSize--;
   if (pList->iSize == 0) {
     pList->pFirstItem = NULL;
@@ -174,7 +174,7 @@ void remove_iterator(struct iterator_data * pIterator)
   pIterator->pItem = NULL;
 }
 
-/** Spits out an item and cycles down the list  
+/** Spits out an item and cycles down the list
  * @return Returns the content of the list
  * */
 
@@ -232,7 +232,7 @@ struct item_data * find_in_list(void * pContent, struct list_data * pList)
 void clear_simple_list(void)
 {
   loop = FALSE;
-  pLastList = NULL;  
+  pLastList = NULL;
 }
 
 void * simple_list(struct list_data * pList)
@@ -248,20 +248,20 @@ void * simple_list(struct list_data * pList)
   if (!loop || pLastList != pList) {
     if (loop && pLastList != pList)
       mudlog(CMP, LVL_GRGOD, TRUE, "SYSERR: simple_list() forced to reset itself.");
-  
+
     pContent = merge_iterator(&Iterator, pList);
     if (pContent != NULL) {
-      pLastList = pList;    
+      pLastList = pList;
       loop = TRUE;
       return (pContent);
     } else
       return NULL;
   }
-   
+
   if ((pContent = next_in_list(&Iterator)) != NULL)
     return (pContent);
 
-  remove_iterator(&Iterator);  
+  remove_iterator(&Iterator);
   loop = FALSE;
   return NULL;
 }
@@ -289,7 +289,7 @@ void * random_from_list(struct list_data * pList)
   }
 
   remove_iterator(&localIterator);
-  
+
   if (found)
     return (pFoundItem);
   else
@@ -300,18 +300,18 @@ struct list_data * randomize_list(struct list_data * pList)
 {
   struct list_data * newList;
   void * pContent;
-  
+
   if (pList->iSize == 0)
     return NULL;
-    
+
   newList = create_list();
-  
+
   while ((pContent = random_from_list(pList)) != NULL) {
     remove_from_list(pContent, pList);
     add_to_list(pContent, newList);
   }
-  
+
   free_list(pList);
-  
+
   return (newList);
 }

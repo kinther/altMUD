@@ -1,5 +1,5 @@
 /**************************************************************************
-*  File: aedit.c                                           Part of tbaMUD *
+*  File: aedit.c                                           Part of altMUD *
 *  Usage: OLC for MUDs -- this one edits socials.                         *
 *  by Michael Scott                                                       *
 **************************************************************************/
@@ -41,7 +41,7 @@ ACMD(do_oasis_aedit)
   /* No building as a mob or while being forced. */
   if (IS_NPC(ch) || !ch->desc || STATE(ch->desc) != CON_PLAYING)
     return;
-    
+
   if (CONFIG_NEW_SOCIALS == 0) {
     send_to_char(ch, "Socials cannot be edited at the moment.\r\n");
     return;
@@ -219,27 +219,27 @@ static void aedit_save_to_disk(struct descriptor_data *d) {
               soc_mess_list[i].min_char_position,
               soc_mess_list[i].min_victim_position,
               soc_mess_list[i].min_level_char);
-              
+
       sprintf(buf, "%s\n%s\n%s\n%s\n",
               ((soc_mess_list[i].char_no_arg)?soc_mess_list[i].char_no_arg:"#"),
               ((soc_mess_list[i].others_no_arg)?soc_mess_list[i].others_no_arg:"#"),
               ((soc_mess_list[i].char_found)?soc_mess_list[i].char_found:"#"),
               ((soc_mess_list[i].others_found)?soc_mess_list[i].others_found:"#"));
       fprintf(fp, "%s", convert_from_tabs(buf));
-      
+
       sprintf(buf, "%s\n%s\n%s\n%s\n",
               ((soc_mess_list[i].vict_found)?soc_mess_list[i].vict_found:"#"),
               ((soc_mess_list[i].not_found)?soc_mess_list[i].not_found:"#"),
               ((soc_mess_list[i].char_auto)?soc_mess_list[i].char_auto:"#"),
               ((soc_mess_list[i].others_auto)?soc_mess_list[i].others_auto:"#"));
       fprintf(fp, "%s", convert_from_tabs(buf));
-      
+
       sprintf(buf, "%s\n%s\n%s\n",
               ((soc_mess_list[i].char_body_found)?soc_mess_list[i].char_body_found:"#"),
               ((soc_mess_list[i].others_body_found)?soc_mess_list[i].others_body_found:"#"),
               ((soc_mess_list[i].vict_body_found)?soc_mess_list[i].vict_body_found:"#"));
       fprintf(fp, "%s", convert_from_tabs(buf));
-      
+
       sprintf(buf, "%s\n%s\n\n",
               ((soc_mess_list[i].char_obj_found)?soc_mess_list[i].char_obj_found:"#"),
               ((soc_mess_list[i].others_obj_found)?soc_mess_list[i].others_obj_found:"#"));
@@ -818,4 +818,3 @@ static int aedit_find_command(const char *txt)
       return (cmd);
   return (-1);
 }
-

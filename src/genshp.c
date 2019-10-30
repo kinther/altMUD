@@ -1,5 +1,5 @@
 /**************************************************************************
-*  File: genshp.c                                          Part of tbaMUD *
+*  File: genshp.c                                          Part of altMUD *
 *  Usage: Generic OLC Library - Shops.                                    *
 *                                                                         *
 *  Copyright 1996 by Harvey Gilpin, 1997-2001 by George Greer.            *
@@ -415,7 +415,7 @@ int save_shops(zone_rnum zone_num)
 	      S_KEEPER(shop) == NOBODY ? -1 : mob_index[S_KEEPER(shop)].vnum,
 	      S_NOTRADE(shop)
 	      );
-        
+
         fputs(convert_from_tabs(buf), shop_file);
 
       /* Save the rooms. */

@@ -1,5 +1,5 @@
 /**************************************************************************
-*  File: oedit.c                                           Part of tbaMUD *
+*  File: oedit.c                                           Part of altMUD *
 *  Usage: Oasis OLC - Objects.                                            *
 *                                                                         *
 * By Levork. Copyright 1996 Harvey Gilpin. 1997-2001 George Greer.        *

@@ -1,5 +1,5 @@
 /**************************************************************************
-*  File: modify.c                                          Part of tbaMUD *
+*  File: modify.c                                          Part of altMUD *
 *  Usage: Run-time modification of game variables.                        *
 *                                                                         *
 *  All rights reserved.  See license for complete information.            *
@@ -253,7 +253,7 @@ static void playing_string_cleanup(struct descriptor_data *d, int action)
       notify_if_playing(d->character, d->mail_to);
     } else
       write_to_output(d, "Mail aborted.\r\n");
-    
+
     free(*d->str);
     free(d->str);
   }

@@ -2,7 +2,7 @@
 * @file interpreter.h
 * Public procs, macro defs, subcommand defines for the command intepreter.
 *
-* Part of the core tbaMUD source code distribution, which is a derivative
+* Part of the core altMUD source code distribution, which is a derivative
 * of, and continuation of, CircleMUD.
 *
 * All rights reserved.  See license for complete information.

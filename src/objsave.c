@@ -1,5 +1,5 @@
 /**************************************************************************
-*  File: objsave.c                                         Part of tbaMUD *
+*  File: objsave.c                                         Part of altMUD *
 *  Usage: loading/saving player objects for rent and crash-save           *
 *                                                                         *
 *  All rights reserved.  See license for complete information.            *
@@ -382,7 +382,7 @@ void Crash_listrent(struct char_data *ch, char *name)
   char filename[MAX_INPUT_LENGTH], buf[MAX_STRING_LENGTH], line[READ_SIZE];
   obj_save_data *loaded, *current;
   int rentcode = RENT_UNDEF, timed, netcost, gold, account, nitems, numread, len;
-  
+
   if (!get_filename(filename, sizeof(filename), CRASH_FILE, name))
     return;
 
@@ -1034,7 +1034,7 @@ obj_save_data *objsave_parse_objects(FILE *fl)
             log("SYSERR: Prevented loading of non-existant item #%d.", nr);
             continue;
           }
-          
+
         if (temp) {
           current->obj = temp;
           CREATE(current->next, obj_save_data, 1);
@@ -1045,7 +1045,7 @@ obj_save_data *objsave_parse_objects(FILE *fl)
         }
       } else
         continue;
-        
+
       /* we have the number, check it, load obj. */
       if (nr == NOTHING) {   /* then it is unique */
         temp = create_obj();
@@ -1065,7 +1065,7 @@ obj_save_data *objsave_parse_objects(FILE *fl)
     }
 
     /* If "temp" is NULL, we are most likely progressing through
-     * a non-existant object, so just keep continuing till we find 
+     * a non-existant object, so just keep continuing till we find
      * the next object */
     if (temp == NULL)
       continue;
@@ -1205,7 +1205,7 @@ static int Crash_load_objs(struct char_data *ch) {
     mudlog(NRM, MAX(LVL_IMMORT, GET_INVIS_LEV(ch)), TRUE, "%s entering game with no equipment.", GET_NAME(ch));
     return 1;
   }
- 
+
   if (!get_line(fl, line))
     mudlog(NRM, MAX(LVL_IMMORT, GET_INVIS_LEV(ch)), TRUE, "Failed to read player's rent code: %s.", GET_NAME(ch));
   else
@@ -1370,4 +1370,3 @@ static int handle_obj(struct obj_data *temp, struct char_data *ch, int locate, s
 
   return TRUE;
 }
-

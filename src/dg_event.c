@@ -1,18 +1,18 @@
 /**
 * @file dg_event.c
-* This file contains a simplified event system to allow trigedit 
+* This file contains a simplified event system to allow trigedit
 * to use the "wait" command, causing a delay in the middle of a script.
 * This system could easily be expanded by coders who wish to implement
 * an event driven mud.
-* 
-* Part of the core tbaMUD source code distribution, which is a derivative
+*
+* Part of the core altMUD source code distribution, which is a derivative
 * of, and continuation of, CircleMUD.
-* 
+*
 * This source code, which was not part of the CircleMUD legacy code,
-* was created by the following people:                                      
-* $Author: Mark A. Heilpern/egreen/Welcor $                              
-* $Date: 2004/10/11 12:07:00$                                            
-* $Revision: 1.0.14 $                                                    
+* was created by the following people:
+* $Author: Mark A. Heilpern/egreen/Welcor $
+* $Date: 2004/10/11 12:07:00$
+* $Revision: 1.0.14 $
 */
 
 
@@ -47,7 +47,7 @@ void event_init(void)
  * @post If the newly created event is valid, it is always added to event_q.
  * @param func The function to be called when this event fires. This function
  * will be passed event_obj when it fires. The function must match the form
- * described by EVENTFUNC. 
+ * described by EVENTFUNC.
  * @param event_obj An optional 'something' to be passed to func when this
  * event fires. It is func's job to cast event_obj. If event_obj is not needed,
  * pass in NULL.
@@ -70,8 +70,8 @@ struct event *event_create(EVENTFUNC(*func), void *event_obj, long when)
   return new_event;
 }
 
-/** Removes an event from event_q and frees the event. 
- * @param event Pointer to the event to be dequeued and removed. 
+/** Removes an event from event_q and frees the event.
+ * @param event Pointer to the event to be dequeued and removed.
  */
 void event_cancel(struct event *event)
 {
@@ -96,7 +96,7 @@ void cleanup_event_obj(struct event *event)
 {
   struct mud_event_data * mud_event;
 
-  if (event->isMudEvent) {  
+  if (event->isMudEvent) {
     mud_event = (struct mud_event_data *) event->event_obj;
     free_mud_event(mud_event);
   } else
@@ -117,7 +117,7 @@ void event_process(void)
       return;
     }
 
-    /* Set the_event->q_el to NULL so that any functions called beneath 
+    /* Set the_event->q_el to NULL so that any functions called beneath
      * event_process can tell if they're being called beneath the actual
      * event function. */
     the_event->q_el = NULL;
@@ -132,11 +132,11 @@ void event_process(void)
       /* It is assumed that the_event will already have freed ->event_obj. */
       free(the_event);
     }
-      
+
   }
 }
 
-/** Returns the time remaining before the event as how many pulses from now. 
+/** Returns the time remaining before the event as how many pulses from now.
  * @param event Check this event for its scheduled activation time.
  * @retval long Number of pulses before this event will fire. */
 long event_time(struct event *event)
@@ -183,10 +183,10 @@ struct dg_queue *queue_init(void)
   return q;
 }
 
-/** Add some 'data' to a priority queue. 
+/** Add some 'data' to a priority queue.
  * @pre The paremeter q must have been previously created by queue_init.
  * @post A new q_element is created to hold the data parameter.
- * @param q The existing dg_queue to add an element to. 
+ * @param q The existing dg_queue to add an element to.
  * @param data The data to be associated with, and theoretically used, when
  * the element comes up in q. data is wrapped in a new q_element.
  * @param key Indicates where this event should be located in the queue, and
@@ -238,7 +238,7 @@ struct q_element *queue_enq(struct dg_queue *q, void *data, long key)
 
 /** Remove queue element qe from the priority queue q.
  * @pre qe->data has been dealt with in some way.
- * @post qe has been freed. 
+ * @post qe has been freed.
  * @param q Pointer to the queue containing qe.
  * @param qe Pointer to the q_element to remove from q.
  */
@@ -263,10 +263,10 @@ void queue_deq(struct dg_queue *q, struct q_element *qe)
   free(qe);
 }
 
-/** Removes and returns the data of the first element of the priority queue q. 
+/** Removes and returns the data of the first element of the priority queue q.
  * @pre pulse must be defined. This is a multi-headed queue, the current
  * head is determined by the current pulse.
- * @post the q->head is dequeued. 
+ * @post the q->head is dequeued.
  * @param q The queue to return the head of.
  * @retval void * NULL if there is not a currently available head, pointer
  * to any data object associated with the queue element. */
@@ -287,7 +287,7 @@ void *queue_head(struct dg_queue *q)
 
 /** Returns the key of the head element of the priority queue.
  * @pre pulse must be defined. This is a multi-headed queue, the current
- * head is determined by the current pulse. 
+ * head is determined by the current pulse.
  * @param q Queue to check for.
  * @retval long Return the key element of the head q_element. If no head
  * q_element is available, return LONG_MAX. */
@@ -324,10 +324,10 @@ void queue_free(struct dg_queue *q)
 
   for (i = 0; i < NUM_EVENT_QUEUES; i++)
   {
-    for (qe = q->head[i]; qe; qe = next_qe) 
+    for (qe = q->head[i]; qe; qe = next_qe)
     {
       next_qe = qe->next;
-      if ((event = (struct event *) qe->data) != NULL) 
+      if ((event = (struct event *) qe->data) != NULL)
       {
         if (event->event_obj)
           cleanup_event_obj(event);
@@ -340,4 +340,3 @@ void queue_free(struct dg_queue *q)
 
   free(q);
 }
-

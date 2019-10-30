@@ -1,5 +1,5 @@
 /**************************************************************************
-*  File: ibt.c                                             Part of tbaMUD *
+*  File: ibt.c                                             Part of altMUD *
 *  Usage: Loading/saving/editing of Ideas, Bugs and Typos lists           *
 *                                                                         *
 *  All rights reserved.  See license for complete information.            *
@@ -152,7 +152,7 @@ static IBT_DATA *read_ibt( char *filename, FILE *fp )
             KEY("Body",     ibtData->body,   fread_clean_string( fp, buf ));
             break;
           case 'D':
-            TXT_KEY("Dated", dated, fread_line(fp));          
+            TXT_KEY("Dated", dated, fread_line(fp));
             break;
           case 'E':
             if (!str_cmp(word, "End"))
@@ -160,11 +160,11 @@ static IBT_DATA *read_ibt( char *filename, FILE *fp )
               if ( id_num ) {
                 ibtData->id_num = atol(id_num);
                 STRFREE( id_num );
-              }  
+              }
               if ( dated ) {
                 ibtData->dated = atol(dated);
                 STRFREE( dated );
-              }  
+              }
               if ( !ibtData->name )
                 ibtData->name = STRALLOC("");
               if ( !ibtData->text )
@@ -231,7 +231,7 @@ static IBT_DATA *read_ibt( char *filename, FILE *fp )
 		 STRFREE( id_num );
    if ( dated )
 		 STRFREE( dated );
-		 
+
    DISPOSE( ibtData);
    return NULL;
 }
@@ -670,7 +670,7 @@ ACMD(do_ibt)
     ibtData->name   = STRALLOC(GET_NAME(ch));
     ibtData->id_num = GET_IDNUM(ch);
     ibtData->dated  = time(0);
-    
+
     switch(subcmd) {
        case SCMD_BUG : LINK( ibtData, first_bug, last_bug, next, prev );
                        break;
@@ -679,7 +679,7 @@ ACMD(do_ibt)
        case SCMD_TYPO: LINK( ibtData, first_typo, last_typo, next, prev );
                        break;
     }
-    mudlog(NRM, MAX(LVL_IMMORT, GET_INVIS_LEV(ch)), 
+    mudlog(NRM, MAX(LVL_IMMORT, GET_INVIS_LEV(ch)),
       FALSE, "%s has posted %s %s!", GET_NAME(ch), TANA(CMD_NAME), CMD_NAME);
     return;
   }
@@ -916,10 +916,10 @@ static void ibtedit_save(struct descriptor_data *d)
 }
 
 void free_olc_ibt(IBT_DATA *toFree) {
-	
+
 	if (!toFree)
 	  return;
- 
+
 	if (toFree->text) {
 	  STRFREE(toFree->text);
 	}
@@ -935,7 +935,7 @@ void free_olc_ibt(IBT_DATA *toFree) {
 	if (toFree->notes) {
 	  STRFREE(toFree->notes);
 	}
-	
+
 	free(toFree);
 }
 

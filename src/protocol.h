@@ -9,7 +9,7 @@
  Set your MUD_NAME, and change descriptor_t if necessary.
  ******************************************************************************/
 
-#define MUD_NAME "tbaMUD"
+#define MUD_NAME "altMUD"
 
 typedef struct descriptor_data descriptor_t;
 

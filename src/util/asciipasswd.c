@@ -1,5 +1,5 @@
 /* ************************************************************************
-*  file:  asciipasswd.c (derived from mudpasswd.c)         Part of tbaMUD *
+*  file:  asciipasswd.c (derived from mudpasswd.c)         Part of altMUD *
 *  Usage: generating hashed passwords for an ascii playerfile.            *
 *  Copyright (C) 1990, 1991 - see 'license.doc' for complete information. *
 *  All Rights Reserved                                                    *
@@ -25,4 +25,3 @@ int main(int argc, char **argv) {
     printf("Name: %s\nPass: %s\n", CAP(argv[1]), CRYPT(argv[2], CAP(argv[1])));
   return (0);
 }
-

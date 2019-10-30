@@ -1,5 +1,5 @@
 /**************************************************************************
-*  File: shop.c                                            Part of tbaMUD *
+*  File: shop.c                                            Part of altMUD *
 *  Usage: Shopkeepers, loading config files, spec procs.                  *
 *                                                                         *
 *  All rights reserved.  See license for complete information.            *
@@ -530,7 +530,7 @@ static void shopping_buy(char *arg, struct char_data *ch, struct char_data *keep
     }
   }
   }
-  
+
   if (IS_NPC(ch) || (!IS_NPC(ch) && !PRF_FLAGGED(ch, PRF_NOHASSLE))) {
 	if (IS_CARRYING_N(ch) + 1 > CAN_CARRY_N(ch)) {
       send_to_char(ch, "%s: You can't carry any more items.\r\n", fname(obj->name));
@@ -541,7 +541,7 @@ static void shopping_buy(char *arg, struct char_data *ch, struct char_data *keep
       return;
 	}
   }
-  
+
   if (OBJ_FLAGGED(obj, ITEM_QUEST)) {
     while (obj &&
            (GET_QUESTPOINTS(ch) >= GET_OBJ_COST(obj) || IS_GOD(ch))
@@ -1585,7 +1585,7 @@ bool shopping_identify(char *arg, struct char_data *ch, struct char_data *keeper
 		GET_OBJ_WEIGHT(obj),
 		QYEL, sell_price(obj, shop_nr, keeper, ch), QNRM,
 		QYEL, buy_price(obj, shop_nr, keeper, ch), QNRM);
-		
+
   sprintbitarray(GET_OBJ_WEAR(obj), wear_bits, TW_ARRAY_MAX, buf);
   send_to_char(ch, "Can be worn on: %s\r\n", buf);
 

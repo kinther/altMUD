@@ -1,5 +1,5 @@
 /**************************************************************************
-*  File: act.comm.c                                        Part of tbaMUD *
+*  File: act.comm.c                                        Part of altMUD *
 *  Usage: Player-level communication commands.                            *
 *                                                                         *
 *  All rights reserved.  See license for complete information.            *

@@ -1,5 +1,5 @@
 /**************************************************************************
-*  File: oasis_list.c                                      Part of tbaMUD *
+*  File: oasis_list.c                                      Part of altMUD *
 *  Usage: Oasis OLC listings.                                             *
 *                                                                         *
 * By Levork. Copyright 1996 Harvey Gilpin. 1997-2001 George Greer.        *
@@ -24,9 +24,9 @@
 #include "quest.h"
 #include "modify.h"
 #include "spells.h"
- 
+
 #define MAX_OBJ_LIST 100
- 
+
 struct obj_list_item {
   obj_vnum vobj;
   int val;
@@ -238,7 +238,7 @@ static void perform_obj_type_list(struct char_data * ch, char *arg)
           len += tmp_len;
         else {
 		  buf[sizeof(buf) -1] = '\0';
-		  break;	
+		  break;
 		}
       }
     }
@@ -601,7 +601,7 @@ static void list_rooms(struct char_data *ch, zone_rnum rnum, room_vnum vmin, roo
       }
 
       len += snprintf(buf + len, sizeof(buf) - len, "\r\n");
-      
+
       if (len > sizeof(buf))
 		break;
     }
@@ -886,8 +886,8 @@ void print_zone(struct char_data *ch, zone_vnum vnum)
     QGRN, QCYN, zone_table[rnum].top,
     QGRN, QCYN, zone_table[rnum].reset_mode ? ((zone_table[rnum].reset_mode == 1) ?
     "Reset when no players are in zone." : "Normal reset.") : "Never reset",
-    QGRN, QCYN, buf, 
-    QGRN, QCYN, zone_table[rnum].min_level, 
+    QGRN, QCYN, buf,
+    QGRN, QCYN, zone_table[rnum].min_level,
     QGRN, QCYN, zone_table[rnum].max_level,
     QGRN,
     QGRN, QCYN, size_rooms,

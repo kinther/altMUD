@@ -1,5 +1,5 @@
 /* ************************************************************************
-*  file: sign.c                                            Part of tbaMUD *
+*  file: sign.c                                            Part of altMUD *
 *  Usage: A program to present text on a TCP port.                        *
 *         sign <port> <filename | port>                                   *
 *  Written by Jeremy Elson                                                *

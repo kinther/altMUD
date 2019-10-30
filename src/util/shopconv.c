@@ -1,5 +1,5 @@
 /* ************************************************************************
-*  file:  shopconv.c                                       Part of tbaMUD *
+*  file:  shopconv.c                                       Part of altMUD *
 *  Usage: code to convert 2.20 shop files to 3.0 shop files               *
 *  Written by Jeff Fink                                                   *
 ************************************************************************* */

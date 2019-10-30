@@ -1,13 +1,13 @@
 /**
 * @file genolc.h
 * Generic OLC Library - General.
-* 
-* Part of the core tbaMUD source code distribution, which is a derivative
+*
+* Part of the core altMUD source code distribution, which is a derivative
 * of, and continuation of, CircleMUD.
-* 
+*
 * This source code, which was not part of the CircleMUD legacy code,
 * is attributed to:
-* Copyright 1996 by Harvey Gilpin, 1997-2001 by George Greer.                                                    
+* Copyright 1996 by Harvey Gilpin, 1997-2001 by George Greer.
 */
 #ifndef _GENOLC_H_
 #define _GENOLC_H_
@@ -45,8 +45,8 @@ extern struct save_list_data *save_list;
 #define SL_ZON	4
 #define SL_CFG	5
 #define SL_QST  6
-#define SL_MAX  6	
-#define SL_ACT SL_MAX + 1 /* must be above MAX */ 
+#define SL_MAX  6
+#define SL_ACT SL_MAX + 1 /* must be above MAX */
 #define SL_HLP SL_MAX + 2
 
 #define ZCMD(zon, cmds)	zone_table[(zon)].cmd[(cmds)]

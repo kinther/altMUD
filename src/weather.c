@@ -1,13 +1,13 @@
 /**
-* @file weather.c                                          
+* @file weather.c
 * Functions that handle the in game progress of time and weather changes.
-* 
-* Part of the core tbaMUD source code distribution, which is a derivative
+*
+* Part of the core altMUD source code distribution, which is a derivative
 * of, and continuation of, CircleMUD.
-*                                                                        
-* All rights reserved.  See license for complete information.                                                                
-* Copyright (C) 1993, 94 by the Trustees of the Johns Hopkins University 
-* CircleMUD is based on DikuMUD, Copyright (C) 1990, 1991.               
+*
+* All rights reserved.  See license for complete information.
+* Copyright (C) 1993, 94 by the Trustees of the Johns Hopkins University
+* CircleMUD is based on DikuMUD, Copyright (C) 1990, 1991.
 */
 
 #include "conf.h"
@@ -34,7 +34,7 @@ void weather_and_time(int mode)
     weather_change();
 }
 
-/** Increment the game time by one hour (no matter what) and display any time 
+/** Increment the game time by one hour (no matter what) and display any time
  * dependent messages via send_to_outdoors() (if parameter is non-zero).
  * @param mode Really, this parameter has the effect of a boolean. If non-zero,
  * display day/night messages to all eligible players.
@@ -85,11 +85,11 @@ static void another_hour(int mode)
  * update is sent via send_to_outdoors().
  * @todo There are some hard coded values that could be extracted to make
  * customizing the weather patterns easier.
- */  
+ */
 static void weather_change(void)
 {
   int diff, change;
-  
+
   if ((time_info.month >= 9) && (time_info.month <= 16))
     diff = (weather_info.pressure > 985 ? -2 : 2);
   else

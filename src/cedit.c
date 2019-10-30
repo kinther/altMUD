@@ -1,5 +1,5 @@
 /**************************************************************************
-*  File: cedit.c                                           Part of tbaMUD *
+*  File: cedit.c                                           Part of altMUD *
 *  Usage: A graphical in-game game configuration utility for OasisOLC.    *
 *                                                                         *
 *  Copyright 2002-2003 Kip Potter                                         *
@@ -133,7 +133,7 @@ static void cedit_setup(struct descriptor_data *d)
   OLC_CONFIG(d)->operation.protocol_negotiation = CONFIG_PROTOCOL_NEGOTIATION;
   OLC_CONFIG(d)->operation.special_in_comm    = CONFIG_SPECIAL_IN_COMM;
   OLC_CONFIG(d)->operation.debug_mode    = CONFIG_DEBUG_MODE;
-  
+
   /* Autowiz */
   OLC_CONFIG(d)->autowiz.use_autowiz          = CONFIG_USE_AUTOWIZ;
   OLC_CONFIG(d)->autowiz.min_wizlist_lev      = CONFIG_MIN_WIZLIST_LEV;
@@ -237,7 +237,7 @@ static void cedit_save_internally(struct descriptor_data *d)
   CONFIG_PROTOCOL_NEGOTIATION = OLC_CONFIG(d)->operation.protocol_negotiation;
   CONFIG_SPECIAL_IN_COMM      = OLC_CONFIG(d)->operation.special_in_comm;
   CONFIG_DEBUG_MODE           = OLC_CONFIG(d)->operation.debug_mode;
-    
+
   /* Autowiz */
   CONFIG_USE_AUTOWIZ          = OLC_CONFIG(d)->autowiz.use_autowiz;
   CONFIG_MIN_WIZLIST_LEV      = OLC_CONFIG(d)->autowiz.min_wizlist_lev;
@@ -564,7 +564,7 @@ int save_config( IDXTYPE nowhere )
   fprintf(fl, "* If yes, enable the special character in comm channels.\n"
               "special_in_comm = %d\n\n",
               CONFIG_SPECIAL_IN_COMM);
-              
+
   fprintf(fl, "* If 0 then off, otherwise 1: Brief, 2: Normal, 3: Complete.\n"
               "debug_mode = %d\n\n",
               CONFIG_DEBUG_MODE);
@@ -975,7 +975,7 @@ void cedit_parse(struct descriptor_data *d, char *arg)
         case 'R':
 		  TOGGLE_VAR(OLC_CONFIG(d)->play.diagonal_dirs);
 		  break;
- 
+
 		case 's':
 		case 'S':
 		  TOGGLE_VAR(OLC_CONFIG(d)->play.no_mort_to_immort);
@@ -1261,12 +1261,12 @@ void cedit_parse(struct descriptor_data *d, char *arg)
          case 'R':
            TOGGLE_VAR(OLC_CONFIG(d)->operation.protocol_negotiation);
            break;
-		   
+
          case 's':
          case 'S':
            TOGGLE_VAR(OLC_CONFIG(d)->operation.special_in_comm);
            break;
-       
+
          case 't':
          case 'T':
            write_to_output(d, "Enter the current debug level (0: Off, 1: Brief, 2: Normal, 3: Complete) : ");

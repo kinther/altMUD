@@ -1,5 +1,5 @@
 /* ***********************************************************************
-*    File:   qedit.c                                  Part of CircleMUD  *
+*    File:   qedit.c                                  Part of altMUD     *
 * Version:   2.0 (November 2005) Written for CircleMud CWG / Suntzu      *
 * Purpose:   To provide special quest-related code.                      *
 * Copyright: Kenneth Ray                                                 *
@@ -744,4 +744,3 @@ void qedit_string_cleanup(struct descriptor_data *d, int terminator)
     break;
   }
 }
-

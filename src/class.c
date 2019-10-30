@@ -1,5 +1,5 @@
 /**************************************************************************
-*  File: class.c                                           Part of tbaMUD *
+*  File: class.c                                           Part of altMUD *
 *  Usage: Source file for class-specific code.                            *
 *                                                                         *
 *  All rights reserved.  See license for complete information.            *

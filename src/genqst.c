@@ -1,11 +1,11 @@
 /* ***********************************************************************
-*    File:   genqst.c                                 Part of CircleMUD  *
+*    File:   genqst.c                                 Part of altMUD     *
 * Version:   2.0 (November 2005) Written for CircleMud CWG / Suntzu      *
 * Purpose:   To provide special quest-related code.                      *
 * Copyright: Kenneth Ray                                                 *
 * Original Version Details:                                              *
-* Copyright 1996 by Harvey Gilpin           *
-* Copyright 1997-2001 by George Greer (greerga@circlemud.org)     *
+* Copyright 1996 by Harvey Gilpin                                        *
+* Copyright 1997-2001 by George Greer (greerga@circlemud.org)            *
 ************************************************************************ */
 
 #include "conf.h"
@@ -111,7 +111,7 @@ int add_quest(struct aq_data *nqst)
   if (qmrnum != NOBODY && mob_index[qmrnum].func &&
      mob_index[qmrnum].func != questmaster)
      QST_FUNC(rnum) = mob_index[qmrnum].func;
-  if(qmrnum != NOBODY) 
+  if(qmrnum != NOBODY)
     mob_index[qmrnum].func = questmaster;
 
   /* And make sure we save the updated quest information to disk */
@@ -136,7 +136,7 @@ int delete_quest(qst_rnum rnum)
 
   if (rnum >= total_quests)
     return FALSE;
-  rznum = real_zone_by_thing(QST_NUM(rnum)); 
+  rznum = real_zone_by_thing(QST_NUM(rnum));
   log("GenOLC: delete_quest: Deleting quest #%d (%s).",
        QST_NUM(rnum), QST_NAME(rnum));
   /* make a note of the quest master's secondary spec proc */
@@ -152,7 +152,7 @@ int delete_quest(qst_rnum rnum)
     RECREATE(aquest_table, struct aq_data, total_quests);
   else {
     free(aquest_table);
-    aquest_table = NULL; 
+    aquest_table = NULL;
    }
   if (rznum != NOWHERE)
      add_to_save_list(zone_table[rznum].number, SL_QST);
@@ -249,13 +249,13 @@ int save_quests(zone_rnum zone_num)
         QST_RETURNMOB(rnum) == NOBODY ? -1 : QST_RETURNMOB(rnum),
         QST_QUANTITY(rnum), QST_GOLD(rnum), QST_EXP(rnum), QST_OBJ(rnum)
       );
-      
+
       if(n < MAX_STRING_LENGTH) {
         fprintf(sf, "%s", convert_from_tabs(buf));
         num_quests++;
       } else {
-        mudlog(BRF,LVL_BUILDER,TRUE, 
-               "SYSERR: Could not save quest #%d due to size (%d > maximum of %d).", 
+        mudlog(BRF,LVL_BUILDER,TRUE,
+               "SYSERR: Could not save quest #%d due to size (%d > maximum of %d).",
                QST_NUM(rnum), n, MAX_STRING_LENGTH);
       }
     }
@@ -278,4 +278,3 @@ int save_quests(zone_rnum zone_num)
     remove_from_save_list(zone_table[zone_num].number, SL_QST);
   return TRUE;
 }
-

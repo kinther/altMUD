@@ -1,5 +1,5 @@
 /**************************************************************************
-*  File: db.c                                              Part of tbaMUD *
+*  File: db.c                                              Part of altMUD *
 *  Usage: Loading/saving chars, booting/resetting world, internal funcs.  *
 *                                                                         *
 *  All rights reserved.  See license for complete information.            *
@@ -2129,7 +2129,7 @@ static void load_zones(FILE *fl, char *zonename)
     Z.zone_flags[i] = 0;
 
   line_num += get_line(fl, buf);
-  /* Look for 10 items first (new tbaMUD), if not found, try 4 (old tbaMUD) */
+  /* Look for 10 items first (new altMUD), if not found, try 4 (old altMUD) */
   if  (sscanf(buf, " %hd %hd %d %d %s %s %s %s %d %d", &Z.bot, &Z.top, &Z.lifespan,
       &Z.reset_mode, zbuf1, zbuf2, zbuf3, zbuf4, &Z.min_level, &Z.max_level) != 10)
   {

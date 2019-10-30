@@ -2,7 +2,7 @@
 * @file utils.h
 * Utility macros and prototypes of utility functions.
 *
-* Part of the core tbaMUD source code distribution, which is a derivative
+* Part of the core altMUD source code distribution, which is a derivative
 * of, and continuation of, CircleMUD.
 *
 * All rights reserved.  See license for complete information.
@@ -337,7 +337,7 @@ do                                                              \
 /** If bit is on in bitarray var, turn it off; if it is off, turn it on. */
 #define TOGGLE_BIT_AR(var, bit)   ((var)[Q_FIELD(bit)] = (var)[Q_FIELD(bit)] ^ Q_BIT(bit))
 
-/* Older, stock tbaMUD bit settings. */
+/* Older, stock altMUD bit settings. */
 /** 1 if bit is set in flag, 0 if it is not set. */
 #define IS_SET(flag,bit)  ((flag) & (bit))
 /** Set a specific bit in var to 1. */

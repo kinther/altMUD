@@ -1,11 +1,11 @@
 /**************************************************************************
-*  File: zmalloc.c                                         Part of tbaMUD *
+*  File: zmalloc.c                                         Part of altMUD *
 *  Usage: A simple memory allocation monitor.                             *
 *                                                                         *
 *  Version 2. Copyright 1996, 1998, 1999, 2000 Eric Murray ericm@lne.com  *
 **************************************************************************/
 
-/*  Usage: To run tbaMUD in debug mode change the flags line in your Makefile
+/*  Usage: To run altMUD in debug mode change the flags line in your Makefile
  *  as below, make clean, and reboot.
  *
  *  Makefile: # Any special flags you want to pass to the compiler
@@ -234,7 +234,7 @@ void zfree(unsigned char *what, char *file, int line)
       pad_check(m);
 
       /* note that we freed the memory */
-      m->frees++;  
+      m->frees++;
 
       /* check to see if it was freed > once */
       if (m->frees > 1) {
@@ -261,7 +261,7 @@ void zfree(unsigned char *what, char *file, int line)
 char *zstrdup(const char *src, char *file, int line)
 {
   char *result;
-#ifndef NO_MEMORY_STRDUP    
+#ifndef NO_MEMORY_STRDUP
   result = (char*)zmalloc(strlen(src) + 1, file, line);
   if (!result)
     return NULL;

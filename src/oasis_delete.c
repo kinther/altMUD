@@ -1,5 +1,5 @@
 /**************************************************************************
-*  File: oasis_delete.c                                    Part of tbaMUD *
+*  File: oasis_delete.c                                    Part of altMUD *
 *  Usage: Oasis OLC deletion.                                             *
 *                                                                         *
 * By Levork. Copyright 1996 Harvey Gilpin. 1997-2001 George Greer.        *
@@ -19,7 +19,7 @@
 #include "improved-edit.h"
 
 /* Free's strings from any object, room, mobiles, or player. TRUE if successful,
- * otherwise, it returns FALSE. Type - The OLC type constant relating to the 
+ * otherwise, it returns FALSE. Type - The OLC type constant relating to the
  * data type of data. */
 int free_strings(void *data, int type)
 {

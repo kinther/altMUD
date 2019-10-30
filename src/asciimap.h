@@ -1,5 +1,5 @@
 /**************************************************************************
-*  File: asciimap.h                                        Part of tbaMUD *
+*  File: asciimap.h                                        Part of altMUD *
 *  Usage: Generates an ASCII map of the player's surroundings.            *
 *                                                                         *
 *  All rights reserved.  See license for complete information.            *

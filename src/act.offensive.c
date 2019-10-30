@@ -1,5 +1,5 @@
 /**************************************************************************
-*  File: act.offensive.c                                   Part of tbaMUD *
+*  File: act.offensive.c                                   Part of altMUD *
 *  Usage: Player-level commands of an offensive nature.                   *
 *                                                                         *
 *  All rights reserved.  See license for complete information.            *
@@ -534,7 +534,7 @@ ACMD(do_kick)
 }
 
 /* Player skill to bandage a someone */
-/* Stock tbaMUD */
+/* Stock altMUD */
 ACMD(do_bandage)
 {
   char arg[MAX_INPUT_LENGTH];

@@ -1,5 +1,5 @@
 /**************************************************************************
-*  File: dg_comm.c                                         Part of tbaMUD *
+*  File: dg_comm.c                                         Part of altMUD *
 *  Usage: Contains routines to handle mud to player communication.        *
 *                                                                         *
 *  All rights reserved.  See license for complete information.            *
@@ -199,4 +199,3 @@ void send_to_zone(char *messg, zone_rnum zone)
         (world[IN_ROOM(i->character)].zone == zone))
       write_to_output(i, "%s", messg);
 }
-

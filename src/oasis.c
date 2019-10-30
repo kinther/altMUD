@@ -1,5 +1,5 @@
 /**************************************************************************
-*  File: oasis.c                                           Part of tbaMUD *
+*  File: oasis.c                                           Part of altMUD *
 *  Usage: Oasis - General.                                                *
 *                                                                         *
 * By Levork. Copyright 1996 Harvey Gilpin. 1997-2001 George Greer.        *
@@ -158,10 +158,10 @@ void cleanup_olc(struct descriptor_data *d, byte cleanup_type)
 	   free_olc_ibt(OLC_IBT(d));
 	   OLC_IBT(d) = NULL;
    }
-   
+
    if (OLC_MSG_LIST(d)) {
      free_message_list(OLC_MSG_LIST(d));
-     OLC_MSG_LIST(d) = NULL;  
+     OLC_MSG_LIST(d) = NULL;
      OLC_MSG(d) = NULL;
    }
 
@@ -197,7 +197,7 @@ void cleanup_olc(struct descriptor_data *d, byte cleanup_type)
     act("$n stops using OLC.", TRUE, d->character, NULL, NULL, TO_ROOM);
 
     if (cleanup_type == CLEANUP_CONFIG)
-      mudlog(BRF, MAX(LVL_IMMORT, GET_INVIS_LEV(d->character)), 
+      mudlog(BRF, MAX(LVL_IMMORT, GET_INVIS_LEV(d->character)),
         TRUE, "OLC: %s stops editing the game configuration", GET_NAME(d->character));
     else if (STATE(d) == CON_TEDIT)
       mudlog(BRF, MAX(LVL_IMMORT, GET_INVIS_LEV(d->character)),
@@ -207,7 +207,7 @@ void cleanup_olc(struct descriptor_data *d, byte cleanup_type)
        TRUE, "OLC: %s stops editing help files.", GET_NAME(d->character));
     else
       mudlog(CMP, MAX(LVL_IMMORT, GET_INVIS_LEV(d->character)),
-        TRUE, "OLC: %s stops editing zone %d allowed zone %d", 
+        TRUE, "OLC: %s stops editing zone %d allowed zone %d",
         GET_NAME(d->character), zone_table[OLC_ZNUM(d)].number, GET_OLC_ZONE(d->character));
 
     STATE(d) = CON_PLAYING;
@@ -310,4 +310,3 @@ void send_cannot_edit(struct char_data *ch, zone_vnum zone)
   }
   mudlog(BRF, LVL_IMPL, TRUE, "%s", buf);
 }
-

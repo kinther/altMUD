@@ -1,5 +1,5 @@
 /**************************************************************************
-*  File: sedit.c                                           Part of tbaMUD *
+*  File: sedit.c                                           Part of altMUD *
 *  Usage: Oasis OLC - Shops.                                              *
 *                                                                         *
 * Copyright 1996 Harvey Gilpin. 1997-2001 George Greer.                   *
@@ -56,7 +56,7 @@ ACMD(do_oasis_sedit)
   /* No building as a mob or while being forced. */
   if (IS_NPC(ch) || !ch->desc || STATE(ch->desc) != CON_PLAYING)
     return;
-    
+
   /* Parse any arguments. */
   two_arguments(argument, buf1, buf2);
 
@@ -777,7 +777,7 @@ void sedit_parse(struct descriptor_data *d, char *arg)
     break;
   }
 
-/* If we get here, we have probably changed something, and now want to return 
+/* If we get here, we have probably changed something, and now want to return
    to main menu.  Use OLC_VAL as a 'has changed' flag. */
   OLC_VAL(d) = 1;
   sedit_disp_menu(d);

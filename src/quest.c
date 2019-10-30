@@ -1,5 +1,5 @@
 /* ***********************************************************************
-*    File:   quest.c                                  Part of CircleMUD  *
+*    File:   quest.c                                  Part of altMUD     *
 * Version:   2.1 (December 2005) Written for CircleMud CWG / Suntzu      *
 * Purpose:   To provide special quest-related code.                      *
 * Copyright: Kenneth Ray                                                 *

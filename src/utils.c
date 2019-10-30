@@ -2,7 +2,7 @@
 * @file utils.c
 * Various utility functions used within the core mud code.
 *
-* Part of the core tbaMUD source code distribution, which is a derivative
+* Part of the core altMUD source code distribution, which is a derivative
 * of, and continuation of, CircleMUD.
 *
 * All rights reserved.  See license for complete information.
@@ -193,7 +193,7 @@ void basic_mud_vlog(const char *format, va_list args)
   time_t ct = time(0);
   char timestr[21];
   int i;
-  
+
   if (logfile == NULL) {
     puts("SYSERR: Using log() before stream was initialized!");
     return;
@@ -804,7 +804,7 @@ int count_non_protocol_chars(char * str)
 {
   int count = 0;
   char *string = str;
-  
+
   while (*string) {
     if (*string == '\r' || *string == '\n') {
       string++;
@@ -825,7 +825,7 @@ int count_non_protocol_chars(char * str)
     count++;
     string++;
   }
-  
+
   return count;
 }
 
@@ -1340,16 +1340,16 @@ char *strfrmt(char *str, int w, int h, int justify, int hpad, int vpad)
         sp += 2; /* Eat the whole code regardless */
       } else if (*sp=='\t'&&sp[1]) {
         char MXPcode = sp[1]=='[' ? ']' : sp[1]=='<' ? '>' : '\0';
-	
+
   if (!MXPcode)
 	   last_color = sp[1];
- 
+
         sp += 2; /* Eat the code */
         if (MXPcode)
         {
            while (*sp!='\0'&&*sp!=MXPcode)
              ++sp; /* Eat the rest of the code */
-        } 
+        }
       } else {
         wlen++;
         sp++;
@@ -1489,7 +1489,7 @@ int get_class_by_name(char *classname)
 char * convert_from_tabs(char * string)
 {
   static char buf[MAX_STRING_LENGTH * 8];
-  
+
   strcpy(buf, string);
   parse_tab(buf);
   return(buf);

@@ -1,5 +1,5 @@
-/**************************************************************************
-*  File: act.item.c                                        Part of tbaMUD *
+alt/**************************************************************************
+*  File: act.item.c                                        Part of altMUD *
 *  Usage: Object handling routines -- get/drop and container handling.    *
 *                                                                         *
 *  All rights reserved.  See license for complete information.            *

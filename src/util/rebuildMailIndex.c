@@ -1,5 +1,5 @@
 /* ************************************************************************
-*  file:  rebuildMailIndex.c                               Part of tbaMUD *
+*  file:  rebuildMailIndex.c                               Part of altMUD *
 *  Copyright (C) 1990, 2010 - see 'license.doc' for complete information. *
 *  All Rights Reserved                                                    *
 ************************************************************************* */
@@ -69,7 +69,7 @@ int main(int argc, char** argv)
     return 1;
   }
 
-  fprintf(index_file, "# tbaMUD mail index\n");
+  fprintf(index_file, "# altMUD mail index\n");
   fprintf(index_file, "# Format: <ID> <flags> <sender ID/vnum> <recipient ID> <time> <subject>\n");
   fprintf(index_file, "# For 'No Subject', use (null)\n");
 

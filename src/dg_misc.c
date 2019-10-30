@@ -1,5 +1,5 @@
 /**************************************************************************
-*  File: dg_misc.c                                         Part of tbaMUD *
+*  File: dg_misc.c                                         Part of altMUD *
 *  Usage: Contains general functions for script usage.                    *
 *                                                                         *
 *  $Author: Mark A. Heilpern/egreen/Welcor $                              *
@@ -307,4 +307,3 @@ void script_damage(struct char_data *vict, int dam)
     die(vict, NULL);
   }
 }
-

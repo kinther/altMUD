@@ -1,5 +1,5 @@
 /**************************************************************************
-*  File: spell_parser.c                                    Part of tbaMUD *
+*  File: spell_parser.c                                    Part of altMUD *
 *  Usage: Top-level magic routines; outside points of entry to magic sys. *
 *                                                                         *
 *  All rights reserved.  See license for complete information.            *

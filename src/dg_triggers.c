@@ -1,5 +1,5 @@
 /**************************************************************************
-*  File: dg_triggers.c                                     part of tbaMUD *
+*  File: dg_triggers.c                                     part of altMUD *
 *  Usage: Contains all the trigger functions for scripts.                 *
 *                                                                         *
 *  All rights reserved.  See license for complete information.            *

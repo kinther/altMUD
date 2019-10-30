@@ -1,5 +1,5 @@
 /**************************************************************************
-*  File: genolc.c                                          Part of tbaMUD *
+*  File: genolc.c                                          Part of altMUD *
 *  Usage: Generic OLC Library - General.                                  *
 *                                                                         *
 *  Copyright 1996 by Harvey Gilpin, 1997-2001 by George Greer.            *
@@ -385,7 +385,7 @@ static int export_info_file(zone_rnum zrnum)
   if (!(info_file = fopen("world/export/qq.info", "w"))) {
     mudlog(BRF, LVL_GOD, TRUE, "SYSERR: export_info_file : Cannot open file!");
     return FALSE;
-  } else if (fprintf(info_file, "tbaMUD Area file.\n") < 0) {
+  } else if (fprintf(info_file, "altMUD Area file.\n") < 0) {
     mudlog(BRF, LVL_GOD, TRUE, "SYSERR: export_info_file: Cannot write to file!");
     fclose(info_file);
     return FALSE;
@@ -434,16 +434,9 @@ static int export_info_file(zone_rnum zrnum)
   }
 
   fprintf(info_file, "\nAdditional zone information is available in the zone description room QQ00.\n");
-  fprintf(info_file, "The Builder's Academy is maintaining and improving these zones. Any typo or\n");
-  fprintf(info_file, "bug reports should be reported to rumble@tbamud.com or stop by The Builder Academy\n");
-  fprintf(info_file, "port telnet://tbamud.com:9091\n");
-  fprintf(info_file, "\nAnyone interested in submitting areas or helping improve the existing ones\n");
-  fprintf(info_file, "please stop by TBA and talk to Rumble.\n\n");
-  fprintf(info_file, "We at The Builder's Academy hope you will enjoy using the area.\n\n");
+  fprintf(info_file, "Bug reports should be reported to xdelaranx@gmail.com.\n");
 
-  fprintf(info_file, "Rumble - Admin of TBA\n");
-  fprintf(info_file, "Welcor - Coder of TBA\n");
-  fprintf(info_file, "\ntelnet://tbamud.com:9091/\n");
+  fprintf(info_file, "Kinther - Coder of altMUD\n");
 
   fclose(info_file);
   return TRUE;

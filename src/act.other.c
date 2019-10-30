@@ -1,5 +1,5 @@
 /**************************************************************************
-*  File: act.other.c                                       Part of tbaMUD *
+*  File: act.other.c                                       Part of altMUD *
 *  Usage: Miscellaneous player-level commands.                             *
 *                                                                         *
 *  All rights reserved.  See license for complete information.            *
@@ -661,7 +661,7 @@ ACMD(do_display)
     REMOVE_BIT_AR(PRF_FLAGS(ch), PRF_DISPMANA);
     REMOVE_BIT_AR(PRF_FLAGS(ch), PRF_DISPMOVE);
     REMOVE_BIT_AR(PRF_FLAGS(ch), PRF_DISPSTUN);
-    
+
   for (i = 0; i < strlen(argument); i++) {
     switch (LOWER(argument[i])) {
       case 'h':
@@ -895,7 +895,7 @@ static void show_happyhour(struct char_data *ch)
       sprintf(happygold, "%s+%d%%%s to Gold gained per kill\r\n",  CCYEL(ch, C_NRM), HAPPY_GOLD, CCNRM(ch, C_NRM));
       sprintf(happyexp,  "%s+%d%%%s to Experience per kill\r\n",   CCYEL(ch, C_NRM), HAPPY_EXP,  CCNRM(ch, C_NRM));
 
-      send_to_char(ch, "tbaMUD Happy Hour!\r\n"
+      send_to_char(ch, "altMUD Happy Hour!\r\n"
                        "------------------\r\n"
                        "%s%s%sTime Remaining: %s%d%s hours %s%d%s mins %s%d%s secs\r\n",
                        (IS_HAPPYEXP || (GET_LEVEL(ch) >= LVL_GOD)) ? happyexp : "",

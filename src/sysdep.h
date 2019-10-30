@@ -1,29 +1,29 @@
 /**
 * @file sysdep.h
 * Machine-specific defs based on values in conf.h (from configure)
-* 
-* Part of the core tbaMUD source code distribution, which is a derivative
+*
+* Part of the core altMUD source code distribution, which is a derivative
 * of, and continuation of, CircleMUD.
-*                                                                        
-* All rights reserved.  See license for complete information.                                                                
-* Copyright (C) 1993, 94 by the Trustees of the Johns Hopkins University 
-* CircleMUD is based on DikuMUD, Copyright (C) 1990, 1991.               
+*
+* All rights reserved.  See license for complete information.
+* Copyright (C) 1993, 94 by the Trustees of the Johns Hopkins University
+* CircleMUD is based on DikuMUD, Copyright (C) 1990, 1991.
 */
 #ifndef _SYSDEP_H_
 #define _SYSDEP_H_
 
-/* Configurables: tbaMUD uses the crypt(3) function to encrypt player passwords
+/* Configurables: altMUD uses the crypt(3) function to encrypt player passwords
  * in the players file so that they are never stored in plaintext form. However,
- * due to U.S. export restrictions on machine-readable cryptographic software, 
- * the crypt() function is not available on some operating systems such as 
- * FreeBSD.  By default, the 'configure' script will determine if you have 
- * crypt() available and enable or disable password encryption appropriately.  
+ * due to U.S. export restrictions on machine-readable cryptographic software,
+ * the crypt() function is not available on some operating systems such as
+ * FreeBSD.  By default, the 'configure' script will determine if you have
+ * crypt() available and enable or disable password encryption appropriately.
  * #define NOCRYPT (by uncommenting the line below) if you'd like to explicitly
  * disable password encryption (i.e., if you have moved your MUD from an OS that
  * does not support encryption to one that does). */
 /* #define NOCRYPT */
 
-/* If you are porting tbaMUD to a new (untested) platform and you find that 
+/* If you are porting altMUD to a new (untested) platform and you find that 
  * POSIX-standard non-blocking I/O does *not* work, you can define the constant
  * below to work around the problem.  Not having non-blocking I/O can cause the
  * MUD to freeze if someone types part of a command while the MUD waits for the
@@ -32,17 +32,17 @@
  * NOTE: **DO** **NOT** use this constant unless you are SURE you understand
  * exactly what non-blocking I/O is, and you are SURE that your operating system
  * does NOT have it!  (The only UNIX system I've ever seen that has broken POSIX
- * non-blocking I/O is AIX 3.2.)  If your MUD is freezing but you're not sure 
- * why, do NOT use this constant.  Use this constant ONLY if you're sure that 
+ * non-blocking I/O is AIX 3.2.)  If your MUD is freezing but you're not sure
+ * why, do NOT use this constant.  Use this constant ONLY if you're sure that
  * your MUD is freezing because of a non-blocking I/O problem. */
 /* #define POSIX_NONBLOCK_BROKEN */
 
 /* The code prototypes library functions to avoid compiler warnings. (Operating
  * system header files *should* do this, but sometimes don't.) However, Circle's
  * prototypes cause the compilation to fail under some combinations of operating
- * systems and compilers. If your compiler reports "conflicting types" for 
- * functions, you need to define this constant to turn off library function 
- * prototyping.  Note, **DO** **NOT** blindly turn on this constant unless you 
+ * systems and compilers. If your compiler reports "conflicting types" for
+ * functions, you need to define this constant to turn off library function
+ * prototyping.  Note, **DO** **NOT** blindly turn on this constant unless you
  * are sure the problem is type conflicts between my header files and the header
  * files of your operating system.  The error message will look something like
  * this: In file included from comm.c:14:
@@ -51,7 +51,7 @@
  *    previous declaration of `random' */
 /* #define NO_LIBRARY_PROTOTYPES */
 
-/* If using the GNU C library, version 2+, then you can have it trace memory 
+/* If using the GNU C library, version 2+, then you can have it trace memory
  * allocations to check for leaks, uninitialized uses, and bogus free() calls.
  * To see if your version supports it, run:
  * info libc 'Allocation Debugging' 'Tracing malloc'
@@ -63,7 +63,7 @@
 
 /* Do not change anything below this line. */
 
-/* Set up various machine-specific things based on the values determined from 
+/* Set up various machine-specific things based on the values determined from
  * configure and conf.h. */
 
 #include <stdio.h>
@@ -341,12 +341,12 @@ struct in_addr {
 
 /* Function prototypes. */
 /* Header files of many OS's do not contain function prototypes for the
- * standard C library functions.  This produces annoying warning messages 
+ * standard C library functions.  This produces annoying warning messages
  * (sometimes, a lot of them) on such OS's when compiling with gcc's -Wall.
  *
- * Configuration script has been changed to detect which prototypes exist 
- * already; this header file only prototypes functions that aren't already 
- * prototyped by the system headers.  A clash should be impossible.  This 
+ * Configuration script has been changed to detect which prototypes exist
+ * already; this header file only prototypes functions that aren't already
+ * prototyped by the system headers.  A clash should be impossible.  This
  * should give us our strong type-checking back. */
 
 #ifndef NO_LIBRARY_PROTOTYPES
@@ -359,7 +359,7 @@ struct in_addr {
    long atol(const char *str);
 #endif
 
-/* bzero is deprecated - use memset() instead. This prototype is needed for 
+/* bzero is deprecated - use memset() instead. This prototype is needed for
  * FD_xxx macros on some machines. */
 #ifdef NEED_BZERO_PROTO
    void bzero(char *b, int length);
@@ -564,4 +564,3 @@ struct in_addr {
 #endif /* NO_LIBRARY_PROTOTYPES */
 
 #endif /* _SYSDEP_H_ */
-
