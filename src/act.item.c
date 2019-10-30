@@ -1,4 +1,4 @@
-alt/**************************************************************************
+/**************************************************************************
 *  File: act.item.c                                        Part of altMUD *
 *  Usage: Object handling routines -- get/drop and container handling.    *
 *                                                                         *
