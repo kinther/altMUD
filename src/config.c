@@ -37,7 +37,7 @@
 /* YES / NO; TRUE / FALSE are all defined in utils.h */
 
 /* Can Scripts be attached to players? */
-int script_players = NO;
+int script_players = YES;
 
 /* pk_allowed sets the tone of the entire game.  If pk_allowed is set to NO,
  * then players will not be allowed to kill, summon, charm, or sleep other
@@ -60,12 +60,12 @@ int holler_move_cost = 20;
 int tunnel_size = 2;
 
 /* Exp change limits. */
-int max_exp_gain = 100000;	/* max gainable per kill */
-int max_exp_loss = 500000;	/* max losable per death */
+int max_exp_gain = 0;	/* max gainable per kill */
+int max_exp_loss = 0;	/* max losable per death */
 
 /* Number of tics (usually 75 seconds) before PC/NPC corpses decompose. */
-int max_npc_corpse_time = 5;
-int max_pc_corpse_time = 10;
+int max_npc_corpse_time = 10;
+int max_pc_corpse_time = 15;
 
 /* How many ticks before a player is sent to the void or idle-rented. */
 int idle_void = 8;
@@ -180,9 +180,9 @@ room_vnum frozen_start_room = 0;
 
 /* Virtual numbers of donation rooms.  note: you must change code in do_drop of
  * act.item.c if you change the number of non-NOWHERE donation rooms. */
-room_vnum donation_room_1 = 40000;
-room_vnum donation_room_2 = 40000;
-room_vnum donation_room_3 = 40000;
+room_vnum donation_room_1 = 0;
+room_vnum donation_room_2 = 0;
+room_vnum donation_room_3 = 0;
 
 /* GAME OPERATION OPTIONS */
 
