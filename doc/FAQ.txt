@@ -2,7 +2,7 @@
 If you have any additions, corrections, ideas, or bug reports please email
 xdelaranx@gmail.com - Kinther
 
-altMUD is a fork of the Builder Academy MUD, which can be found at
+altMUD is a fork of The Builder Academy MUD, which can be found at
 http://tbamud.com and on github: https://github.com/tbamud/tbamud.
 
 All of the original documentation for tbaMUD can be found in the legacydoc/
@@ -18,7 +18,6 @@ Table of Contents
 2. Resources
     2.1 Github repository
     2.2 Discord
-    2.3 Email
 
 ______________________________________________________________________
 
@@ -35,7 +34,7 @@ to use telnet, how to access the game, and I was off to make my first PC.
 After some time I grew bored of the simple hack and slash games.  I visited
 the MUD Connector (which is still around to this day) and found that not all
 MUDs played the same way.  There was everything from nonstop player-killing
-games to roleplay intensive.  My eyes opened and for the next 20 years, I
+games to roleplay intensive.  My eyes opened, and for the next 20 years I
 bounced from game to game.
 
 As I grew older I found that the MUD community began to lose its share of the
@@ -46,15 +45,16 @@ I enjoyed.
 
 There were already several MUDs with public repositories to look over, and
 after pouring over several options to work with I landed on CircleMUD.  The
-most recent version of CircleMUD was maintained by the Builder Academy.  While
+most recent version of CircleMUD was maintained by The Builder Academy.  While
 they had kept the spirit of CircleMUD alive, I saw potential in continuing
 that effort in a new direction.
 
 The Builder Academy is far and away the best resource for learning about MUDs
 in general.  Where we differ is in approach to adding new features and releasing
 them to the public to use.  They have kept the traditional hack and slash MUD
-alive, whereas I aim to add more features, modernize the code, and keep it
-competitive with alternatives written in other languages such as Python.
+alive, making a template for others to build upon, whereas I aim to add more
+features, modernize the code, and keep it competitive with alternatives written
+in other languages such as Python.
 
 1.2    A novel project for a beginning coder
 
@@ -79,9 +79,5 @@ me an email at xdelaranx@gmail.com or stop by our Discord.
 
 2.2    Discord
 
-To be filled in later.
-
-2.3    Email
-
-The best way to get in touch with me directly outside of Discord is to email
-me at xdelaranx@gmail.com.
+Join us at https://discord.gg/b6F7mcp and ask questions, report bugs, or tell
+us how we're doing.

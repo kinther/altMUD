@@ -1,0 +1,14 @@
+-------------------------------------------------------------------------------
+If you have any additions, corrections, ideas, or bug reports please email
+xdelaranx@gmail.com - Kinther
+
+altMUD is a fork of The Builder Academy MUD, which can be found at
+http://tbamud.com and on github: https://github.com/tbamud/tbamud.
+
+All of the original documentation for tbaMUD can be found in the legacydoc/
+folder, which has not been modified.
+-------------------------------------------------------------------------------
+
+altMUD Release history:
+
+Version 0.1 release: October 2019

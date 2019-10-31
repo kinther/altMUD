@@ -10,6 +10,7 @@ src/util/Makefile
 src/.accepted
 src/depend
 src/util/depend
-doc/*
 log/*
 syslog*
+lib/plr*
+lib/etc/plr*
