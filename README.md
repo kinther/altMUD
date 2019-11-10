@@ -7,8 +7,6 @@ which change how the game is played significantly.
 * Permanent death of characters if they die
 * Emoting is now preferred over standard socials
 
-TO-DO:
+version 0.2.0 goals:
 
-* Migrate player files to SQL database
 * Create account structure with a one character per account limit
-* Expand emoting system further
