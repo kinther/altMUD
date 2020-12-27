@@ -9,4 +9,6 @@ which change how the game is played significantly.
 
 version 0.2.0 goals:
 
-* Create account structure with a one character per account limit
+* Remove legacy features not needed - happyhour, merriam-webster
+* Add new features - ranged weapons that require ammo, skinning of animals for hides/meat
+* Update documentation and fix bugs as needed.
